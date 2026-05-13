@@ -3,181 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniqueStays - Odkrijte Izjemna Prenočišča na Posebnih Krajih</title>
+    <title>UniqueStays - Odkrijte izjemna prenočišča na posebnih krajih</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <header>
-        <nav>
-            <div>✨ UniqueStays</div>
-            <div>
+        <nav class="navbar">
+            <div class="logo">✨ UniqueStays</div>
+
+            <div class="nav-links">
                 <a href="#destinations">Destinacije</a>
                 <a href="#experiences">Izkušnje</a>
                 <a href="#about">O nas</a>
-                <button>Prijava</button>
+                <button class="login-btn">Prijava</button>
             </div>
         </nav>
     </header>
 
-    <section>
-        <h1>Odkrijte Svet Izjemnih Prenočišč</h1>
-        <p>Spimo na najbolj posebnih in navdihujočih krajih na planetu</p>
-        
-        <div>
-            <div>
-                <label for="location">Kje?</label>
-                <input type="text" id="location" placeholder="Destinacija ali regija">
-            </div>
-            <div>
-                <label for="checkin">Prihod</label>
-                <input type="date" id="checkin">
-            </div>
-            <div>
-                <label for="checkout">Odhod</label>
-                <input type="date" id="checkout">
-            </div>
-            <div>
-                <label for="guests">Gostje</label>
-                <select id="guests">
-                    <option>1 gost</option>
-                    <option>2 gosta</option>
-                    <option>3 gostje</option>
-                    <option>4 gostje</option>
-                    <option>5+ gostov</option>
-                </select>
-            </div>
-            <button>🔍 Iskanje</button>
-        </div>
-    </section>
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <p class="eyebrow">Edinstvena prenočišča po svetu</p>
+                <h1>Odkrijte svet izjemnih prenočišč</h1>
+                <p class="hero-text">
+                    Prespite v drevesni hiški, ledenem hotelu, gorski koči, na ladji, dvorcu ali v vili pod oceanom.
+                </p>
 
-    <section>
-        <h2>Zakaj UniqueStays?</h2>
-        <div>
-            <div>
-                <div>🏔️</div>
-                <h3>Edinstvene Lokacije</h3>
-                <p>Prenočišča na nedostopnih vrhovih, sredi divjine, na oceanskih klifih in drugih izjemnih krajih.</p>
-            </div>
-            <div>
-                <div>⭐</div>
-                <h3>Preverjena Kakovost</h3>
-                <p>Vsako prenočišče osebno preverimo in ocenimo po strogih merilih edinstvene izkušnje.</p>
-            </div>
-            <div>
-                <div>🌍</div>
-                <h3>Globalno Dostopno</h3>
-                <p>Od arktičnih iglujev do tropskih bungalovov - najdite svoj popoln pobeg.</p>
-            </div>
-            <div>
-                <div>🔒</div>
-                <h3>Varno Plačilo</h3>
-                <p>Popolna zaščita vaših podatkov in plačil s 24/7 podporo strankam.</p>
-            </div>
-        </div>
-    </section>
+                <form class="search-box">
+                    <div class="form-group">
+                        <label for="location">Kje?</label>
+                        <input type="text" id="location" placeholder="Destinacija ali regija">
+                    </div>
 
-    <section id="filters">
-        <h2>Raziskujte po Vrsti Izkušnje</h2>
-        <div>
-            <button>🏔️ Gorske Koče</button>
-            <button>🏝️ Privatni Otoki</button>
-            <button>🌲 Drevesne Hiške</button>
-            <button>❄️ Polarne Izkušnje</button>
-            <button>🏜️ Puščavski Glamp</button>
-            <button>🌊 Podvodni Hoteli</button>
-            <button>🏰 Gradovi &amp; Dvorci</button>
-            <button>🚂 Luksuzni Vlaki</button>
-            <button>⛰️ Viseči Hoteli</button>
-            <button>🦒 Safari Lodges</button>
-        </div>
-    </section>
+                    <div class="form-group">
+                        <label for="checkin">Prihod</label>
+                        <input type="date" id="checkin">
+                    </div>
 
-    <section id="destinations">
-        <div>
-            <h2>Priljubljene Destinacije</h2>
-            <p>Odkrijte najbolj iskane edinstvene kraje tega meseca</p>
-            
-            <div>
-                <div>
+                    <div class="form-group">
+                        <label for="checkout">Odhod</label>
+                        <input type="date" id="checkout">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guests">Gostje</label>
+                        <select id="guests">
+                            <option>1 gost</option>
+                            <option>2 gosta</option>
+                            <option>3 gostje</option>
+                            <option>4 gostje</option>
+                            <option>5+ gostov</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="type">Tip prenočišča</label>
+                        <select id="type">
+                            <option>Vse vrste</option>
+                            <option>Drevesna hiška</option>
+                            <option>Gorska koča</option>
+                            <option>Glamping šotor</option>
+                            <option>Vila ob vodi</option>
+                            <option>Grad ali dvorec</option>
+                            <option>Iglu / ledeni hotel</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price">Cenovni razpon</label>
+                        <select id="price">
+                            <option>Vse cene</option>
+                            <option>Do 100 € / noč</option>
+                            <option>100 € - 250 € / noč</option>
+                            <option>250 € - 500 € / noč</option>
+                            <option>500 €+ / noč</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="experience">Vrsta izkušnje</label>
+                        <select id="experience">
+                            <option>Vse izkušnje</option>
+                            <option>Romantični pobeg</option>
+                            <option>Družinske počitnice</option>
+                            <option>Avantura v naravi</option>
+                            <option>Luksuzni oddih</option>
+                            <option>Wellness sprostitev</option>
+                            <option>Digitalni detox</option>
+                            <option>Solo trip</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location-type">Okolica</label>
+                        <select id="location-type">
+                            <option>Vse lokacije</option>
+                            <option>Popolna samota</option>
+                            <option>Blizu mesta</option>
+                            <option>Ob jezeru</option>
+                            <option>Ob morju</option>
+                            <option>V gorah</option>
+                            <option>V gozdu</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="access">Dostop</label>
+                        <select id="access">
+                            <option>Vse možnosti</option>
+                            <option>Dostop z avtom</option>
+                            <option>Dostop samo peš</option>
+                            <option>Dostop z ladjo</option>
+                            <option>Dostop s helikopterjem</option>
+                            <option>Dostop z vlakom</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="activities">Aktivnosti</label>
+                        <select id="activities">
+                            <option>Vse aktivnosti</option>
+                            <option>Pohodništvo</option>
+                            <option>Smučanje</option>
+                            <option>Potapljanje</option>
+                            <option>Safari</option>
+                            <option>Kolesarjenje</option>
+                            <option>Wellness</option>
+                            <option>Opazovanje severnega sija</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                       <label for="rating">Ocena gostov</label>
+                       <select id="rating">
+                            <option>Vse ocene</option>
+                            <option>4.0+ ⭐</option>
+                            <option>4.5+ ⭐</option>
+                            <option>4.8+ ⭐</option>
+                            <option>5.0 ⭐</option>
+                        </select>
+                    </div>
+
+                    <div class="checkbox-area">
+                        <span>Posebne želje</span>
+
+                        <label>
+                            <input type="checkbox">
+                            Hišni ljubljenčki
+                        </label>
+
+                        <label>
+                            <input type="checkbox">
+                            Zasebni bazen
+                        </label>
+
+                        <label>
+                            <input type="checkbox">
+                            Zajtrk vključen
+                        </label>
+
+                        <label>
+                            <input type="checkbox">
+                            Trajnostna nastanitev
+                        </label>
+
+                        <label>
+                            <input type="checkbox">
+                            Panoramski razgled
+                        </label>
+
+                        <label>
+                            <input type="checkbox">
+                            Parkiranje
+                        </label>
+                    </div>
+
+                    <button type="submit" class="search-btn">🔍 Iskanje</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="section-heading">
+                <h2>Zakaj UniqueStays?</h2>
+                <p>Ker običajen hotel ni vedno dovolj posebno doživetje.</p>
+            </div>
+
+            <div class="feature-grid">
+                <article class="feature-card">
+                    <div class="icon">🏔️</div>
+                    <h3>Edinstvene lokacije</h3>
+                    <p>Prenočišča na gorskih vrhovih, v divjini, ob oceanu in na drugih posebnih krajih.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="icon">⭐</div>
+                    <h3>Preverjena kakovost</h3>
+                    <p>Vsako prenočišče je izbrano glede na udobje, izkušnjo, lokacijo in varnost.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="icon">🌍</div>
+                    <h3>Globalna ponudba</h3>
+                    <p>Od arktičnih iglujev do tropskih bungalovov — najdite svoj popoln pobeg.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="icon">🔒</div>
+                    <h3>Varno plačilo</h3>
+                    <p>Varna rezervacija, zaščita podatkov in podpora uporabnikom ob vsakem koraku.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="experiences" class="filters-section">
+            <div class="section-heading">
+                <h2>Raziskujte po vrsti izkušnje</h2>
+                <p>Izberite slog potovanja, ki vam najbolj ustreza.</p>
+            </div>
+
+            <div class="filter-buttons">
+                <button>🏔️ Gorske koče</button>
+                <button>🏝️ Privatni otoki</button>
+                <button>🌲 Drevesne hiške</button>
+                <button>❄️ Polarne izkušnje</button>
+                <button>🏜️ Puščavski glamp</button>
+                <button>🌊 Podvodni hoteli</button>
+                <button>🏰 Gradovi & dvorci</button>
+                <button>🚂 Luksuzni vlaki</button>
+                <button>⛰️ Viseči hoteli</button>
+                <button>🦒 Safari lodges</button>
+            </div>
+        </section>
+
+        <section id="destinations" class="destinations">
+            <div class="section-heading">
+                <h2>Priljubljene destinacije</h2>
+                <p>Odkrijte najbolj iskane edinstvene kraje tega meseca.</p>
+            </div>
+
+            <div class="destination-grid">
+                <article class="destination-card iceland">
                     <div>
                         <h3>Islandija</h3>
-                        <p>Ledeni hoteli &amp; severni sij</p>
+                        <p>Ledeni hoteli & severni sij</p>
                     </div>
-                </div>
-                
-                <div>
+                </article>
+
+                <article class="destination-card maldives">
                     <div>
                         <h3>Maldivi</h3>
-                        <p>Podvodni hoteli &amp; vile</p>
+                        <p>Podvodni hoteli & vile</p>
                     </div>
-                </div>
-                
-                <div>
+                </article>
+
+                <article class="destination-card switzerland">
                     <div>
                         <h3>Švica</h3>
                         <p>Alpske koče na vrhovih</p>
                     </div>
-                </div>
-                
-                <div>
+                </article>
+
+                <article class="destination-card costa-rica">
                     <div>
                         <h3>Kostarika</h3>
-                        <p>Jungle drevesne hiške</p>
+                        <p>Drevesne hiške v džungli</p>
                     </div>
-                </div>
-                
-                <div>
+                </article>
+
+                <article class="destination-card namibia">
                     <div>
                         <h3>Namibija</h3>
                         <p>Puščavski luksuz</p>
                     </div>
-                </div>
-                
-                <div>
+                </article>
+
+                <article class="destination-card norway">
                     <div>
                         <h3>Norveška</h3>
-                        <p>Fjord kabane</p>
+                        <p>Kabine ob fjordih</p>
                     </div>
-                </div>
+                </article>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <section id="about" class="about">
+            <div>
+                <p class="eyebrow">O nas</p>
+                <h2>Za ljudi, ki iščejo nekaj več kot samo sobo.</h2>
+                <p>
+                    UniqueStays združuje najbolj posebna prenočišča na svetu.
+                    Naš cilj je, da vsako potovanje postane zgodba, ki si jo zapomnite.
+                </p>
+            </div>
+        </section>
+    </main>
 
     <footer>
-        <div>
+        <div class="footer-grid">
             <div>
                 <h3>UniqueStays</h3>
                 <p>Najdite svoj popoln pobeg na najbolj posebnih krajih sveta.</p>
             </div>
+
             <div>
                 <h3>Podpora</h3>
                 <ul>
-                    <li><a href="#">Pomoc Center</a></li>
-                    <li><a href="#">Pogosta Vprašanja</a></li>
-                    <li><a href="#">Preklici Rezervacijo</a></li>
+                    <li><a href="#">Pomoč center</a></li>
+                    <li><a href="#">Pogosta vprašanja</a></li>
+                    <li><a href="#">Preklic rezervacije</a></li>
                     <li><a href="#">Kontakt</a></li>
                 </ul>
             </div>
+
             <div>
                 <h3>Podjetje</h3>
                 <ul>
-                    <li><a href="#">O Nas</a></li>
+                    <li><a href="#">O nas</a></li>
                     <li><a href="#">Kariere</a></li>
                     <li><a href="#">Blog</a></li>
                     <li><a href="#">Partnerji</a></li>
                 </ul>
             </div>
+
             <div>
                 <h3>Pravno</h3>
                 <ul>
-                    <li><a href="#">Pogoji Uporabe</a></li>
-                    <li><a href="#">Politika Zasebnosti</a></li>
+                    <li><a href="#">Pogoji uporabe</a></li>
+                    <li><a href="#">Politika zasebnosti</a></li>
                     <li><a href="#">Piškotki</a></li>
                 </ul>
             </div>
         </div>
-        <div>
-            <p>&copy; 2024 UniqueStays. Vse pravice pridržane.</p>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 UniqueStays. Vse pravice pridržane.</p>
         </div>
     </footer>
+
 </body>
 </html>
