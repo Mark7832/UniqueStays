@@ -4,6 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniqueStays - Odkrijte izjemna prenočišča na posebnih krajih</title>
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: { preflight: false }, /* NE resetira tvojega CSS-a */
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#14b8a6',
+                        dark: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,6 +32,10 @@
                 <a href="#destinations">Destinacije</a>
                 <a href="#experiences">Izkušnje</a>
                 <a href="#about">O nas</a>
+                <!-- Tailwind: dodane pill badge oznake -->
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">
+                    Novo
+                </span>
                 <button class="login-btn">Prijava</button>
             </div>
         </nav>
@@ -24,162 +44,165 @@
     <main>
         <section class="hero">
             <div class="hero-content">
-                <p class="eyebrow">Edinstvena prenočišča po svetu</p>
+                <!-- Tailwind: flex za eyebrow + badge -->
+                <div class="flex items-center gap-3 mb-4 flex-wrap">
+                    <p class="eyebrow">Edinstvena prenočišča po svetu</p>
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-teal-400/20 text-teal-200 text-xs font-bold tracking-wide border border-teal-400/30">
+                        🏠 1.200+ lokacij
+                    </span>
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-400/20 text-blue-200 text-xs font-bold tracking-wide border border-blue-400/30">
+                        ⭐ 4.9 ocena
+                    </span>
+                </div>
+
                 <h1>Odkrijte svet izjemnih prenočišč</h1>
                 <p class="hero-text">
                     Prespite v drevesni hiški, ledenem hotelu, gorski koči, na ladji, dvorcu ali v vili pod oceanom.
                 </p>
 
-                <form class="search-box">
-                    <div class="form-group">
-                        <label for="location">Kje?</label>
-                        <input type="text" id="location" placeholder="Destinacija ali regija">
+                <style>
+                    .sel-wrap { position: relative; display: inline-flex; flex-direction: column; }
+                    .sel-wrap select { -webkit-appearance: none; appearance: none; padding-right: 28px; cursor: pointer; }
+                    .sel-wrap .chev { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #94a3b8; }
+                    .sel-wrap-inline { position: relative; display: inline-block; }
+                    .sel-wrap-inline select { -webkit-appearance: none; appearance: none; padding-right: 28px; cursor: pointer; }
+                    .sel-wrap-inline .chev { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #94a3b8; }
+                    .pill-toggle input { display: none; }
+                    .pill-toggle { display: inline-flex; align-items: center; padding: 6px 16px; border: 1px solid #e2e8f0; border-radius: 999px; font-size: 0.85rem; font-weight: 600; color: #334155; background: white; cursor: pointer; transition: all 0.15s; user-select: none; }
+                    .pill-toggle:has(input:checked) { background: #0f172a; color: white; border-color: #0f172a; }
+                </style>
+
+                <form class="search-box" style="display:flex; flex-direction:column; gap:0; padding:0; border-radius:20px; overflow:hidden;">
+
+                    <!-- Vrstica 1: glavni iskalni filtri -->
+                    <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr 1fr auto; gap:0;">
+
+                        <div style="padding:16px 20px; border-right:1px solid #e2e8f0; display:flex; flex-direction:column; gap:5px;">
+                            <label for="location" style="font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:#64748b; font-weight:700;">Destinacija</label>
+                            <input type="text" id="location" placeholder="Kam greste?" style="border:none; padding:0; font-size:0.95rem; font-weight:600; color:#0f172a; background:transparent; outline:none; width:100%;">
+                        </div>
+
+                        <div style="padding:16px 20px; border-right:1px solid #e2e8f0; display:flex; flex-direction:column; gap:5px;">
+                            <label for="checkin" style="font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:#64748b; font-weight:700;">Prihod</label>
+                            <input type="date" id="checkin" style="border:none; padding:0; font-size:0.9rem; font-weight:600; color:#0f172a; background:transparent; outline:none; width:100%;">
+                        </div>
+
+                        <div style="padding:16px 20px; border-right:1px solid #e2e8f0; display:flex; flex-direction:column; gap:5px;">
+                            <label for="checkout" style="font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:#64748b; font-weight:700;">Odhod</label>
+                            <input type="date" id="checkout" style="border:none; padding:0; font-size:0.9rem; font-weight:600; color:#0f172a; background:transparent; outline:none; width:100%;">
+                        </div>
+
+                        <div style="padding:16px 20px; border-right:1px solid #e2e8f0; display:flex; flex-direction:column; gap:5px;">
+                            <label for="guests" style="font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:#64748b; font-weight:700;">Gostje</label>
+                            <div class="sel-wrap" style="width:100%;">
+                                <select id="guests" style="border:none; padding:0; font-size:0.95rem; font-weight:600; color:#0f172a; background:transparent; outline:none; width:100%;">
+                                    <option value="1">1 gost</option>
+                                    <option value="2">2 gosta</option>
+                                    <option value="3">3 gostje</option>
+                                    <option value="4">4 gostje</option>
+                                    <option value="5">5+ gostov</option>
+                                </select>
+                                <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                            </div>
+                        </div>
+
+                        <div style="padding:16px 20px; border-right:1px solid #e2e8f0; display:flex; flex-direction:column; gap:5px;">
+                            <label for="type" style="font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:#64748b; font-weight:700;">Tip lokacije</label>
+                            <div class="sel-wrap" style="width:100%;">
+                                <select id="type" style="border:none; padding:0; font-size:0.95rem; font-weight:600; color:#0f172a; background:transparent; outline:none; width:100%;">
+                                    <option value="">Vse vrste</option>
+                                    <option>Drevesna hiška</option>
+                                    <option>Gorska koča</option>
+                                    <option>Glamping šotor</option>
+                                    <option>Vila ob vodi</option>
+                                    <option>Grad ali dvorec</option>
+                                    <option>Iglu / ledeni hotel</option>
+                                </select>
+                                <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                            </div>
+                        </div>
+
+                        <div style="padding:10px; display:flex; align-items:center;">
+                            <button type="submit" class="search-btn" style="height:48px; padding:0 22px; border-radius:12px; font-size:0.95rem; white-space:nowrap; display:inline-flex; align-items:center; gap:8px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                Iskanje
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="checkin">Prihod</label>
-                        <input type="date" id="checkin">
+                    <!-- Vrstica 2: dodatni filtri (selecti) -->
+                    <div style="padding:12px 20px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:#f8fafc; border-top:1px solid #e2e8f0;">
+                        <span style="font-size:0.72rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.06em;">Filtri:</span>
+
+                        <div class="sel-wrap-inline">
+                            <select id="price" style="border:1px solid #e2e8f0; border-radius:999px; padding:6px 32px 6px 16px; font-size:0.85rem; font-weight:600; color:#334155; background:white; outline:none;">
+                                <option value="">Cena / noč</option>
+                                <option>Do 100 €</option>
+                                <option>100 – 250 €</option>
+                                <option>250 – 500 €</option>
+                                <option>500 €+</option>
+                            </select>
+                            <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+
+                        <div class="sel-wrap-inline">
+                            <select id="experience" style="border:1px solid #e2e8f0; border-radius:999px; padding:6px 32px 6px 16px; font-size:0.85rem; font-weight:600; color:#334155; background:white; outline:none;">
+                                <option value="">Vrsta izkušnje</option>
+                                <option>Romantični pobeg</option>
+                                <option>Družinske počitnice</option>
+                                <option>Avantura v naravi</option>
+                                <option>Luksuzni oddih</option>
+                                <option>Digitalni detox</option>
+                            </select>
+                            <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+
+                        <div class="sel-wrap-inline">
+                            <select id="rating" style="border:1px solid #e2e8f0; border-radius:999px; padding:6px 32px 6px 16px; font-size:0.85rem; font-weight:600; color:#334155; background:white; outline:none;">
+                                <option value="">Ocena gostov</option>
+                                <option>4.0 in več</option>
+                                <option>4.5 in več</option>
+                                <option>4.8 in več</option>
+                                <option>Samo 5.0</option>
+                            </select>
+                            <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="checkout">Odhod</label>
-                        <input type="date" id="checkout">
+                    <!-- Vrstica 3: ugodnosti (toggle pills) -->
+                    <div style="padding:12px 20px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:#f1f5f9; border-top:1px solid #e2e8f0;">
+                        <span style="font-size:0.72rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.06em;">Ugodnosti:</span>
+                        <label class="pill-toggle"><input type="checkbox"> Hišni ljubljenčki</label>
+                        <label class="pill-toggle"><input type="checkbox"> Zasebni bazen</label>
+                        <label class="pill-toggle"><input type="checkbox"> Zajtrk vključen</label>
+                        <label class="pill-toggle"><input type="checkbox"> Trajnostno</label>
+                        <label class="pill-toggle"><input type="checkbox"> Parkiranje</label>
+                        <label class="pill-toggle"><input type="checkbox"> Panoramski razgled</label>
                     </div>
 
-                    <div class="form-group">
-                        <label for="guests">Gostje</label>
-                        <select id="guests">
-                            <option>1 gost</option>
-                            <option>2 gosta</option>
-                            <option>3 gostje</option>
-                            <option>4 gostje</option>
-                            <option>5+ gostov</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="type">Tip prenočišča</label>
-                        <select id="type">
-                            <option>Vse vrste</option>
-                            <option>Drevesna hiška</option>
-                            <option>Gorska koča</option>
-                            <option>Glamping šotor</option>
-                            <option>Vila ob vodi</option>
-                            <option>Grad ali dvorec</option>
-                            <option>Iglu / ledeni hotel</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="price">Cenovni razpon</label>
-                        <select id="price">
-                            <option>Vse cene</option>
-                            <option>Do 100 € / noč</option>
-                            <option>100 € - 250 € / noč</option>
-                            <option>250 € - 500 € / noč</option>
-                            <option>500 €+ / noč</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="experience">Vrsta izkušnje</label>
-                        <select id="experience">
-                            <option>Vse izkušnje</option>
-                            <option>Romantični pobeg</option>
-                            <option>Družinske počitnice</option>
-                            <option>Avantura v naravi</option>
-                            <option>Luksuzni oddih</option>
-                            <option>Wellness sprostitev</option>
-                            <option>Digitalni detox</option>
-                            <option>Solo trip</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="location-type">Okolica</label>
-                        <select id="location-type">
-                            <option>Vse lokacije</option>
-                            <option>Popolna samota</option>
-                            <option>Blizu mesta</option>
-                            <option>Ob jezeru</option>
-                            <option>Ob morju</option>
-                            <option>V gorah</option>
-                            <option>V gozdu</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="access">Dostop</label>
-                        <select id="access">
-                            <option>Vse možnosti</option>
-                            <option>Dostop z avtom</option>
-                            <option>Dostop samo peš</option>
-                            <option>Dostop z ladjo</option>
-                            <option>Dostop s helikopterjem</option>
-                            <option>Dostop z vlakom</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="activities">Aktivnosti</label>
-                        <select id="activities">
-                            <option>Vse aktivnosti</option>
-                            <option>Pohodništvo</option>
-                            <option>Smučanje</option>
-                            <option>Potapljanje</option>
-                            <option>Safari</option>
-                            <option>Kolesarjenje</option>
-                            <option>Wellness</option>
-                            <option>Opazovanje severnega sija</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                       <label for="rating">Ocena gostov</label>
-                       <select id="rating">
-                            <option>Vse ocene</option>
-                            <option>4.0+ ⭐</option>
-                            <option>4.5+ ⭐</option>
-                            <option>4.8+ ⭐</option>
-                            <option>5.0 ⭐</option>
-                        </select>
-                    </div>
-
-                    <div class="checkbox-area">
-                        <span>Posebne želje</span>
-
-                        <label>
-                            <input type="checkbox">
-                            Hišni ljubljenčki
-                        </label>
-
-                        <label>
-                            <input type="checkbox">
-                            Zasebni bazen
-                        </label>
-
-                        <label>
-                            <input type="checkbox">
-                            Zajtrk vključen
-                        </label>
-
-                        <label>
-                            <input type="checkbox">
-                            Trajnostna nastanitev
-                        </label>
-
-                        <label>
-                            <input type="checkbox">
-                            Panoramski razgled
-                        </label>
-
-                        <label>
-                            <input type="checkbox">
-                            Parkiranje
-                        </label>
-                    </div>
-
-                    <button type="submit" class="search-btn">🔍 Iskanje</button>
                 </form>
+            </div>
+        </section>
+
+        <!-- ── STATS BAR ── -->
+        <section class="bg-white border-b border-slate-100 py-10 px-6">
+            <div class="max-w-4xl mx-auto flex flex-wrap justify-center items-center gap-0 divide-x divide-slate-200">
+                <div class="text-center px-10 py-2">
+                    <p class="text-4xl font-extrabold text-slate-900 tracking-tight">1.200+</p>
+                    <p class="text-sm text-slate-400 mt-2 font-medium uppercase tracking-widest">Posebnih lokacij</p>
+                </div>
+                <div class="text-center px-10 py-2">
+                    <p class="text-4xl font-extrabold text-slate-900 tracking-tight">48</p>
+                    <p class="text-sm text-slate-400 mt-2 font-medium uppercase tracking-widest">Držav</p>
+                </div>
+                <div class="text-center px-10 py-2">
+                    <p class="text-4xl font-extrabold text-slate-900 tracking-tight">32k+</p>
+                    <p class="text-sm text-slate-400 mt-2 font-medium uppercase tracking-widest">Zadovoljnih gostov</p>
+                </div>
+                <div class="text-center px-10 py-2">
+                    <p class="text-4xl font-extrabold text-slate-900 tracking-tight">4.9 ★</p>
+                    <p class="text-sm text-slate-400 mt-2 font-medium uppercase tracking-widest">Povprečna ocena</p>
+                </div>
             </div>
         </section>
 
@@ -190,26 +213,31 @@
             </div>
 
             <div class="feature-grid">
+                <!-- Tailwind: dodana zelena badge oznaka nad ikono -->
                 <article class="feature-card">
                     <div class="icon">🏔️</div>
+                    <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 text-xs font-bold">🗺️ Lokacije</span>
                     <h3>Edinstvene lokacije</h3>
                     <p>Prenočišča na gorskih vrhovih, v divjini, ob oceanu in na drugih posebnih krajih.</p>
                 </article>
 
                 <article class="feature-card">
                     <div class="icon">⭐</div>
+                    <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 text-xs font-bold">✅ Kakovost</span>
                     <h3>Preverjena kakovost</h3>
                     <p>Vsako prenočišče je izbrano glede na udobje, izkušnjo, lokacijo in varnost.</p>
                 </article>
 
                 <article class="feature-card">
                     <div class="icon">🌍</div>
+                    <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold">🌐 Globalno</span>
                     <h3>Globalna ponudba</h3>
                     <p>Od arktičnih iglujev do tropskih bungalovov — najdite svoj popoln pobeg.</p>
                 </article>
 
                 <article class="feature-card">
                     <div class="icon">🔒</div>
+                    <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs font-bold">🔐 Varnost</span>
                     <h3>Varno plačilo</h3>
                     <p>Varna rezervacija, zaščita podatkov in podpora uporabnikom ob vsakem koraku.</p>
                 </article>
@@ -227,10 +255,10 @@
                 <button>🏝️ Privatni otoki</button>
                 <button>🌲 Drevesne hiške</button>
                 <button>❄️ Polarne izkušnje</button>
-                <button>🏜️ Puščavski glamp</button>
+                <button>🏜️ Puščavski glamping</button>
                 <button>🌊 Podvodni hoteli</button>
-                <button>🏰 Gradovi & dvorci</button>
-                <button>🚂 Luksuzni vlaki</button>
+                <button>🏰 Gradovi &amp; dvorci</button>
+                <button>🚂 Vintage vlaki</button>
                 <button>⛰️ Viseči hoteli</button>
                 <button>🦒 Safari lodges</button>
             </div>
@@ -245,6 +273,10 @@
             <div class="destination-grid">
                 <article class="destination-card iceland">
                     <div>
+                        <!-- Tailwind: badge na vsaki destinaciji -->
+                        <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-sm">
+                            ❄️ Zima
+                        </span>
                         <h3>Islandija</h3>
                         <p>Ledeni hoteli & severni sij</p>
                     </div>
@@ -252,6 +284,9 @@
 
                 <article class="destination-card maldives">
                     <div>
+                        <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-sm">
+                            🌊 Celo leto
+                        </span>
                         <h3>Maldivi</h3>
                         <p>Podvodni hoteli & vile</p>
                     </div>
@@ -259,6 +294,9 @@
 
                 <article class="destination-card switzerland">
                     <div>
+                        <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-sm">
+                            ⛷️ Zima / Poletje
+                        </span>
                         <h3>Švica</h3>
                         <p>Alpske koče na vrhovih</p>
                     </div>
@@ -266,6 +304,9 @@
 
                 <article class="destination-card costa-rica">
                     <div>
+                        <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-sm">
+                            🌿 Poletje
+                        </span>
                         <h3>Kostarika</h3>
                         <p>Drevesne hiške v džungli</p>
                     </div>
@@ -273,6 +314,9 @@
 
                 <article class="destination-card namibia">
                     <div>
+                        <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-sm">
+                            ☀️ Celo leto
+                        </span>
                         <h3>Namibija</h3>
                         <p>Puščavski luksuz</p>
                     </div>
@@ -280,10 +324,30 @@
 
                 <article class="destination-card norway">
                     <div>
+                        <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-sm">
+                            🌌 Jesen / Zima
+                        </span>
                         <h3>Norveška</h3>
                         <p>Kabine ob fjordih</p>
                     </div>
                 </article>
+            </div>
+        </section>
+
+        <!-- ── CTA BANNER (nova sekcija s Tailwindom) ── -->
+        <section class="bg-slate-900 py-16 px-6 text-center text-white">
+            <p class="text-sm font-bold tracking-widest text-teal-400 uppercase mb-3">Za lastnike posebnih prostorov</p>
+            <h2 class="text-3xl md:text-4xl font-extrabold mb-4 tracking-tight">Imate posebno lokacijo?</h2>
+            <p class="text-slate-400 max-w-xl mx-auto mb-8 text-lg">
+                Grad, jama, svetilnik ali hiška na drevesu — objavite jo na UniqueStays in dosezite tisoče gostov.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <button class="px-6 py-3 rounded-full bg-teal-500 hover:bg-teal-400 text-white font-bold transition-all duration-200 hover:-translate-y-1">
+                    Postanite lastnik
+                </button>
+                <button class="px-6 py-3 rounded-full bg-teal-500 hover:bg-teal-400 text-white font-bold transition-all duration-200 hover:-translate-y-1">
+                    Več informacij
+                </button>
             </div>
         </section>
 
@@ -295,6 +359,12 @@
                     UniqueStays združuje najbolj posebna prenočišča na svetu.
                     Naš cilj je, da vsako potovanje postane zgodba, ki si jo zapomnite.
                 </p>
+                <!-- Tailwind: gumb v about sekciji -->
+                <div class="mt-8">
+                    <button class="px-8 py-3 rounded-full bg-white text-slate-900 font-bold hover:bg-teal-400 hover:text-white transition-all duration-200">
+                        Začni iskati →
+                    </button>
+                </div>
             </div>
         </section>
     </main>
@@ -304,6 +374,18 @@
             <div>
                 <h3>UniqueStays</h3>
                 <p>Najdite svoj popoln pobeg na najbolj posebnih krajih sveta.</p>
+                <!-- Tailwind: social ikonice -->
+                <div class="flex gap-3 mt-4">
+                    <a href="#" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="X / Twitter">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.736-8.856L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="Instagram">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/></svg>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="YouTube">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.2 2.8 12 2.8 12 2.8s-4.2 0-6.8.2c-.6 0-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.2.7 11.4v2.1C.7 15.7 1 18 1 18s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.6 22.2 12 22.2 12 22.2s4.2 0 6.8-.3c.6-.1 1.9-.2 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.2.3-4.4v-2.1C23.3 9.2 23 7 23 7zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>
+                    </a>
+                </div>
             </div>
 
             <div>
