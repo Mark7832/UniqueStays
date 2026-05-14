@@ -1,427 +1,483 @@
+
 <!DOCTYPE html>
 <html lang="sl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniqueStays - Odkrijte izjemna prenočišča na posebnih krajih</title>
-    <!-- Tailwind CDN -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UniqueStays</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script>
         tailwind.config = {
-            corePlugins: { preflight: false }, /* NE resetira tvojega CSS-a */
             theme: {
                 extend: {
                     colors: {
                         primary: '#2563eb',
-                        secondary: '#14b8a6',
-                        dark: '#0f172a',
+                        secondary: '#14b8a6'
                     }
                 }
             }
         }
     </script>
-    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="bg-slate-50 text-slate-700 antialiased">
 
-    <header>
-        <nav class="navbar">
-            <div class="logo">✨ UniqueStays</div>
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-xl">
+        <nav class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
 
-            <div class="nav-links">
-                <a href="#destinations">Destinacije</a>
-                <a href="#experiences">Izkušnje</a>
-                <a href="#about">O nas</a>
-                <!-- Tailwind: dodane pill badge oznake -->
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">
+            <div class="text-2xl font-extrabold text-slate-900">
+                ✨ UniqueStays
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-5">
+                <a href="#destinations" class="font-semibold hover:text-blue-600 transition">Destinacije</a>
+                <a href="#experiences" class="font-semibold hover:text-blue-600 transition">Izkušnje</a>
+                <a href="#about" class="font-semibold hover:text-blue-600 transition">O nas</a>
+
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">
                     Novo
                 </span>
-                <button class="login-btn">Prijava</button>
+
+                <button class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                    Prijava
+                </button>
             </div>
         </nav>
     </header>
 
-    <main>
-        <section class="hero">
-            <div class="hero-content">
-                <!-- Tailwind: flex za eyebrow + badge -->
-                <div class="flex items-center gap-3 mb-4 flex-wrap">
-                    <p class="eyebrow">Edinstvena prenočišča po svetu</p>
-                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-teal-400/20 text-teal-200 text-xs font-bold tracking-wide border border-teal-400/30">
-                        🏠 1.200+ lokacij
-                    </span>
-                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-400/20 text-blue-200 text-xs font-bold tracking-wide border border-blue-400/30">
-                        ⭐ 4.9 ocena
-                    </span>
-                </div>
 
-                <h1>Odkrijte svet izjemnih prenočišč</h1>
-                <p class="hero-text">
-                    Prespite v drevesni hiški, ledenem hotelu, gorski koči, na ladji, dvorcu ali v vili pod oceanom.
-                </p>
+    <!-- HERO -->
+    <section class="min-h-[90vh] px-6 py-24 flex items-center bg-gradient-to-br from-slate-900 via-blue-900 to-teal-800 relative overflow-hidden">
 
-                <style>
-                    .sel-wrap { position: relative; display: inline-flex; flex-direction: column; }
-                    .sel-wrap select { -webkit-appearance: none; appearance: none; padding-right: 28px; cursor: pointer; }
-                    .sel-wrap .chev { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #94a3b8; }
-                    .sel-wrap-inline { position: relative; display: inline-block; }
-                    .sel-wrap-inline select { -webkit-appearance: none; appearance: none; padding-right: 28px; cursor: pointer; }
-                    .sel-wrap-inline .chev { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #94a3b8; }
-                    .pill-toggle input { display: none; }
-                    .pill-toggle { display: inline-flex; align-items: center; padding: 6px 16px; border: 1px solid #e2e8f0; border-radius: 999px; font-size: 0.85rem; font-weight: 600; color: #334155; background: white; cursor: pointer; transition: all 0.15s; user-select: none; }
-                    .pill-toggle:has(input:checked) { background: #0f172a; color: white; border-color: #0f172a; }
-                </style>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.3),transparent_30%)]"></div>
 
-                <form class="search-box" style="display:flex; flex-direction:column; gap:0; padding:0; border-radius:20px; overflow:hidden;">
+        <div class="max-w-7xl mx-auto w-full relative z-10 text-white">
 
-                    <!-- Vrstica 1: glavni iskalni filtri -->
-                    <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr 1fr auto; gap:0;">
+            <div class="flex flex-wrap items-center gap-3 mb-6">
+                <span class="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-sm font-bold uppercase tracking-wider">
+                    Edinstvena prenočišča po svetu
+                </span>
 
-                        <div style="padding:16px 20px; border-right:1px solid #e2e8f0; display:flex; flex-direction:column; gap:5px;">
-                            <label for="location" style="font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:#64748b; font-weight:700;">Destinacija</label>
-                            <input type="text" id="location" placeholder="Kam greste?" style="border:none; padding:0; font-size:0.95rem; font-weight:600; color:#0f172a; background:transparent; outline:none; width:100%;">
-                        </div>
+                <span class="px-4 py-2 rounded-full bg-teal-400/20 border border-teal-300/20 text-teal-100 text-sm font-bold">
+                    🏠 1.200+ lokacij
+                </span>
 
-                        <div style="padding:16px 20px; border-right:1px solid #e2e8f0; display:flex; flex-direction:column; gap:5px;">
-                            <label for="checkin" style="font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:#64748b; font-weight:700;">Prihod</label>
-                            <input type="date" id="checkin" style="border:none; padding:0; font-size:0.9rem; font-weight:600; color:#0f172a; background:transparent; outline:none; width:100%;">
-                        </div>
-
-                        <div style="padding:16px 20px; border-right:1px solid #e2e8f0; display:flex; flex-direction:column; gap:5px;">
-                            <label for="checkout" style="font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:#64748b; font-weight:700;">Odhod</label>
-                            <input type="date" id="checkout" style="border:none; padding:0; font-size:0.9rem; font-weight:600; color:#0f172a; background:transparent; outline:none; width:100%;">
-                        </div>
-
-                        <div style="padding:16px 20px; border-right:1px solid #e2e8f0; display:flex; flex-direction:column; gap:5px;">
-                            <label for="guests" style="font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:#64748b; font-weight:700;">Gostje</label>
-                            <div class="sel-wrap" style="width:100%;">
-                                <select id="guests" style="border:none; padding:0; font-size:0.95rem; font-weight:600; color:#0f172a; background:transparent; outline:none; width:100%;">
-                                    <option value="1">1 gost</option>
-                                    <option value="2">2 gosta</option>
-                                    <option value="3">3 gostje</option>
-                                    <option value="4">4 gostje</option>
-                                    <option value="5">5+ gostov</option>
-                                </select>
-                                <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-                            </div>
-                        </div>
-
-                        <div style="padding:16px 20px; border-right:1px solid #e2e8f0; display:flex; flex-direction:column; gap:5px;">
-                            <label for="type" style="font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:#64748b; font-weight:700;">Tip lokacije</label>
-                            <div class="sel-wrap" style="width:100%;">
-                                <select id="type" style="border:none; padding:0; font-size:0.95rem; font-weight:600; color:#0f172a; background:transparent; outline:none; width:100%;">
-                                    <option value="">Vse vrste</option>
-                                    <option>Drevesna hiška</option>
-                                    <option>Gorska koča</option>
-                                    <option>Glamping šotor</option>
-                                    <option>Vila ob vodi</option>
-                                    <option>Grad ali dvorec</option>
-                                    <option>Iglu / ledeni hotel</option>
-                                </select>
-                                <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-                            </div>
-                        </div>
-
-                        <div style="padding:10px; display:flex; align-items:center;">
-                            <button type="submit" class="search-btn" style="height:48px; padding:0 22px; border-radius:12px; font-size:0.95rem; white-space:nowrap; display:inline-flex; align-items:center; gap:8px;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                                Iskanje
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Vrstica 2: dodatni filtri (selecti) -->
-                    <div style="padding:12px 20px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:#f8fafc; border-top:1px solid #e2e8f0;">
-                        <span style="font-size:0.72rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.06em;">Filtri:</span>
-
-                        <div class="sel-wrap-inline">
-                            <select id="price" style="border:1px solid #e2e8f0; border-radius:999px; padding:6px 32px 6px 16px; font-size:0.85rem; font-weight:600; color:#334155; background:white; outline:none;">
-                                <option value="">Cena / noč</option>
-                                <option>Do 100 €</option>
-                                <option>100 – 250 €</option>
-                                <option>250 – 500 €</option>
-                                <option>500 €+</option>
-                            </select>
-                            <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-                        </div>
-
-                        <div class="sel-wrap-inline">
-                            <select id="experience" style="border:1px solid #e2e8f0; border-radius:999px; padding:6px 32px 6px 16px; font-size:0.85rem; font-weight:600; color:#334155; background:white; outline:none;">
-                                <option value="">Vrsta izkušnje</option>
-                                <option>Romantični pobeg</option>
-                                <option>Družinske počitnice</option>
-                                <option>Avantura v naravi</option>
-                                <option>Luksuzni oddih</option>
-                                <option>Digitalni detox</option>
-                            </select>
-                            <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-                        </div>
-
-                        <div class="sel-wrap-inline">
-                            <select id="rating" style="border:1px solid #e2e8f0; border-radius:999px; padding:6px 32px 6px 16px; font-size:0.85rem; font-weight:600; color:#334155; background:white; outline:none;">
-                                <option value="">Ocena gostov</option>
-                                <option>4.0 in več</option>
-                                <option>4.5 in več</option>
-                                <option>4.8 in več</option>
-                                <option>Samo 5.0</option>
-                            </select>
-                            <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-                        </div>
-                    </div>
-
-                    <!-- Vrstica 3: ugodnosti (toggle pills) -->
-                    <div style="padding:12px 20px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:#f1f5f9; border-top:1px solid #e2e8f0;">
-                        <span style="font-size:0.72rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.06em;">Ugodnosti:</span>
-                        <label class="pill-toggle"><input type="checkbox"> Hišni ljubljenčki</label>
-                        <label class="pill-toggle"><input type="checkbox"> Zasebni bazen</label>
-                        <label class="pill-toggle"><input type="checkbox"> Zajtrk vključen</label>
-                        <label class="pill-toggle"><input type="checkbox"> Trajnostno</label>
-                        <label class="pill-toggle"><input type="checkbox"> Parkiranje</label>
-                        <label class="pill-toggle"><input type="checkbox"> Panoramski razgled</label>
-                    </div>
-
-                </form>
-            </div>
-        </section>
-
-        <!-- ── STATS BAR ── -->
-        <section class="bg-white border-b border-slate-100 py-10 px-6">
-            <div class="max-w-4xl mx-auto flex flex-wrap justify-center items-center gap-0 divide-x divide-slate-200">
-                <div class="text-center px-10 py-2">
-                    <p class="text-4xl font-extrabold text-slate-900 tracking-tight">1.200+</p>
-                    <p class="text-sm text-slate-400 mt-2 font-medium uppercase tracking-widest">Posebnih lokacij</p>
-                </div>
-                <div class="text-center px-10 py-2">
-                    <p class="text-4xl font-extrabold text-slate-900 tracking-tight">48</p>
-                    <p class="text-sm text-slate-400 mt-2 font-medium uppercase tracking-widest">Držav</p>
-                </div>
-                <div class="text-center px-10 py-2">
-                    <p class="text-4xl font-extrabold text-slate-900 tracking-tight">32k+</p>
-                    <p class="text-sm text-slate-400 mt-2 font-medium uppercase tracking-widest">Zadovoljnih gostov</p>
-                </div>
-                <div class="text-center px-10 py-2">
-                    <p class="text-4xl font-extrabold text-slate-900 tracking-tight">4.9 ★</p>
-                    <p class="text-sm text-slate-400 mt-2 font-medium uppercase tracking-widest">Povprečna ocena</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="features">
-            <div class="section-heading">
-                <h2>Zakaj UniqueStays?</h2>
-                <p>Ker običajen hotel ni vedno dovolj posebno doživetje.</p>
+                <span class="px-4 py-2 rounded-full bg-blue-400/20 border border-blue-300/20 text-blue-100 text-sm font-bold">
+                    ⭐ 4.9 ocena
+                </span>
             </div>
 
-            <div class="feature-grid">
-                <!-- Tailwind: dodana zelena badge oznaka nad ikono -->
-                <article class="feature-card">
-                    <div class="icon">🏔️</div>
-                    <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 text-xs font-bold">🗺️ Lokacije</span>
-                    <h3>Edinstvene lokacije</h3>
-                    <p>Prenočišča na gorskih vrhovih, v divjini, ob oceanu in na drugih posebnih krajih.</p>
-                </article>
+            <h1 class="max-w-5xl text-5xl md:text-7xl font-extrabold tracking-tight leading-none mb-8">
+                Odkrijte svet izjemnih prenočišč
+            </h1>
 
-                <article class="feature-card">
-                    <div class="icon">⭐</div>
-                    <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 text-xs font-bold">✅ Kakovost</span>
-                    <h3>Preverjena kakovost</h3>
-                    <p>Vsako prenočišče je izbrano glede na udobje, izkušnjo, lokacijo in varnost.</p>
-                </article>
-
-                <article class="feature-card">
-                    <div class="icon">🌍</div>
-                    <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold">🌐 Globalno</span>
-                    <h3>Globalna ponudba</h3>
-                    <p>Od arktičnih iglujev do tropskih bungalovov — najdite svoj popoln pobeg.</p>
-                </article>
-
-                <article class="feature-card">
-                    <div class="icon">🔒</div>
-                    <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs font-bold">🔐 Varnost</span>
-                    <h3>Varno plačilo</h3>
-                    <p>Varna rezervacija, zaščita podatkov in podpora uporabnikom ob vsakem koraku.</p>
-                </article>
-            </div>
-        </section>
-
-        <section id="experiences" class="filters-section">
-            <div class="section-heading">
-                <h2>Raziskujte po vrsti izkušnje</h2>
-                <p>Izberite slog potovanja, ki vam najbolj ustreza.</p>
-            </div>
-
-            <div class="filter-buttons">
-                <button>🏔️ Gorske koče</button>
-                <button>🏝️ Privatni otoki</button>
-                <button>🌲 Drevesne hiške</button>
-                <button>❄️ Polarne izkušnje</button>
-                <button>🏜️ Puščavski glamping</button>
-                <button>🌊 Podvodni hoteli</button>
-                <button>🏰 Gradovi &amp; dvorci</button>
-                <button>🚂 Vintage vlaki</button>
-                <button>⛰️ Viseči hoteli</button>
-                <button>🦒 Safari lodges</button>
-            </div>
-        </section>
-
-        <section id="destinations" class="destinations">
-            <div class="section-heading">
-                <h2>Priljubljene destinacije</h2>
-                <p>Odkrijte najbolj iskane edinstvene kraje tega meseca.</p>
-            </div>
-
-            <div class="destination-grid">
-                <article class="destination-card iceland">
-                    <div>
-                        <!-- Tailwind: badge na vsaki destinaciji -->
-                        <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-sm">
-                            ❄️ Zima
-                        </span>
-                        <h3>Islandija</h3>
-                        <p>Ledeni hoteli & severni sij</p>
-                    </div>
-                </article>
-
-                <article class="destination-card maldives">
-                    <div>
-                        <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-sm">
-                            🌊 Celo leto
-                        </span>
-                        <h3>Maldivi</h3>
-                        <p>Podvodni hoteli & vile</p>
-                    </div>
-                </article>
-
-                <article class="destination-card switzerland">
-                    <div>
-                        <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-sm">
-                            ⛷️ Zima / Poletje
-                        </span>
-                        <h3>Švica</h3>
-                        <p>Alpske koče na vrhovih</p>
-                    </div>
-                </article>
-
-                <article class="destination-card costa-rica">
-                    <div>
-                        <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-sm">
-                            🌿 Poletje
-                        </span>
-                        <h3>Kostarika</h3>
-                        <p>Drevesne hiške v džungli</p>
-                    </div>
-                </article>
-
-                <article class="destination-card namibia">
-                    <div>
-                        <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-sm">
-                            ☀️ Celo leto
-                        </span>
-                        <h3>Namibija</h3>
-                        <p>Puščavski luksuz</p>
-                    </div>
-                </article>
-
-                <article class="destination-card norway">
-                    <div>
-                        <span class="inline-block mb-2 px-2 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-sm">
-                            🌌 Jesen / Zima
-                        </span>
-                        <h3>Norveška</h3>
-                        <p>Kabine ob fjordih</p>
-                    </div>
-                </article>
-            </div>
-        </section>
-
-        <!-- ── CTA BANNER (nova sekcija s Tailwindom) ── -->
-        <section class="bg-slate-900 py-16 px-6 text-center text-white">
-            <p class="text-sm font-bold tracking-widest text-teal-400 uppercase mb-3">Za lastnike posebnih prostorov</p>
-            <h2 class="text-3xl md:text-4xl font-extrabold mb-4 tracking-tight">Imate posebno lokacijo?</h2>
-            <p class="text-slate-400 max-w-xl mx-auto mb-8 text-lg">
-                Grad, jama, svetilnik ali hiška na drevesu — objavite jo na UniqueStays in dosezite tisoče gostov.
+            <p class="max-w-3xl text-lg md:text-2xl text-white/80 leading-relaxed mb-10">
+                Prespite v drevesni hiški, ledenem hotelu, gorski koči,
+                na ladji, dvorcu ali v vili pod oceanom.
             </p>
-            <div class="flex flex-wrap justify-center gap-4">
-                <button class="px-6 py-3 rounded-full bg-teal-500 hover:bg-teal-400 text-white font-bold transition-all duration-200 hover:-translate-y-1">
-                    Postanite lastnik
-                </button>
-                <button class="px-6 py-3 rounded-full bg-teal-500 hover:bg-teal-400 text-white font-bold transition-all duration-200 hover:-translate-y-1">
-                    Več informacij
-                </button>
-            </div>
-        </section>
 
-        <section id="about" class="about">
+
+            <!-- SEARCH -->
+            <form class="overflow-hidden rounded-[28px] bg-white text-slate-900 shadow-2xl border border-white/10">
+
+                <div class="grid xl:grid-cols-6 md:grid-cols-2">
+
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
+                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
+                            Destinacija
+                        </label>
+
+                        <input
+                            type="text"
+                            placeholder="Kam greste?"
+                            class="w-full bg-transparent outline-none font-semibold"
+                        />
+                    </div>
+
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
+                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
+                            Prihod
+                        </label>
+
+                        <input
+                            type="date"
+                            class="w-full bg-transparent outline-none font-semibold"
+                        />
+                    </div>
+
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
+                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
+                            Odhod
+                        </label>
+
+                        <input
+                            type="date"
+                            class="w-full bg-transparent outline-none font-semibold"
+                        />
+                    </div>
+
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
+                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
+                            Gostje
+                        </label>
+
+                        <select class="w-full bg-transparent outline-none font-semibold appearance-none cursor-pointer">
+                            <option>1 gost</option>
+                            <option>2 gosta</option>
+                            <option>3 gostje</option>
+                            <option>4 gostje</option>
+                            <option>5+ gostov</option>
+                        </select>
+                    </div>
+
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
+                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
+                            Tip lokacije
+                        </label>
+
+                        <select class="w-full bg-transparent outline-none font-semibold appearance-none cursor-pointer">
+                            <option>Vse vrste</option>
+                            <option>Drevesna hiška</option>
+                            <option>Gorska koča</option>
+                            <option>Glamping šotor</option>
+                        </select>
+                    </div>
+
+                    <div class="p-4 flex items-center justify-center">
+                        <button class="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.02] transition-all duration-200 shadow-lg">
+                            Iskanje
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- FILTERS -->
+                <div class="border-t border-slate-200 bg-slate-50 px-5 py-4 flex flex-wrap gap-3 items-center">
+
+                    <span class="text-xs uppercase tracking-widest font-bold text-slate-400">
+                        Filtri:
+                    </span>
+
+                    <select class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm">
+                        <option>Cena / noč</option>
+                    </select>
+
+                    <select class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm">
+                        <option>Vrsta izkušnje</option>
+                    </select>
+
+                    <select class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm">
+                        <option>Ocena gostov</option>
+                    </select>
+                </div>
+
+
+                <!-- AMENITIES -->
+                <div class="border-t border-slate-200 bg-slate-100 px-5 py-4 flex flex-wrap gap-3 items-center">
+
+                    <span class="text-xs uppercase tracking-widest font-bold text-slate-400">
+                        Ugodnosti:
+                    </span>
+
+                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
+                        <input type="checkbox" />
+                        Hišni ljubljenčki
+                    </label>
+
+                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
+                        <input type="checkbox" />
+                        Zasebni bazen
+                    </label>
+
+                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
+                        <input type="checkbox" />
+                        Trajnostno
+                    </label>
+                </div>
+            </form>
+        </div>
+    </section>
+
+
+    <!-- STATS -->
+    <section class="bg-white border-b border-slate-100 py-12 px-6">
+
+        <div class="max-w-5xl mx-auto grid md:grid-cols-4 gap-8 text-center">
+
             <div>
-                <p class="eyebrow">O nas</p>
-                <h2>Za ljudi, ki iščejo nekaj več kot samo sobo.</h2>
-                <p>
-                    UniqueStays združuje najbolj posebna prenočišča na svetu.
-                    Naš cilj je, da vsako potovanje postane zgodba, ki si jo zapomnite.
+                <h3 class="text-5xl font-extrabold text-slate-900">1.200+</h3>
+                <p class="mt-2 text-sm uppercase tracking-widest text-slate-400 font-bold">
+                    Posebnih lokacij
                 </p>
-                <!-- Tailwind: gumb v about sekciji -->
-                <div class="mt-8">
-                    <button class="px-8 py-3 rounded-full bg-white text-slate-900 font-bold hover:bg-teal-400 hover:text-white transition-all duration-200">
-                        Začni iskati →
-                    </button>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="footer-grid">
-            <div>
-                <h3>UniqueStays</h3>
-                <p>Najdite svoj popoln pobeg na najbolj posebnih krajih sveta.</p>
-                <!-- Tailwind: social ikonice -->
-                <div class="flex gap-3 mt-4">
-                    <a href="#" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="X / Twitter">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.736-8.856L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-                    </a>
-                    <a href="#" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="Instagram">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/></svg>
-                    </a>
-                    <a href="#" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="YouTube">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.2 2.8 12 2.8 12 2.8s-4.2 0-6.8.2c-.6 0-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.2.7 11.4v2.1C.7 15.7 1 18 1 18s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.6 22.2 12 22.2 12 22.2s4.2 0 6.8-.3c.6-.1 1.9-.2 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.2.3-4.4v-2.1C23.3 9.2 23 7 23 7zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>
-                    </a>
-                </div>
             </div>
 
             <div>
-                <h3>Podpora</h3>
-                <ul>
-                    <li><a href="#">Pomoč center</a></li>
-                    <li><a href="#">Pogosta vprašanja</a></li>
-                    <li><a href="#">Preklic rezervacije</a></li>
-                    <li><a href="#">Kontakt</a></li>
+                <h3 class="text-5xl font-extrabold text-slate-900">48</h3>
+                <p class="mt-2 text-sm uppercase tracking-widest text-slate-400 font-bold">
+                    Držav
+                </p>
+            </div>
+
+            <div>
+                <h3 class="text-5xl font-extrabold text-slate-900">32k+</h3>
+                <p class="mt-2 text-sm uppercase tracking-widest text-slate-400 font-bold">
+                    Zadovoljnih gostov
+                </p>
+            </div>
+
+            <div>
+                <h3 class="text-5xl font-extrabold text-slate-900">4.9 ★</h3>
+                <p class="mt-2 text-sm uppercase tracking-widest text-slate-400 font-bold">
+                    Povprečna ocena
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- FEATURES -->
+    <section class="py-24 px-6 bg-white">
+
+        <div class="max-w-3xl mx-auto text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-5">
+                Zakaj UniqueStays?
+            </h2>
+
+            <p class="text-lg text-slate-500">
+                Ker običajen hotel ni vedno dovolj posebno doživetje.
+            </p>
+        </div>
+
+
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+
+            <article class="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
+                <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-3xl mb-6 shadow-sm">
+                    🏔️
+                </div>
+
+                <span class="inline-block mb-4 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">
+                    🗺️ Lokacije
+                </span>
+
+                <h3 class="text-2xl font-bold text-slate-900 mb-3">
+                    Edinstvene lokacije
+                </h3>
+
+                <p class="text-slate-500 leading-relaxed">
+                    Prenočišča na gorskih vrhovih, v divjini, ob oceanu in na drugih posebnih krajih.
+                </p>
+            </article>
+
+
+            <article class="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
+                <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-3xl mb-6 shadow-sm">
+                    ⭐
+                </div>
+
+                <span class="inline-block mb-4 px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-bold">
+                    ✅ Kakovost
+                </span>
+
+                <h3 class="text-2xl font-bold text-slate-900 mb-3">
+                    Preverjena kakovost
+                </h3>
+
+                <p class="text-slate-500 leading-relaxed">
+                    Vsako prenočišče je izbrano glede na udobje, izkušnjo, lokacijo in varnost.
+                </p>
+            </article>
+
+
+            <article class="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
+                <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-3xl mb-6 shadow-sm">
+                    🌍
+                </div>
+
+                <span class="inline-block mb-4 px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">
+                    🌐 Globalno
+                </span>
+
+                <h3 class="text-2xl font-bold text-slate-900 mb-3">
+                    Globalna ponudba
+                </h3>
+
+                <p class="text-slate-500 leading-relaxed">
+                    Od arktičnih iglujev do tropskih bungalovov.
+                </p>
+            </article>
+
+
+            <article class="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
+                <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-3xl mb-6 shadow-sm">
+                    🔒
+                </div>
+
+                <span class="inline-block mb-4 px-3 py-1 rounded-full bg-slate-200 text-slate-700 text-xs font-bold">
+                    🔐 Varnost
+                </span>
+
+                <h3 class="text-2xl font-bold text-slate-900 mb-3">
+                    Varno plačilo
+                </h3>
+
+                <p class="text-slate-500 leading-relaxed">
+                    Varna rezervacija in zaščita podatkov.
+                </p>
+            </article>
+        </div>
+    </section>
+
+
+    <!-- DESTINATIONS -->
+    <section id="destinations" class="py-24 px-6 bg-slate-50">
+
+        <div class="max-w-3xl mx-auto text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-5">
+                Priljubljene destinacije
+            </h2>
+
+            <p class="text-lg text-slate-500">
+                Odkrijte najbolj iskane edinstvene kraje tega meseca.
+            </p>
+        </div>
+
+
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+            <article class="destination-card bg-[url('images/islandija.jpg')]">
+                <div>
+                    <span class="destination-badge">❄️ Zima</span>
+                    <h3 class="destination-title">Islandija</h3>
+                    <p class="destination-text">Ledeni hoteli & severni sij</p>
+                </div>
+            </article>
+
+            <article class="destination-card bg-[url('images/maldivi.jpg')]">
+                <div>
+                    <span class="destination-badge">🌊 Celo leto</span>
+                    <h3 class="destination-title">Maldivi</h3>
+                    <p class="destination-text">Podvodni hoteli & vile</p>
+                </div>
+            </article>
+
+            <article class="destination-card bg-[url('images/svica.jpg')]">
+                <div>
+                    <span class="destination-badge">⛷️ Zima / Poletje</span>
+                    <h3 class="destination-title">Švica</h3>
+                    <p class="destination-text">Alpske koče na vrhovih</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+
+    <!-- CTA -->
+    <section class="bg-slate-900 py-24 px-6 text-center text-white">
+
+        <p class="uppercase tracking-[0.3em] text-teal-400 font-bold text-sm mb-4">
+            Za lastnike posebnih prostorov
+        </p>
+
+        <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">
+            Imate posebno lokacijo?
+        </h2>
+
+        <p class="max-w-2xl mx-auto text-lg text-slate-400 mb-10 leading-relaxed">
+            Grad, jama, svetilnik ali hiška na drevesu — objavite jo na UniqueStays.
+        </p>
+
+        <div class="flex flex-wrap justify-center gap-4">
+
+            <button class="px-8 py-4 rounded-full bg-teal-500 hover:bg-teal-400 font-bold transition-all hover:-translate-y-1">
+                Postanite lastnik
+            </button>
+
+            <button class="px-8 py-4 rounded-full bg-white text-slate-900 hover:bg-slate-200 font-bold transition-all hover:-translate-y-1">
+                Več informacij
+            </button>
+        </div>
+    </section>
+
+
+    <!-- ABOUT -->
+    <section id="about" class="py-24 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white text-center">
+
+        <div class="max-w-4xl mx-auto">
+
+            <span class="inline-block px-4 py-2 rounded-full bg-white/10 text-sm font-bold uppercase tracking-widest mb-6">
+                O nas
+            </span>
+
+            <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-8">
+                Za ljudi, ki iščejo nekaj več kot samo sobo.
+            </h2>
+
+            <p class="text-lg md:text-2xl text-white/70 leading-relaxed mb-10">
+                UniqueStays združuje najbolj posebna prenočišča na svetu.
+            </p>
+
+            <button class="px-8 py-4 rounded-full bg-white text-slate-900 font-bold hover:bg-teal-400 hover:text-white transition-all duration-200 hover:-translate-y-1">
+                Začni iskati →
+            </button>
+        </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 text-white px-6 pt-20 pb-10">
+
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-4 gap-10 border-b border-white/10 pb-10">
+
+            <div>
+                <h3 class="text-2xl font-bold mb-4">UniqueStays</h3>
+
+                <p class="text-white/60 leading-relaxed mb-5">
+                    Najdite svoj popoln pobeg na najbolj posebnih krajih sveta.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-lg mb-4">Podpora</h3>
+
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="#" class="hover:text-white transition">Pomoč center</a></li>
+                    <li><a href="#" class="hover:text-white transition">Kontakt</a></li>
+                    <li><a href="#" class="hover:text-white transition">Pogosta vprašanja</a></li>
                 </ul>
             </div>
 
             <div>
-                <h3>Podjetje</h3>
-                <ul>
-                    <li><a href="#">O nas</a></li>
-                    <li><a href="#">Kariere</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Partnerji</a></li>
+                <h3 class="font-bold text-lg mb-4">Podjetje</h3>
+
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="#" class="hover:text-white transition">O nas</a></li>
+                    <li><a href="#" class="hover:text-white transition">Blog</a></li>
+                    <li><a href="#" class="hover:text-white transition">Partnerji</a></li>
                 </ul>
             </div>
 
             <div>
-                <h3>Pravno</h3>
-                <ul>
-                    <li><a href="#">Pogoji uporabe</a></li>
-                    <li><a href="#">Politika zasebnosti</a></li>
-                    <li><a href="#">Piškotki</a></li>
+                <h3 class="font-bold text-lg mb-4">Pravno</h3>
+
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="#" class="hover:text-white transition">Pogoji uporabe</a></li>
+                    <li><a href="#" class="hover:text-white transition">Politika zasebnosti</a></li>
+                    <li><a href="#" class="hover:text-white transition">Piškotki</a></li>
                 </ul>
             </div>
         </div>
 
-        <div class="footer-bottom">
-            <p>&copy; 2026 UniqueStays. Vse pravice pridržane.</p>
+
+        <div class="max-w-7xl mx-auto pt-8 text-center text-white/40 text-sm">
+            © 2026 UniqueStays. Vse pravice pridržane.
         </div>
     </footer>
 
 </body>
 </html>
+
