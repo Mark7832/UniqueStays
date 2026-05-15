@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UniqueStays</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#14b8a6'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-slate-50 text-slate-700 antialiased">
+
+    <!--header-->
+    <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-xl">
+        <nav class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+
+            <div class="text-2xl font-extrabold text-slate-900">
+                ✨ UniqueStays
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-5">
+                <a href="#about" class="font-semibold hover:text-blue-600 transition">O nas</a>
+
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">
+                    Novo
+                </span>
+
+                <button class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                    Prijava
+                </button>
+            </div>
+        </nav>
+    </header>
+    <!--zgornja sekcija-->
+    <section class="min-h-[90vh] px-6 py-24 flex items-center bg-gradient-to-br from-slate-900 via-blue-900 to-teal-800 relative overflow-hidden">
+
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.3),transparent_30%)]"></div>
+
+        <div class="max-w-7xl mx-auto w-full relative z-10 text-white">
+
+            <div class="flex flex-wrap items-center gap-3 mb-6">
+                <span class="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-sm font-bold uppercase tracking-wider">
+                    Edinstvena prenočišča po svetu
+                </span>
+
+                <span class="px-4 py-2 rounded-full bg-teal-400/20 border border-teal-300/20 text-teal-100 text-sm font-bold">
+                    🏠 1.200+ lokacij
+                </span>
+
+                <span class="px-4 py-2 rounded-full bg-blue-400/20 border border-blue-300/20 text-blue-100 text-sm font-bold">
+                    ⭐ 4.9 ocena
+                </span>
+            </div>
+
+            <h1 class="max-w-5xl text-5xl md:text-7xl font-extrabold tracking-tight leading-none mb-8">
+                Odkrijte svet izjemnih prenočišč
+            </h1>
+
+            <p class="max-w-3xl text-lg md:text-2xl text-white/80 leading-relaxed mb-10">
+                Prespite v drevesni hiški, ledenem hotelu, gorski koči,
+                na ladji, dvorcu ali v vili pod oceanom.
+            </p>
+
+            <!--search-->
+            <form class="overflow-hidden rounded-[28px] bg-white text-slate-900 shadow-2xl border border-white/10">
+
+                <div class="grid xl:grid-cols-6 md:grid-cols-2">
+
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
+                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
+                            Destinacija
+                        </label>
+
+                        <input
+                            type="text"
+                            placeholder="Kam greste?"
+                            class="w-full bg-transparent outline-none font-semibold"
+                        />
+                    </div>
+
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
+                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
+                            Prihod
+                        </label>
+
+                        <input
+                            type="date"
+                            class="w-full bg-transparent outline-none font-semibold"
+                        />
+                    </div>
+
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
+                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
+                            Odhod
+                        </label>
+
+                        <input
+                            type="date"
+                            class="w-full bg-transparent outline-none font-semibold"
+                        />
+                    </div>
+
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
+                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
+                            Gostje
+                        </label>
+
+                        <select class="w-full bg-transparent outline-none font-semibold appearance-none cursor-pointer">
+                            <option>1 gost</option>
+                            <option>2 gosta</option>
+                            <option>3 gostje</option>
+                            <option>4 gostje</option>
+                            <option>5+ gostov</option>
+                        </select>
+                    </div>
+
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
+                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
+                            Tip lokacije
+                        </label>
+
+                        <select class="w-full bg-transparent outline-none font-semibold appearance-none cursor-pointer">
+                            <option>Vse vrste</option>
+                            <option>Drevesna hiška</option>
+                            <option>Gorska koča</option>
+                            <option>Glamping šotor</option>
+                            <option>Iglu</option>
+                            <option>Luksuzna vila</option>
+                            <option>Pod/na/ob vodi</option>
+                        </select>
+                    </div>
+
+                    <div class="p-4 flex items-center justify-center">
+                        <button class="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.02] transition-all duration-200 shadow-lg">
+                            Iskanje
+                        </button>
+                    </div>
+                </div>
+                <!--filtri-->
+                <div class="border-t border-slate-200 bg-slate-50 px-5 py-4 flex flex-wrap gap-3 items-center">
+
+                    <span class="text-xs uppercase tracking-widest font-bold text-slate-400">
+                        Filtri:
+                    </span>
+
+                    <select class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm">
+                        <option value="">Cena / noč</option>
+                        <option>Do 100 €</option>
+                        <option>100 - 250 €</option>
+                        <option>250 - 500 €</option>
+                        <option>500 €+</option>
+                    </select>
+
+                    <select class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm">
+                        <option value="">Vrsta izkušnje</option>
+                        <option>Romantični pobeg</option>
+                        <option>Družinske počitnice</option>
+                        <option>Avantura v naravi</option>
+                        <option>Luksuzni oddih</option>
+                        <option>Digitalni detox</option>
+                    </select>
+
+                    <select class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm">
+                        <option value="">Ocena</option>
+                        <option>4.0 in več</option>
+                        <option>4.5 in več</option>
+                        <option>4.75 in več</option>
+                        <option>Samo 5.0</option>
+                    </select>
+                </div>
+                <!--dodatne ugodnosti-->
+                <div class="border-t border-slate-200 bg-slate-100 px-5 py-4 flex flex-wrap gap-3 items-center">
+
+                    <span class="text-xs uppercase tracking-widest font-bold text-slate-400">
+                        Ugodnosti:
+                    </span>
+
+                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
+                        <input type="checkbox" />
+                        Hišni ljubljenčki
+                    </label>
+
+                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
+                        <input type="checkbox" />
+                        Zasebni bazen
+                    </label>
+
+                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
+                        <input type="checkbox" />
+                        Trajnostno
+                    </label>
+
+                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
+                        <input type="checkbox" />
+                        Parking
+                    </label>
+                                        
+                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
+                        <input type="checkbox" />
+                        Panoramski razgled
+                    </label>
+                                        
+                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
+                        <input type="checkbox" />
+                        Zajtrk vključen
+                    </label>
+
+                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
+                        <input type="checkbox"/>
+                        Wi-Fi
+                    </label>
+                </div>
+                <div class="border-t border-slate-200 bg-slate-50 px-5 py-4 flex flex-wrap gap-3 items-center">
+
+                    <span class="text-xs uppercase tracking-widest font-bold text-slate-400">
+                        Razvrsti rezultate:
+                    </span>
+
+                    <select class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm">
+                        <option value="">Razvrsti rezultate</option>
+                        <option>Po oceni od najboljše ocenjene do najslabše</option>
+                        <option>Po oceni od najslabše ocenjene do najboljše</option>
+                        <option>Po ceni od najcenejše do najdražje</option>
+                        <option>Po ceni od najdražje do najcenejše</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!--rezultati iskanja-->
+    <section class="bg-slate-50 px-6 py-20">
+        <div class="max-w-6xl mx-auto">
+        <div class="space-y-8">
+
+            <div class="mb-10">
+                <p class="text-sm uppercase tracking-[0.25em] text-teal-500 font-bold mb-3">
+                    Rezultati iskanja
+                </p>
+
+                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
+                    Našli smo posebna prenočišča samo za vas
+                </h2>
+
+                <p class="text-lg text-slate-500">
+                    Izbrali smo nastanitve, ki najbolj ustrezajo vašemu iskanju.
+                </p>
+            </div>
+
+            <article class="group bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 grid lg:grid-cols-[380px_1fr]">
+                <!--slika ponudbe-->
+                <div class="relative min-h-[280px] lg:min-h-full overflow-hidden">
+                    <img src="images/svica.jpg" alt="Alpska koča v gorah v Švici" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/10 to-transparent"></div>
+
+                    <span class="absolute top-5 left-5 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-bold border border-white/30">
+                        🏔️ Gorska koča
+                    </span>
+
+                    <span class="absolute bottom-5 left-5 px-4 py-2 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-sm font-bold">
+                        Švica, Alpe
+                    </span>
+                </div>
+                <!--vsebina ponudbe-->
+                <div class="p-7 md:p-9 flex flex-col">
+
+                    <!--čisto zgoraj-->
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-bold">
+                                ❄️ Zima
+                            </span>
+
+                            <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-sm font-bold">
+                                🌄 Razgled
+                            </span>
+                        </div>
+
+                        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">
+                            ⭐ 4.8
+                        </span>
+                    </div>
+
+                    <!--osnovni podatki("ime", lokacija, opis)-->
+                    <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+                        Alpska koča v gorah
+                    </h3>
+
+                    <p class="text-sm font-bold text-teal-600 uppercase tracking-widest mb-4">
+                        📍 Švica, Alpe
+                    </p>
+
+                    <p class="text-slate-500 leading-relaxed mb-7 max-w-3xl">
+                        Koča obdana s prečudovitim razgledom na zasnežene gorske vrhove, zasebno savno in idealno lokacijo blizu večjih smučišč.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            👥 do 4 gostje
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🛏️ 2 postelji
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🌄 panoramski razgled
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🧖 zasebna savna & jacuzzi
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            ⛷️ smučanje
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🏔️ pohodništvo
+                        </span>
+                    </div>
+
+                    <div class="mt-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 pt-6 border-t border-slate-100">
+                        <p class="text-slate-500 font-semibold">
+                            od
+                            <span class="text-3xl font-extrabold text-slate-900">180 €</span>
+                            / noč
+                        </p>
+                        <button class="px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.03] transition-all duration-200 shadow-lg">
+                            Ogled ponudbe
+                        </button>
+                    </div>
+                </div>
+            </article>
+    
+            <article class="group bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 grid lg:grid-cols-[380px_1fr]">
+                <!--slika ponudbe-->
+                <div class="relative min-h-[280px] lg:min-h-full overflow-hidden">
+                    <img src="images/slovenija.jpg" alt="Predjamski grad" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/10 to-transparent"></div>
+
+                    <span class="absolute top-5 left-5 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-bold border border-white/30">
+                        🏰 Grad
+                    </span>
+
+                    <span class="absolute bottom-5 left-5 px-4 py-2 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-sm font-bold">
+                        Slovenija, Predjamski grad
+                    </span>
+                </div>
+                <!--vsebina ponudbe-->
+                <div class="p-7 md:p-9 flex flex-col">
+
+                    <!--čisto zgoraj-->
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-bold">
+                                🌸 Pomlad / Poletje
+                            </span>
+
+                            <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-sm font-bold">
+                                👑 Plemič za en dan
+                            </span>
+                        </div>
+
+                        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">
+                            ⭐ 4.9
+                        </span>
+                    </div>
+
+                    <!--osnovni podatki("ime", lokacija, opis)-->
+                    <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+                        Predjamski grad
+                    </h3>
+
+                    <p class="text-sm font-bold text-teal-600 uppercase tracking-widest mb-4">
+                        📍 Slovenija
+                    </p>
+
+                    <p class="text-slate-500 leading-relaxed mb-7 max-w-3xl">
+                        Predjamski grad, vklesan v mogočno skalno steno, ponuja pravljično doživetje s pridihom zgodovine, skrivnostnih rovov in čudovitega razgleda na kraško pokrajino.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            👥 do 15 gostov
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🛏️ 10 postelj
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            👑 plemiško življenje
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🍲 viteška sobna postrežba
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            👁️‍🗨️ raziskovanje skrivnostnih rovov
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            📚 zgodovina
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🐎 bližina Lipice & Postojne
+                        </span>
+                    </div>
+
+                    <div class="mt-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 pt-6 border-t border-slate-100">
+                        <p class="text-slate-500 font-semibold">
+                            od
+                            <span class="text-3xl font-extrabold text-slate-900">230 €</span>
+                            / noč
+                        </p>
+                        <button class="px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.03] transition-all duration-200 shadow-lg">
+                            Ogled ponudbe
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="group bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 grid lg:grid-cols-[380px_1fr]">
+                <!--slika ponudbe-->
+                <div class="relative min-h-[280px] lg:min-h-full overflow-hidden">
+                    <img src="images/islandija-hotel.jpg" alt="Steklena kupola na Islandiji" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/10 to-transparent"></div>
+
+                    <span class="absolute top-5 left-5 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-bold border border-white/30">
+                        🔮 Steklena kupola / glamping
+                    </span>
+
+                    <span class="absolute bottom-5 left-5 px-4 py-2 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-sm font-bold">
+                        Islandija
+                    </span>
+                </div>
+                <!--vsebina ponudbe-->
+                <div class="p-7 md:p-9 flex flex-col">
+
+                    <!--čisto zgoraj-->
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-bold">
+                                🌌 Jesen / Zima
+                            </span>
+
+                            <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-sm font-bold">
+                                🌄 Razgled
+                            </span>
+                        </div>
+
+                        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">
+                            ⭐ 5.0
+                        </span>
+                    </div>
+
+                    <!--osnovni podatki("ime", lokacija, opis)-->
+                    <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+                        Aurora Bubble Lodge
+                    </h3>
+
+                    <p class="text-sm font-bold text-teal-600 uppercase tracking-widest mb-4">
+                        📍 Islandija, gozd ob severnem siju
+                    </p>
+
+                    <p class="text-slate-500 leading-relaxed mb-7 max-w-3xl">
+                        Prosojna ogrevana kupola sredi islandske narave ponuja čarobno noč pod zvezdami in severnim sijem, idealno za romantičen pobeg v tišini gozda.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            👥 do 2 gosta
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🛏️ 1 postelja
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🌄 panoramski razgled
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            💫 romantični pobeg
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🌠 severni sij
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🔥 ogrevana kupola
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🥐 zajtrk vključen
+                        </span>
+                    </div>
+
+                    <div class="mt-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 pt-6 border-t border-slate-100">
+                        <p class="text-slate-500 font-semibold">
+                            od
+                            <span class="text-3xl font-extrabold text-slate-900">310 €</span>
+                            / noč
+                        </p>
+                        <button class="px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.03] transition-all duration-200 shadow-lg">
+                            Ogled ponudbe
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="group bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 grid lg:grid-cols-[380px_1fr]">
+                <!--slika ponudbe-->
+                <div class="relative min-h-[280px] lg:min-h-full overflow-hidden">
+                    <img src="images/jama.jpg" alt="Jama v Turčiji" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/10 to-transparent"></div>
+
+                    <span class="absolute top-5 left-5 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-bold border border-white/30">
+                        🪨 Jama
+                    </span>
+
+                    <span class="absolute bottom-5 left-5 px-4 py-2 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-sm font-bold">
+                        Turčija
+                    </span>
+                </div>
+                <!--vsebina ponudbe-->
+                <div class="p-7 md:p-9 flex flex-col">
+
+                    <!--čisto zgoraj-->
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-bold">
+                                ☀️ Celo leto
+                            </span>
+
+                            <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-sm font-bold">
+                                🌡️ naravno hlajenje
+                            </span>
+                        </div>
+
+                        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">
+                            ⭐ 4.9
+                        </span>
+                    </div>
+
+                    <!--osnovni podatki("ime", lokacija, opis)-->
+                    <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+                        Cave Hideaway
+                    </h3>
+
+                    <p class="text-sm font-bold text-teal-600 uppercase tracking-widest mb-4">
+                        📍 Turčija, Kapakondija
+                    </p>
+
+                    <p class="text-slate-500 leading-relaxed mb-7 max-w-3xl">
+                        Prespite v skrivnostni jami z mehko svetlobo lantern, naravno hladnim zrakom in občutkom, kot da ste odkrili skriti svet pod zemljo.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            👥 do 4 gostje
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🛏️ 2 postelji
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🕯️ večer ob svečah v jami
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🍷 degustacija vina
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🏺 starodavno vzdušje
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🔦 vodeni ogled jame
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🎶 akustični koncert v jami
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            👻 spooky, ampak varno
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🦇 večerni polet netopirjev
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🌌 spanje v tišini
+                        </span>
+                    </div>
+
+                    <div class="mt-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 pt-6 border-t border-slate-100">
+                        <p class="text-slate-500 font-semibold">
+                            od
+                            <span class="text-3xl font-extrabold text-slate-900">167 €</span>
+                            / noč
+                        </p>
+                        <button class="px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.03] transition-all duration-200 shadow-lg">
+                            Ogled ponudbe
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="group bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 grid lg:grid-cols-[380px_1fr]">
+                <!--slika ponudbe-->
+                <div class="relative min-h-[280px] lg:min-h-full overflow-hidden">
+                    <img src="images/kostarika.jpg" alt="Drevesna hišica na Kostariki" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/10 to-transparent"></div>
+
+                    <span class="absolute top-5 left-5 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-bold border border-white/30">
+                        🌴 Drevesna hišica
+                    </span>
+
+                    <span class="absolute bottom-5 left-5 px-4 py-2 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-sm font-bold">
+                        Kostarika
+                    </span>
+                </div>
+                <!--vsebina ponudbe-->
+                <div class="p-7 md:p-9 flex flex-col">
+
+                    <!--čisto zgoraj-->
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-bold">
+                                🌿 Poletje
+                            </span>
+
+                            <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-sm font-bold">
+                                🌧️ tropska klima
+                            </span>
+                        </div>
+
+                        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">
+                            ⭐ 4.3
+                        </span>
+                    </div>
+
+                    <!--osnovni podatki("ime", lokacija, opis)-->
+                    <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+                        Jungle Treehouse Hideaway
+                    </h3>
+
+                    <p class="text-sm font-bold text-teal-600 uppercase tracking-widest mb-4">
+                        📍 Kostarika, tropski deževni gozd
+                    </p>
+
+                    <p class="text-slate-500 leading-relaxed mb-7 max-w-3xl">
+                        Drevesna hišica sredi kostariške džungle, kjer vas zjutraj zbudijo tropske ptice, zvečer pa uspava zvok dežja med krošnjami.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            👥 do 8 gostov
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🛏️ 4 postelje
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🧘 joga na terasi
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            📵 digitalni detox
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🛁 zunanja kad
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🌲 sprehod med krošnjami
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🦥 jutranji obisk lenivcev
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🐒 opazovanje opic
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🍍 tropical breakfast basket
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🔦 nočni sprehod po džungli
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🌧️ zvok tropskega dežja
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🌿 eko nastanitev
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🌉 viseči most do hišice
+                        </span>
+                    </div>
+
+                    <div class="mt-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 pt-6 border-t border-slate-100">
+                        <p class="text-slate-500 font-semibold">
+                            od
+                            <span class="text-3xl font-extrabold text-slate-900">420 €</span>
+                            / noč
+                        </p>
+                        <button class="px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.03] transition-all duration-200 shadow-lg">
+                            Ogled ponudbe
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="group bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 grid lg:grid-cols-[380px_1fr]">
+                <!--slika ponudbe-->
+                <div class="relative min-h-[280px] lg:min-h-full overflow-hidden">
+                    <img src="images/maldivi.jpg" alt="Podvodni hotel na Maldivih" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/10 to-transparent"></div>
+
+                    <span class="absolute top-5 left-5 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-bold border border-white/30">
+                        🌊 Vila pod vodo
+                    </span>
+
+                    <span class="absolute bottom-5 left-5 px-4 py-2 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-sm font-bold">
+                        Maldivi
+                    </span>
+                </div>
+                <!--vsebina ponudbe-->
+                <div class="p-7 md:p-9 flex flex-col">
+
+                    <!--čisto zgoraj-->
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-bold">
+                                ☀️ Celo leto
+                            </span>
+
+                            <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-sm font-bold">
+                                🐚 življenje v oceanu
+                            </span>
+                        </div>
+
+                        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">
+                            ⭐ 4.7
+                        </span>
+                    </div>
+
+                    <!--osnovni podatki("ime", lokacija, opis)-->
+                    <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+                        Under the sea hotel
+                    </h3>
+
+                    <p class="text-sm font-bold text-teal-600 uppercase tracking-widest mb-4">
+                        📍 Maldivi
+                    </p>
+
+                    <p class="text-slate-500 leading-relaxed mb-7 max-w-3xl">
+                        Podvodni hotel na Maldivih ponuja nepozabno spanje med koralnimi grebeni, kjer skozi steklene stene opazujete pisane ribe, morske želve in čarobni svet oceana kar iz udobja svoje sobe.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            👥 do 2 gosta
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🛏️ 1 postelja
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🦈 plavanje z morskimi psi
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🧜 podvodni spa tretma
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🐠 koralni greben
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🤿 nočno snorklanje z modro svetlečim planktonom
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🍣 sushi bar
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            📸 podvodno fotografiranje
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🐬 jutranji izlet z delfini
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🚁 panoramski polet nad atoli
+                        </span>
+                        
+                    </div>
+
+                    <div class="mt-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 pt-6 border-t border-slate-100">
+                        <p class="text-slate-500 font-semibold">
+                            od
+                            <span class="text-3xl font-extrabold text-slate-900">333 €</span>
+                            / noč
+                        </p>
+                        <button class="px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.03] transition-all duration-200 shadow-lg">
+                            Ogled ponudbe
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="group bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 grid lg:grid-cols-[380px_1fr]">
+                <!--slika ponudbe-->
+                <div class="relative min-h-[280px] lg:min-h-full overflow-hidden">
+                    <img src="images/amsterdam.jpg" alt="Barka v Amsterdamu" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/10 to-transparent"></div>
+
+                    <span class="absolute top-5 left-5 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-bold border border-white/30">
+                        ⚓ Barka
+                    </span>
+
+                    <span class="absolute bottom-5 left-5 px-4 py-2 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-sm font-bold">
+                        Nizozemska, Amsterdam
+                    </span>
+                </div>
+                <!--vsebina ponudbe-->
+                <div class="p-7 md:p-9 flex flex-col">
+
+                    <!--čisto zgoraj-->
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-bold">
+                                🌸 Pomlad / Poletje
+                            </span>
+
+                            <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-sm font-bold">
+                                ☕ Plavajoči zajtrk stay
+                            </span>
+                        </div>
+
+                        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">
+                            ⭐ 4.6
+                        </span>
+                    </div>
+
+                    <!--osnovni podatki("ime", lokacija, opis)-->
+                    <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+                        Quack & Coffee Houseboat
+                    </h3>
+
+                    <p class="text-sm font-bold text-teal-600 uppercase tracking-widest mb-4">
+                        📍 Nizozemska, Amsterdam
+                    </p>
+
+                    <p class="text-slate-500 leading-relaxed mb-7 max-w-3xl">
+                        Majhna plavajoča hiška na mirni reki, kjer vas zjutraj namesto alarma zbudijo račke, valovi in vonj sveže kave.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            👥 do 4 gostje
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🛏️ 2 postelji
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🦆 naravna budnica z račkami
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🌊 zajtrk na palubi
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🦦 možnost opazovanja vider
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🌅 sončni zahod iz krova
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🎣 mini ribiški komplet vključen
+                        </span>
+                    </div>
+
+                    <div class="mt-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 pt-6 border-t border-slate-100">
+                        <p class="text-slate-500 font-semibold">
+                            od
+                            <span class="text-3xl font-extrabold text-slate-900">140 €</span>
+                            / noč
+                        </p>
+                        <button class="px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.03] transition-all duration-200 shadow-lg">
+                            Ogled ponudbe
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="group bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 grid lg:grid-cols-[380px_1fr]">
+                <!--slika ponudbe-->
+                <div class="relative min-h-[280px] lg:min-h-full overflow-hidden">
+                    <img src="images/vlak.jpg" alt="Prenovljen star vagon v Franciji" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/10 to-transparent"></div>
+
+                    <span class="absolute top-5 left-5 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-bold border border-white/30">
+                        🚂 Prenovljen star vagon
+                    </span>
+
+                    <span class="absolute bottom-5 left-5 px-4 py-2 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-sm font-bold">
+                        Francija
+                    </span>
+                </div>
+                <!--vsebina ponudbe-->
+                <div class="p-7 md:p-9 flex flex-col">
+
+                    <!--čisto zgoraj-->
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-bold">
+                                ☀️ Celo leto
+                            </span>
+
+                            <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-sm font-bold">
+                                ⚙️ Industrijski dizajn
+                            </span>
+                        </div>
+
+                        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">
+                            ⭐ 4.7
+                        </span>
+                    </div>
+
+                    <!--osnovni podatki("ime", lokacija, opis)-->
+                    <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+                        Sleepy Train Carriage
+                    </h3>
+
+                    <p class="text-sm font-bold text-teal-600 uppercase tracking-widest mb-4">
+                        📍 Francija
+                    </p>
+
+                    <p class="text-slate-500 leading-relaxed mb-7 max-w-3xl">
+                        Prespite v vintage vagonu, kjer notranjost izgleda kot potovanje v preteklost, zunaj pa vas čaka mirna narava.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            👥 do 6 gostov
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🛏️ 5 postelj
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🔍 Orient express soba/vagon pobega
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🛤️ pogled na tirnice
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🎟️ mini vozovnica za spomin
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🎧 zvoki stare železnice
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🥐 zajtrk kot na stari železniški postaji
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🍸 večerja v retro jedilnem vagonu
+                        </span>
+                    </div>
+
+                    <div class="mt-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 pt-6 border-t border-slate-100">
+                        <p class="text-slate-500 font-semibold">
+                            od
+                            <span class="text-3xl font-extrabold text-slate-900">210 €</span>
+                            / noč
+                        </p>
+                        <button class="px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.03] transition-all duration-200 shadow-lg">
+                            Ogled ponudbe
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="group bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 grid lg:grid-cols-[380px_1fr]">
+                <!--slika ponudbe-->
+                <div class="relative min-h-[280px] lg:min-h-full overflow-hidden">
+                    <img src="images/mushroom.jpg" alt="Pravljična gozdna hiška na Novi Zelandiji" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/10 to-transparent"></div>
+
+                    <span class="absolute top-5 left-5 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-bold border border-white/30">
+                        🍄 Pravljična gozdna hiška
+                    </span>
+
+                    <span class="absolute bottom-5 left-5 px-4 py-2 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-sm font-bold">
+                        Nova Zelandija
+                    </span>
+                </div>
+                <!--vsebina ponudbe-->
+                <div class="p-7 md:p-9 flex flex-col">
+
+                    <!--čisto zgoraj-->
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-bold">
+                                🍂 Jesen
+                            </span>
+
+                            <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-sm font-bold">
+                                ✨ pravljična razsvetljava
+                            </span>
+                        </div>
+
+                        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">
+                            ⭐ 4.4
+                        </span>
+                    </div>
+
+                    <!--osnovni podatki("ime", lokacija, opis)-->
+                    <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+                        Mushroom Forest Hut
+                    </h3>
+
+                    <p class="text-sm font-bold text-teal-600 uppercase tracking-widest mb-4">
+                        📍 Nova Zelandija
+                    </p>
+
+                    <p class="text-slate-500 leading-relaxed mb-7 max-w-3xl">
+                        Majhna okrogla hiška med drevesi, ki izgleda kot iz pravljice, z mehko svetlobo in vonjem po gozdu.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            👥 do 2 gosta
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🛏️ 1 postelja
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🕯️ večer ob lanternah
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            📵 digitalni detox
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🐿️ jutranji obisk veveric
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🌲 skriti gozd
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            📜 zemljevid skritih gozdnih kotičkov
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🧚 pravljična pot do hiške
+                        </span>
+
+                        <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                            🧙 večerni “forest magic” paket
+                        </span>
+                    </div>
+
+                    <div class="mt-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 pt-6 border-t border-slate-100">
+                        <p class="text-slate-500 font-semibold">
+                            od
+                            <span class="text-3xl font-extrabold text-slate-900">90 €</span>
+                            / noč
+                        </p>
+                        <button class="px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.03] transition-all duration-200 shadow-lg">
+                            Ogled ponudbe
+                        </button>
+                    </div>
+                </div>
+            </article>
+        </div>
+        </div>
+    </section>
+
+    <!--footer-->
+    <footer class="bg-slate-950 text-white px-6 pt-20 pb-10">
+
+        <div id="about" class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-4 gap-10 border-b border-white/10 pb-10">
+
+            <div>
+                <h3 class="text-2xl font-bold mb-4">UniqueStays</h3>
+
+                <p class="text-white/60 leading-relaxed mb-5">
+                    Najdite svoj popoln pobeg na najbolj posebnih krajih sveta.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-lg mb-4">Podpora</h3>
+
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="#" class="hover:text-white transition">Pomoč center</a></li>
+                    <li><a href="#" class="hover:text-white transition">Kontakt</a></li>
+                    <li><a href="#" class="hover:text-white transition">Pogosta vprašanja</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-lg mb-4">Podjetje</h3>
+
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="#" class="hover:text-white transition">O nas</a></li>
+                    <li><a href="#" class="hover:text-white transition">Blog</a></li>
+                    <li><a href="#" class="hover:text-white transition">Partnerji</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-lg mb-4">Pravno</h3>
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="#" class="hover:text-white transition">Pogoji uporabe</a></li>
+                    <li><a href="#" class="hover:text-white transition">Politika zasebnosti</a></li>
+                    <li><a href="#" class="hover:text-white transition">Piškotki</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto pt-8 text-center text-white/40 text-sm">
+            © 2026 UniqueStays. Vse pravice pridržane.
+        </div>
+    </footer>
+</body>
+</html>

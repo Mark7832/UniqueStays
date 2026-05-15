@@ -1,13 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="sl">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UniqueStays</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-
     <script>
         tailwind.config = {
             theme: {
@@ -20,12 +17,11 @@
             }
         }
     </script>
-
     <link rel="stylesheet" href="style.css" />
 </head>
 <body class="bg-slate-50 text-slate-700 antialiased">
 
-    <!-- HEADER -->
+    <!--header-->
     <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-xl">
         <nav class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
 
@@ -49,8 +45,7 @@
         </nav>
     </header>
 
-
- 
+    <!--zgornja sekcija-->
     <section class="min-h-[90vh] px-6 py-24 flex items-center bg-gradient-to-br from-slate-900 via-blue-900 to-teal-800 relative overflow-hidden">
 
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.3),transparent_30%)]"></div>
@@ -80,8 +75,7 @@
                 na ladji, dvorcu ali v vili pod oceanom.
             </p>
 
-
-            <!-- SEARCH -->
+            <!--search-->
             <form class="overflow-hidden rounded-[28px] bg-white text-slate-900 shadow-2xl border border-white/10">
 
                 <div class="grid xl:grid-cols-6 md:grid-cols-2">
@@ -146,7 +140,7 @@
                             <option>Glamping šotor</option>
                             <option>Iglu</option>
                             <option>Luksuzna vila</option>
-                            <option>Pod/ob vodi</option>
+                            <option>Pod/na/ob vodi</option>
                         </select>
                     </div>
 
@@ -156,9 +150,7 @@
                         </button>
                     </div>
                 </div>
-
-
-                <!-- FILTERS -->
+                <!--filtri-->
                 <div class="border-t border-slate-200 bg-slate-50 px-5 py-4 flex flex-wrap gap-3 items-center">
 
                     <span class="text-xs uppercase tracking-widest font-bold text-slate-400">
@@ -168,31 +160,29 @@
                     <select class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm">
                         <option value="">Cena / noč</option>
                         <option>Do 100 €</option>
-                                <option>100 – 250 €</option>
-                                <option>250 – 500 €</option>
-                                <option>500 €+</option>
+                        <option>100 - 250 €</option>
+                        <option>250 - 500 €</option>
+                        <option>500 €+</option>
                     </select>
 
                     <select class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm">
                         <option value="">Vrsta izkušnje</option>
                         <option>Romantični pobeg</option>
-                                <option>Družinske počitnice</option>
-                                <option>Avantura v naravi</option>
-                                <option>Luksuzni oddih</option>
-                                <option>Digitalni detox</option>
+                        <option>Družinske počitnice</option>
+                        <option>Avantura v naravi</option>
+                        <option>Luksuzni oddih</option>
+                        <option>Digitalni detox</option>
                     </select>
 
                     <select class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm">
                         <option value="">Ocena</option>
-                            <option>4.0 in več</option>
-                                <option>4.5 in več</option>
-                                <option>4.8 in več</option>
-                                <option>Samo 5.0</option>
-                    
+                        <option>4.0 in več</option>
+                        <option>4.5 in več</option>
+                        <option>4.75 in več</option>
+                        <option>Samo 5.0</option>
                     </select>
                 </div>
-
-
+                <!--dodatne ugodnosti-->
                 <div class="border-t border-slate-200 bg-slate-100 px-5 py-4 flex flex-wrap gap-3 items-center">
 
                     <span class="text-xs uppercase tracking-widest font-bold text-slate-400">
@@ -200,41 +190,46 @@
                     </span>
 
                     <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
-                        <input type="checkbox" />
+                        <input type="checkbox"/>
                         Hišni ljubljenčki
                     </label>
 
                     <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
-                        <input type="checkbox" />
+                        <input type="checkbox"/>
                         Zasebni bazen
                     </label>
 
                     <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
-                        <input type="checkbox" />
+                        <input type="checkbox"/>
                         Trajnostno
                     </label>
 
                     <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
-                        <input type="checkbox" />
+                        <input type="checkbox"/>
                         Parking
                     </label>
                                         
                     <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
-                        <input type="checkbox" />
+                        <input type="checkbox"/>
                         Panoramski razgled
                     </label>
                                         
                     <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
-                        <input type="checkbox" />
+                        <input type="checkbox"/>
                         Zajtrk vključen
+                    </label>
+
+                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
+                        <input type="checkbox"/>
+                        Wi-Fi
                     </label>
                 </div>
             </form>
         </div>
     </section>
 
-
-    <section class="bg-white border-b border-slate-100 py-12 px-6">
+    <!--statistika-->
+    <section class="bg-slate-50 border-b border-slate-100 py-12 px-6">
 
         <div class="max-w-5xl mx-auto grid md:grid-cols-4 gap-8 text-center">
 
@@ -268,7 +263,7 @@
         </div>
     </section>
 
-
+    <!--zakaj UniqueStays-->
     <section class="py-24 px-6 bg-white">
 
         <div class="max-w-3xl mx-auto text-center mb-16">
@@ -280,7 +275,6 @@
                 Ker običajen hotel ni vedno dovolj posebno doživetje.
             </p>
         </div>
-
 
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-4 gap-6">
 
@@ -302,7 +296,6 @@
                 </p>
             </article>
 
-
             <article class="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
                 <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-3xl mb-6 shadow-sm">
                     ⭐
@@ -321,7 +314,6 @@
                 </p>
             </article>
 
-
             <article class="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
                 <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-3xl mb-6 shadow-sm">
                     🌍
@@ -339,7 +331,6 @@
                     Od arktičnih iglujev do tropskih bungalovov.
                 </p>
             </article>
-
 
             <article class="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
                 <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-3xl mb-6 shadow-sm">
@@ -361,7 +352,7 @@
         </div>
     </section>
 
-
+    <!--priljubljene lokacije tega meseca-->
     <section id="destinations" class="py-24 px-6 bg-slate-50">
 
         <div class="max-w-3xl mx-auto text-center mb-16">
@@ -373,7 +364,6 @@
                 Odkrijte najbolj iskane edinstvene kraje tega meseca.
             </p>
         </div>
-
 
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-3 gap-6">
 
@@ -387,7 +377,7 @@
 
             <article class="destination-card bg-[url('images/maldivi.jpg')]">
                 <div>
-                    <span class="destination-badge">🌊 Celo leto</span>
+                    <span class="destination-badge">☀️ Celo leto</span>
                     <h3 class="destination-title">Maldivi</h3>
                     <p class="destination-text">Podvodni hoteli & vile</p>
                 </div>
@@ -395,26 +385,29 @@
 
             <article class="destination-card bg-[url('images/svica.jpg')]">
                 <div>
-                    <span class="destination-badge">⛷️ Zima / Poletje</span>
+                    <span class="destination-badge">❄️ Zima</span>
                     <h3 class="destination-title">Švica</h3>
                     <p class="destination-text">Alpske koče na vrhovih</p>
                 </div>
             </article>
-                        <article class="destination-card bg-[url('images/kostarika.jpg')]">
+                        
+            <article class="destination-card bg-[url('images/kostarika.jpg')]">
                 <div>
                     <span class="destination-badge">🌿 Poletje</span>
                     <h3 class="destination-title">Kostarika</h3>
                     <p class="destination-text">Drevesne hiške v džungli</p>
                 </div>
             </article>
-                        <article class="destination-card bg-[url('images/norveska.jpg')]">
+                        
+            <article class="destination-card bg-[url('images/norveska.jpg')]">
                 <div>
                     <span class="destination-badge">🌌 Jesen / Zima</span>
                     <h3 class="destination-title">Norveška</h3>
                     <p class="destination-text">Kabine ob fjordih</p>
                 </div>
             </article>
-                        <article class="destination-card bg-[url('images/namibija.jpg')]">
+                        
+            <article class="destination-card bg-[url('images/namibija.jpg')]">
                 <div>
                     <span class="destination-badge">☀️ Celo leto</span>
                     <h3 class="destination-title">Namibija</h3>
@@ -424,7 +417,7 @@
         </div>
     </section>
 
-
+    <!--več informacij za lastnike-->
     <section class="bg-slate-900 py-24 px-6 text-center text-white">
 
         <p class="uppercase tracking-[0.3em] text-teal-400 font-bold text-sm mb-4">
@@ -451,7 +444,7 @@
         </div>
     </section>
 
-
+    <!--o nas-->
     <section id="about" class="py-24 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white text-center">
 
         <div class="max-w-4xl mx-auto">
@@ -474,7 +467,7 @@
         </div>
     </section>
 
-
+    <!--footer-->
     <footer class="bg-slate-950 text-white px-6 pt-20 pb-10">
 
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-4 gap-10 border-b border-white/10 pb-10">
@@ -509,7 +502,6 @@
 
             <div>
                 <h3 class="font-bold text-lg mb-4">Pravno</h3>
-
                 <ul class="space-y-3 text-white/60">
                     <li><a href="#" class="hover:text-white transition">Pogoji uporabe</a></li>
                     <li><a href="#" class="hover:text-white transition">Politika zasebnosti</a></li>
@@ -518,7 +510,6 @@
             </div>
         </div>
 
-
         <div class="max-w-7xl mx-auto pt-8 text-center text-white/40 text-sm">
             © 2026 UniqueStays. Vse pravice pridržane.
         </div>
@@ -526,4 +517,3 @@
 
 </body>
 </html>
-
