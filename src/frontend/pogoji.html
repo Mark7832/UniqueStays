@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pogoji uporabe - UniqueStays</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#14b8a6'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-slate-50 text-slate-700 antialiased">
+
+    <!--header-->
+    <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-xl">
+        <nav class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <a href="index.html" class="text-2xl font-extrabold text-slate-900">
+                ✨ UniqueStays
+            </a>
+            <div class="flex flex-wrap items-center justify-center gap-5">
+                <a href="index.html#destinations" class="font-semibold hover:text-blue-600 transition">Destinacije</a>
+                <a href="index.html#experiences" class="font-semibold hover:text-blue-600 transition">Izkušnje</a>
+                <a href="index.html#about" class="font-semibold hover:text-blue-600 transition">O nas</a>
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text:xs font-bold">Novo</span>
+                <a href="login.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                    Prijava
+                </a>
+                <a href="register.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                    Registracija
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!--hero-->
+    <section class="px-6 py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-teal-800 relative overflow-hidden text-white text-center">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.3),transparent_30%)]"></div>
+        <div class="relative z-10 max-w-3xl mx-auto">
+            <span class="inline-block px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-sm font-bold uppercase tracking-wider mb-6">
+                📄 Pravno
+            </span>
+            <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-4">Pogoji uporabe</h1>
+            <p class="text-white/70 text-lg">Zadnja posodobitev: maj 2026</p>
+        </div>
+    </section>
+
+    <!--vsebina-->
+    <section class="py-20 px-6">
+        <div class="max-w-3xl mx-auto space-y-10">
+
+            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center text-2xl">👋</div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">Dobrodošli na UniqueStays</h2>
+                </div>
+                <p class="text-slate-500 leading-relaxed">
+                    UniqueStays je platforma za rezervacijo edinstvenih prenočišč po vsem svetu. Z uporabo naše spletne strani se strinjate s temi pogoji. Prosimo, da jih preberete pozorno.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-2xl bg-teal-100 flex items-center justify-center text-2xl">👤</div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">Uporabniški račun</h2>
+                </div>
+                <ul class="space-y-3 text-slate-500">
+                    <li class="flex items-start gap-3"><span class="text-teal-500 font-bold mt-0.5">✓</span><span>Za rezervacijo prenočišča potrebujete registriran račun.</span></li>
+                    <li class="flex items-start gap-3"><span class="text-teal-500 font-bold mt-0.5">✓</span><span>Odgovorni ste za varovanje svojih prijavnih podatkov.</span></li>
+                    <li class="flex items-start gap-3"><span class="text-teal-500 font-bold mt-0.5">✓</span><span>Račun je oseben in ga ne smete deliti z drugimi.</span></li>
+                    <li class="flex items-start gap-3"><span class="text-teal-500 font-bold mt-0.5">✓</span><span>Ob sumu zlorabe si pridržujemo pravico do ukinitve računa.</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-100 flex items-center justify-center text-2xl">📅</div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">Rezervacije in plačila</h2>
+                </div>
+                <ul class="space-y-3 text-slate-500">
+                    <li class="flex items-start gap-3"><span class="text-teal-500 font-bold mt-0.5">✓</span><span>Ob rezervaciji se zaračuna 30% akontacija.</span></li>
+                    <li class="flex items-start gap-3"><span class="text-teal-500 font-bold mt-0.5">✓</span><span>Preostali znesek plačate najkasneje 7 dni pred prihodom.</span></li>
+                    <li class="flex items-start gap-3"><span class="text-teal-500 font-bold mt-0.5">✓</span><span>Vse cene so navedene v evrih in vključujejo DDV.</span></li>
+                    <li class="flex items-start gap-3"><span class="text-teal-500 font-bold mt-0.5">✓</span><span>Sprejemamo plačila s kreditnimi karticami in bančnim nakazilom.</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-2xl bg-red-100 flex items-center justify-center text-2xl">❌</div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">Odpovedi</h2>
+                </div>
+                <ul class="space-y-3 text-slate-500">
+                    <li class="flex items-start gap-3"><span class="text-teal-500 font-bold mt-0.5">✓</span><span>Odpoved več kot 30 dni pred prihodom: polno povračilo.</span></li>
+                    <li class="flex items-start gap-3"><span class="text-teal-500 font-bold mt-0.5">✓</span><span>Odpoved 15–30 dni pred prihodom: povračilo 50%.</span></li>
+                    <li class="flex items-start gap-3"><span class="text-teal-500 font-bold mt-0.5">✓</span><span>Odpoved manj kot 15 dni pred prihodom: brez povračila.</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-2xl bg-purple-100 flex items-center justify-center text-2xl">⚖️</div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">Odgovornost</h2>
+                </div>
+                <p class="text-slate-500 leading-relaxed">
+                    UniqueStays deluje kot posrednik med gosti in lastniki prenočišč. Ne prevzemamo odgovornosti za morebitne škode ali nesreče med bivanjem. Priporočamo sklenitev potovalnega zavarovanja.
+                </p>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-50 to-teal-50 rounded-3xl border-2 border-teal-200 p-8">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-2xl bg-teal-100 flex items-center justify-center text-2xl">📬</div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">Kontakt</h2>
+                </div>
+                <p class="text-slate-500 leading-relaxed mb-2">
+                    Za vprašanja v zvezi s pogoji nas kontaktirajte na:
+                </p>
+                <p class="font-bold text-blue-600">info@uniquestays.com</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!--footer-->
+    <footer class="bg-slate-950 text-white px-6 pt-20 pb-10">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-4 gap-10 border-b border-white/10 pb-10">
+            <div>
+                <h3 class="text-2xl font-bold mb-4">UniqueStays</h3>
+                <p class="text-white/60 leading-relaxed mb-5">Najdite svoj popoln pobeg na najbolj posebnih krajih sveta.</p>
+            </div>
+            <div>
+                <h3 class="font-bold text-lg mb-4">Podpora</h3>
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="#" class="hover:text-white transition">Pomoč center</a></li>
+                    <li><a href="#" class="hover:text-white transition">Kontakt</a></li>
+                    <li><a href="#" class="hover:text-white transition">Pogosta vprašanja</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="font-bold text-lg mb-4">Podjetje</h3>
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="#" class="hover:text-white transition">O nas</a></li>
+                    <li><a href="#" class="hover:text-white transition">Blog</a></li>
+                    <li><a href="#" class="hover:text-white transition">Partnerji</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="font-bold text-lg mb-4">Pravno</h3>
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="pogoji.html" class="hover:text-white transition">Pogoji uporabe</a></li>
+                    <li><a href="zasebnost.html" class="hover:text-white transition">Politika zasebnosti</a></li>
+                    <li><a href="#" class="hover:text-white transition">Piškotki</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto pt-8 text-center text-white/40 text-sm">
+            © 2026 UniqueStays. Vse pravice pridržane.
+        </div>
+    </footer>
+
+</body>
+</html>
