@@ -55,3 +55,54 @@ body {
 .destination-text {
     color: rgba(255,255,255,0.8);
 }
+
+/* Predjama page styles */
+.hero-castle {
+    background: linear-gradient(to bottom, rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.8)),
+                url('images/slovenija.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 70vh;
+}
+
+.feature-box {
+    transition: all 0.3s ease;
+}
+
+.feature-box:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 40px;
+    padding-bottom: 40px;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #14b8a6, #2563eb);
+}
+
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #14b8a6;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px #14b8a6;
+}
+
+.timeline-item:last-child::before {
+    display: none;
+}
