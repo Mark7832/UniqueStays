@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Prenočišče v Predjamskem gradu - UniqueStays</title>
+
+    <title>Predjamski grad - UniqueStays</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -17,803 +20,527 @@
             }
         }
     </script>
-    <link rel="stylesheet" href="style.css" />
-</head>
-<body class="bg-slate-50 text-slate-700 antialiased">
 
-    <!--header-->
+</head>
+
+<body class="bg-slate-100 text-slate-800 antialiased">
+
+
+
+    <!-- HEADER -->
     <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-xl">
+
         <nav class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+
             <div class="text-2xl font-extrabold text-slate-900">
-                <a href="index.html">✨ UniqueStays</a>
+                <a href="index.html">
+                    ✨ UniqueStays
+                </a>
             </div>
 
+
             <div class="flex flex-wrap items-center justify-center gap-5">
-                <a href="index.html#destinations" class="font-semibold hover:text-blue-600 transition">Destinacije</a>
-                <a href="index.html#experiences" class="font-semibold hover:text-blue-600 transition">Izkušnje</a>
-                <a href="index.html#about" class="font-semibold hover:text-blue-600 transition">O nas</a>
+
+                <a href="#"
+                   class="font-semibold hover:text-blue-600 transition">
+                    Destinacije
+                </a>
+
+                <a href="#"
+                   class="font-semibold hover:text-blue-600 transition">
+                    O nas
+                </a>
+
+                <a href="#"
+                   class="font-semibold hover:text-blue-600 transition">
+                    Kontakt
+                </a>
+
 
                 <button class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
                     Rezerviraj
                 </button>
+
             </div>
+
         </nav>
+
     </header>
 
-    <section class="hero-castle flex items-center justify-center text-white px-6">
-        <div class="max-w-7xl mx-auto text-center py-24">
+
+
+
+
+    <!-- HERO -->
+    <section class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-teal-900 text-white">
+
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-10 left-10 text-9xl">🏰</div>
+            <div class="absolute bottom-10 right-10 text-9xl">✨</div>
+        </div>
+
+
+        <div class="relative z-10 max-w-7xl mx-auto px-6 py-32">
+
             <div class="inline-block mb-6 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md">
-                <span class="text-sm font-bold uppercase tracking-wider">🏰 Slovenija, Postojna</span>
+                <span class="text-sm font-bold uppercase tracking-wider">
+                    🏰 Grad • Slovenija
+                </span>
             </div>
-            
+
+
             <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
-                Prenočite v Predjamskem gradu
+                Predjamski grad
             </h1>
-            
-            <p class="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
-                Ekskluzivna priložnost za nezabravno prenočišče v največjem jamskem gradu na svetu
+
+
+            <p class="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl leading-relaxed">
+                Predjamski grad, vklesan v mogočno skalo.
+                Edinstveno prenočišče v enem najbolj ikoničnih gradov v Sloveniji.
             </p>
 
-            <div class="flex flex-wrap justify-center gap-4 mb-8">
-                <span class="px-4 py-2 rounded-full bg-teal-500/90 backdrop-blur-sm text-white font-bold">
-                    👥 Do 6 gostov
-                </span>
-                <span class="px-4 py-2 rounded-full bg-blue-500/90 backdrop-blur-sm text-white font-bold">
-                    🏰 3 spalnice
-                </span>
-                <span class="px-4 py-2 rounded-full bg-purple-500/90 backdrop-blur-sm text-white font-bold">
-                    ⭐ 4.9 ocena
-                </span>
+
+
+            <!-- stats -->
+            <div class="flex flex-wrap gap-4 mb-10">
+
+                <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
+                    <div class="text-sm text-white/70">
+                        Cena na noč
+                    </div>
+
+                    <div class="text-3xl font-bold">
+                        230 €
+                    </div>
+                </div>
+
+
+                <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
+                    <div class="text-sm text-white/70">
+                        Gostov
+                    </div>
+
+                    <div class="text-3xl font-bold">
+                        6
+                    </div>
+                </div>
+
+
+                <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
+                    <div class="text-sm text-white/70">
+                        Spalnic
+                    </div>
+
+                    <div class="text-3xl font-bold">
+                        3
+                    </div>
+                </div>
+
+
+                <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
+                    <div class="text-sm text-white/70">
+                        Ocena
+                    </div>
+
+                    <div class="text-3xl font-bold">
+                        4.9
+                    </div>
+                </div>
+
             </div>
 
-            <div class="flex flex-wrap justify-center gap-4">
+
+
+            <!-- buttons -->
+            <div class="flex flex-wrap gap-4">
+
                 <button class="px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-105 transition-all duration-200 shadow-lg">
-                    Rezerviraj prenočišče
+                    Rezerviraj zdaj
                 </button>
+
+
                 <button class="px-8 py-4 rounded-full bg-white/10 backdrop-blur-md text-white font-bold hover:bg-white/20 transition-all duration-200">
-                    Poglej razpoložljivost
+                    Poglej lokacijo
                 </button>
+
             </div>
+
         </div>
+
     </section>
 
-    <section class="py-20 px-6 bg-white">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-6">
-            <div class="feature-box text-center p-8 rounded-3xl bg-gradient-to-br from-slate-50 to-white border border-slate-200">
-                <div class="text-5xl mb-4">🛏️</div>
-                <h3 class="text-3xl font-bold text-slate-900 mb-2">3</h3>
-                <p class="text-slate-600">Ekskluzivne spalnice</p>
-            </div>
 
-            <div class="feature-box text-center p-8 rounded-3xl bg-gradient-to-br from-slate-50 to-white border border-slate-200">
-                <div class="text-5xl mb-4">👥</div>
-                <h3 class="text-3xl font-bold text-slate-900 mb-2">6</h3>
-                <p class="text-slate-600">Maksimalno gostov</p>
-            </div>
 
-            <div class="feature-box text-center p-8 rounded-3xl bg-gradient-to-br from-slate-50 to-white border border-slate-200">
-                <div class="text-5xl mb-4">💶</div>
-                <h3 class="text-3xl font-bold text-slate-900 mb-2">600€</h3>
-                <p class="text-slate-600">Na noč (celoten grad)</p>
-            </div>
 
-            <div class="feature-box text-center p-8 rounded-3xl bg-gradient-to-br from-slate-50 to-white border border-slate-200">
-                <div class="text-5xl mb-4">⭐</div>
-                <h3 class="text-3xl font-bold text-slate-900 mb-2">4.9</h3>
-                <p class="text-slate-600">Povprečna ocena (127 ocen)</p>
-            </div>
-        </div>
-    </section>
 
-    <!--o prenočišču-->
-    <section class="py-24 px-6 bg-slate-50">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-16">
-                <span class="inline-block px-4 py-2 rounded-full bg-teal-100 text-teal-700 font-bold text-sm uppercase tracking-widest mb-4">
-                    Edinstven doživetje
-                </span>
-                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">
-                    Spite kot kralj v srednjeveškem gradu
-                </h2>
-            </div>
 
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-6">
-                    <p class="text-lg text-slate-600 leading-relaxed">
-                        Ekskluzivna možnost prenočitve v Predjamskem gradu - največjem jamskem gradu na svetu, vpisanem v Guinnesovo knjigo rekordov. To ni le prenočišče, to je potovanje v preteklost.
-                    </p>
-                    
-                    <p class="text-lg text-slate-600 leading-relaxed">
-                        Grad v celoti najamete za svojo skupino (do 6 oseb) in doživite neponovljivo izkušnjo prenočitve v avtentičnem srednjeveškem gradu, vpetem v 123 metrov visoko skalno steno.
-                    </p>
-
-                    <p class="text-lg text-slate-600 leading-relaxed">
-                        Večerjajte v renesančni dvorani pri svečah, raziskujte skrivne hodnike in se zbudite z razgledom na dramatično kraško pokrajino. Grad je opremljen z modernimi udobnostmi, a hkrati ohranja svojo srednjeveško dušo.
-                    </p>
-
-                    <div class="flex flex-wrap gap-3 mt-8">
-                        <span class="px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-bold text-sm">
-                            🏰 Celoten grad le za vas
-                        </span>
-                        <span class="px-4 py-2 rounded-full bg-purple-100 text-purple-700 font-bold text-sm">
-                            🕯️ Romantična atmosfera
-                        </span>
-                        <span class="px-4 py-2 rounded-full bg-teal-100 text-teal-700 font-bold text-sm">
-                            📸 Nepozabne fotografije
-                        </span>
-                    </div>
-                </div>
-
-                <div class="rounded-3xl overflow-hidden shadow-2xl">
-                    <img src="images/predjama.png" alt="Predjamski grad" class="w-full h-auto object-cover" />
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!--izkušnja prenočišča-->
-    <section class="py-24 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-16">
-                <span class="inline-block px-4 py-2 rounded-full bg-white/10 backdrop-blur-md font-bold text-sm uppercase tracking-widest mb-4">
-                    🌙 Vaša avantura
-                </span>
-                <h2 class="text-4xl md:text-5xl font-extrabold mb-6">
-                    Kako poteka vaš pobeg v preteklost
-                </h2>
-                <p class="text-xl text-white/70 max-w-3xl mx-auto">
-                    Od prihoda do odhoda - celotna izkušnja je skrbno načrtovana
-                </p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-12">
-                <div class="bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-white/10">
-                    <h3 class="text-2xl font-bold mb-4 text-teal-400">🏰 Prihod (16:00)</h3>
-                    <p class="text-white/80 leading-relaxed mb-4">
-                        Dobrodošli vas bo osebje v zgodovinskih kostumih. Sledil bo vodeni ogled gradu z zgodbami o Erazmu Predjamskem in skrivnostnih podzemnih hodnikih.
-                    </p>
-                    <ul class="space-y-2 text-white/70">
-                        <li class="flex items-start gap-2">
-                            <span class="text-teal-400">✓</span>
-                            <span>Privaščen sprejem in pozdravni napitek</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-teal-400">✓</span>
-                            <span>Vodeni ogled s kustosom gradu</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-teal-400">✓</span>
-                            <span>Predstavitev vseh prostorov</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-white/10">
-                    <h3 class="text-2xl font-bold mb-4 text-purple-400">🕯️ Večer (19:00)</h3>
-                    <p class="text-white/80 leading-relaxed mb-4">
-                        Večerja pri svečah v veliki renesančni dvorani. 5-hodni meni, pripravljen po zgodovinskih receptih z modernim pridihom. Degustacija slovenskih vin.
-                    </p>
-                    <ul class="space-y-2 text-white/70">
-                        <li class="flex items-start gap-2">
-                            <span class="text-purple-400">✓</span>
-                            <span>Gourmet večerja pri svečah</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-purple-400">✓</span>
-                            <span>Izbor premium slovenskih vin</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-purple-400">✓</span>
-                            <span>Srednjeveška glasba v živo</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-white/10">
-                    <h3 class="text-2xl font-bold mb-4 text-blue-400">🌌 Noč</h3>
-                    <p class="text-white/80 leading-relaxed mb-4">
-                        Po večerji raziskujte grad z baklami, se udobno namestite v historičnih spalnicah z modernimi posteljami ali uživajte v nočnem pogledu na zvezde s terase.
-                    </p>
-                    <ul class="space-y-2 text-white/70">
-                        <li class="flex items-start gap-2">
-                            <span class="text-blue-400">✓</span>
-                            <span>Luksuzne postelje z zgodovinskim baldahinom</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-blue-400">✓</span>
-                            <span>Moderne kopalnice z zgodovinskim šarmom</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-blue-400">✓</span>
-                            <span>Bakle za nočno raziskovanje</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-white/10">
-                    <h3 class="text-2xl font-bold mb-4 text-orange-400">☀️ Jutro in odhod (11:00)</h3>
-                    <p class="text-white/80 leading-relaxed mb-4">
-                        Zajtrkujte v viteški sobi z razgledom na dolino. Po zajtrku imate še čas za raziskovanje jame pod gradom ali fotografiranje pred odhodom.
-                    </p>
-                    <ul class="space-y-2 text-white/70">
-                        <li class="flex items-start gap-2">
-                            <span class="text-orange-400">✓</span>
-                            <span>Bogat zajtrk z lokalnimi dobrotami</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-orange-400">✓</span>
-                            <span>Ogled jame pod gradom (opcijsko)</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-orange-400">✓</span>
-                            <span>Spominki iz grajske trgovinice</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!--namestitev in oprema-->
+    <!-- O PRENOČIŠČU -->
     <section class="py-24 px-6 bg-white">
+
         <div class="max-w-6xl mx-auto">
+
             <div class="text-center mb-16">
+
+                <span class="inline-block px-4 py-2 rounded-full bg-teal-100 text-teal-700 font-bold text-sm uppercase tracking-widest mb-4">
+                    Edinstvena izkušnja
+                </span>
+
+
                 <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">
-                    Vaša grajska rezidenca
+                    O prenočišču
                 </h2>
-                <p class="text-xl text-slate-600 max-w-3xl mx-auto">
-                    Zgodovinski šarm srečuje sodobno udobje
+
+
+                <p class="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+                    Predjamski grad je eno najbolj znanih zgodovinskih prenočišč v Sloveniji.
+                    Nahaja se v mogočni kraški steni in združuje zgodovino,
+                    naravo ter moderno udobje v nepozabno izkušnjo.
                 </p>
+
             </div>
 
- <div class="grid md:grid-cols-3 gap-8 mb-12">
-    <div class="bg-slate-50 rounded-3xl p-8 border border-slate-200">
-        <div class="text-5xl mb-4">👑</div>
-        <h3 class="text-2xl font-bold text-slate-900 mb-3">Kraljeva spalnica</h3>
-        
 
-        <div class="w-full h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden">
-            <img src="images/kraljeva.png" alt="Kraljeva spalnica" class="w-full h-full object-cover">
-        </div>
-        
-        <p class="text-slate-600 mb-4">Glavna spalnica z baldahinom, king-size posteljo in pogledom na dolino</p>
-        <ul class="space-y-2 text-slate-600 text-sm">
-            <li class="flex items-start gap-2">
-                <span class="text-teal-600">✓</span>
-                <span>King-size postelja</span>
-            </li>
-            <li class="flex items-start gap-2">
-                <span class="text-teal-600">✓</span>
-                <span>Zasebna kopalnica</span>
-            </li>
-            <li class="flex items-start gap-2">
-                <span class="text-teal-600">✓</span>
-                <span>Kamin</span>
-            </li>
-        </ul>
-    </div>
 
-    <div class="bg-slate-50 rounded-3xl p-8 border border-slate-200">
-        <div class="text-5xl mb-4">⚔️</div>
-        <h3 class="text-2xl font-bold text-slate-900 mb-3">Viteška soba</h3>
-        
-        <!-- Prostor za sliko -->
-        <div class="w-full h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden">
-            <img src="images/viteska.png" alt="Viteška soba" class="w-full h-full object-cover">
-        </div>
-        
-        <p class="text-slate-600 mb-4">Soba s srednjeveškimi dekoracjami, twin posteljama in razstavljenimi oklopi</p>
-        <ul class="space-y-2 text-slate-600 text-sm">
-            <li class="flex items-start gap-2">
-                <span class="text-teal-600">✓</span>
-                <span>2x enojna postelja</span>
-            </li>
-            <li class="flex items-start gap-2">
-                <span class="text-teal-600">✓</span>
-                <span>Zgodovinska oprema</span>
-            </li>
-            <li class="flex items-start gap-2">
-                <span class="text-teal-600">✓</span>
-                <span>Skupna kopalnica</span>
-            </li>
-        </ul>
-    </div>
 
-    <div class="bg-slate-50 rounded-3xl p-8 border border-slate-200">
-        <div class="text-5xl mb-4">🏰</div>
-        <h3 class="text-2xl font-bold text-slate-900 mb-3">Stolpna soba</h3>
-        
-        <!-- Prostor za sliko -->
-        <div class="w-full h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden">
-            <img src="images/stolpna.png" alt="Stolpna soba" class="w-full h-full object-cover">
-        </div>
-        
-        <p class="text-slate-600 mb-4">Romantična soba v stolpu z okroglim oknom in queen-size posteljo</p>
-        <ul class="space-y-2 text-slate-600 text-sm">
-            <li class="flex items-start gap-2">
-                <span class="text-teal-600">✓</span>
-                <span>Queen-size postelja</span>
-            </li>
-            <li class="flex items-start gap-2">
-                <span class="text-teal-600">✓</span>
-                <span>Panoramski razgled</span>
-            </li>
-            <li class="flex items-start gap-2">
-                <span class="text-teal-600">✓</span>
-                <span>Mini bar</span>
-            </li>
-        </ul>
-    </div>
-</div>
+            <!-- CARDS -->
+            <div class="grid md:grid-cols-4 gap-6">
 
-            <div class="bg-gradient-to-br from-teal-50 to-blue-50 rounded-3xl p-10 border-2 border-teal-200">
-                <h3 class="text-2xl font-bold text-slate-900 mb-6">Dodatne ugodnosti vključene v ceno</h3>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="space-y-3">
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">🍽️</span>
-                            <div>
-                                <h4 class="font-bold text-slate-900">Gourmet hrana</h4>
-                                <p class="text-slate-600 text-sm">Večerja in zajtrk vključena</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">🍷</span>
-                            <div>
-                                <h4 class="font-bold text-slate-900">Degustacija vin</h4>
-                                <p class="text-slate-600 text-sm">Izbor slovenskih premium vin</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">🕯️</span>
-                            <div>
-                                <h4 class="font-bold text-slate-900">Romantična atmosfera</h4>
-                                <p class="text-slate-600 text-sm">Sveče v vseh prostorih</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">🔥</span>
-                            <div>
-                                <h4 class="font-bold text-slate-900">Ogrevanje</h4>
-                                <p class="text-slate-600 text-sm">Kamini in centralno ogrevanje</p>
-                            </div>
-                        </div>
+                <div class="text-center p-8 rounded-3xl bg-gradient-to-br from-slate-50 to-white border border-slate-200 shadow-sm">
+
+                    <div class="text-5xl mb-4">
+                        🏰
                     </div>
-                    <div class="space-y-3">
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">📸</span>
-                            <div>
-                                <h4 class="font-bold text-slate-900">Fotografiranje</h4>
-                                <p class="text-slate-600 text-sm">Fotograf za spominke (opcijsko)</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">🗿</span>
-                            <div>
-                                <h4 class="font-bold text-slate-900">Dostop do jame</h4>
-                                <p class="text-slate-600 text-sm">Vodeni ogled jamskega sistema</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">📚</span>
-                            <div>
-                                <h4 class="font-bold text-slate-900">Zgodovinski kontekst</h4>
-                                <p class="text-slate-600 text-sm">Kustos gradu kot vodnik</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">🅿️</span>
-                            <div>
-                                <h4 class="font-bold text-slate-900">Parkiranje</h4>
-                                <p class="text-slate-600 text-sm">Brezplačno zasebno parkiranje</p>
-                            </div>
-                        </div>
-                    </div>
+
+                    <h3 class="text-3xl font-bold text-slate-900 mb-2">
+                        Grad
+                    </h3>
+
+                    <p class="text-slate-600">
+                        Tip prenočišča
+                    </p>
+
                 </div>
+
+
+
+                <div class="text-center p-8 rounded-3xl bg-gradient-to-br from-slate-50 to-white border border-slate-200 shadow-sm">
+
+                    <div class="text-5xl mb-4">
+                        👥
+                    </div>
+
+                    <h3 class="text-3xl font-bold text-slate-900 mb-2">
+                        6
+                    </h3>
+
+                    <p class="text-slate-600">
+                        Maksimalno gostov
+                    </p>
+
+                </div>
+
+
+
+                <div class="text-center p-8 rounded-3xl bg-gradient-to-br from-slate-50 to-white border border-slate-200 shadow-sm">
+
+                    <div class="text-5xl mb-4">
+                        🛏️
+                    </div>
+
+                    <h3 class="text-3xl font-bold text-slate-900 mb-2">
+                        3
+                    </h3>
+
+                    <p class="text-slate-600">
+                        Spalnice
+                    </p>
+
+                </div>
+
+
+
+                <div class="text-center p-8 rounded-3xl bg-gradient-to-br from-slate-50 to-white border border-slate-200 shadow-sm">
+
+                    <div class="text-5xl mb-4">
+                        ⭐
+                    </div>
+
+                    <h3 class="text-3xl font-bold text-slate-900 mb-2">
+                        4.9
+                    </h3>
+
+                    <p class="text-slate-600">
+                        Povprečna ocena
+                    </p>
+
+                </div>
+
             </div>
+
         </div>
+
     </section>
 
-    <!--posebne aktivnosti-->
+
+
+
+
+
+
+    <!-- DETAILS -->
     <section class="py-24 px-6 bg-slate-50">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">
-                    Posebne priložnosti
-                </h2>
-                <p class="text-xl text-slate-600 max-w-3xl mx-auto">
-                    Ustvarite nepozabne spomine v izjemnem okolju
-                </p>
-            </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <article class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                    <div class="p-8">
-                        <div class="text-5xl mb-4">💍</div>
-                        <h3 class="text-2xl font-bold text-slate-900 mb-4">Romantični pobeg</h3>
-                        <p class="text-slate-600 leading-relaxed mb-4">
-                            Popolna lokacija za obletnice, prositev ali romantični vikend. Organiziramo lahko posebno večerjo pri svečah, glasbo v živo in šampanjec ob sončnem zahodu.
-                        </p>
-                        <div class="bg-pink-50 rounded-xl p-4 border border-pink-200">
-                            <p class="text-sm text-pink-800 font-semibold">💝 Posebna ponudba za pare</p>
-                            <p class="text-xs text-pink-700 mt-1">Vključuje rože, šampanjec in fotografiranje</p>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                    <div class="p-8">
-                        <div class="text-5xl mb-4">🎂</div>
-                        <h3 class="text-2xl font-bold text-slate-900 mb-4">Praznovanja</h3>
-                        <p class="text-slate-600 leading-relaxed mb-4">
-                            Praznujte rojstni dan, obletnico ali drug poseben dogodek v gradu. Lahko organiziramo tematsko zabavo z viteško večerjo in zabavo.
-                        </p>
-                        <div class="bg-purple-50 rounded-xl p-4 border border-purple-200">
-                            <p class="text-sm text-purple-800 font-semibold">🎉 Možnost do 12 oseb</p>
-                            <p class="text-xs text-purple-700 mt-1">Za večje skupine dodatni prostori</p>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                    <div class="p-8">
-                        <div class="text-5xl mb-4">📸</div>
-                        <h3 class="text-2xl font-bold text-slate-900 mb-4">Fotografiranje</h3>
-                        <p class="text-slate-600 leading-relaxed mb-4">
-                            Grad je popolna lokacija za poročne fotografije, fashion fotošutinge ali družinske portrete. Ponujamo profesionalnega fotografa in styling.
-                        </p>
-                        <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
-                            <p class="text-sm text-blue-800 font-semibold">📷 Profesionalni fotograf</p>
-                            <p class="text-xs text-blue-700 mt-1">Booking 2 tedna vnaprej</p>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <!--cenik in rezervacija-->
-<section class="py-24 px-6 bg-white">
         <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">
-                    Cenik in rezervacija
-                </h2>
-            </div>
 
             <div class="grid md:grid-cols-2 gap-8">
-                <!-- Celotni grad -->
-                <div class="bg-gradient-to-br from-slate-50 to-white rounded-3xl p-8 border border-slate-200">
-                    <h3 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-                        <span class="text-3xl">🏰</span> Celotni grad
-                    </h3>
-                    <div class="space-y-4 text-slate-700">
-                        <div class="flex justify-between items-center py-4 border-b border-slate-200">
-                            <div>
-                                <span class="font-bold block">Osnovna cena</span>
-                                <span class="text-sm text-slate-500">Celoten grad, do 6 oseb</span>
-                            </div>
-                            <span class="text-2xl font-bold text-teal-600">600 €</span>
-                        </div>
-                        <div class="flex justify-between items-center py-4 border-b border-slate-200">
-                            <div>
-                                <span class="font-bold block">Vikend paket (Pe-Ne)</span>
-                                <span class="text-sm text-slate-500">2 nočitvi, do 6 oseb</span>
-                            </div>
-                            <span class="text-2xl font-bold text-teal-600">1000 €</span>
-                        </div>
-                        <div class="flex justify-between items-center py-4 border-b border-slate-200">
-                            <div>
-                                <span class="font-bold block">Dodatni gostje</span>
-                                <span class="text-sm text-slate-500">Nad 6 oseb (max 12)</span>
-                            </div>
-                            <span class="text-xl font-bold text-teal-600">120 € / osebo</span>
-                        </div>
-                        <div class="flex justify-between items-center py-4">
-                            <div>
-                                <span class="font-bold block">Profesionalni fotograf</span>
-                                <span class="text-sm text-slate-500">3 ure fotografiranja</span>
-                            </div>
-                            <span class="text-xl font-bold text-teal-600">350 €</span>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Posamezne sobe -->
-                <div class="bg-gradient-to-br from-slate-50 to-white rounded-3xl p-8 border border-slate-200">
-                    <h3 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-                        <span class="text-3xl">🛏️</span> Posamezne sobe
-                    </h3>
-                    <div class="space-y-4 text-slate-700">
-                        <div class="flex justify-between items-center py-4 border-b border-slate-200">
-                            <div>
-                                <span class="font-bold block flex items-center gap-2">
-                                    👑 Kraljeva spalnica
-                                </span>
-                                <span class="text-sm text-slate-500">King-size postelja, 2 osebi</span>
-                            </div>
-                            <span class="text-2xl font-bold text-teal-600">320 €</span>
-                        </div>
-                        <div class="flex justify-between items-center py-4 border-b border-slate-200">
-                            <div>
-                                <span class="font-bold block flex items-center gap-2">
-                                    ⚔️ Viteška soba
-                                </span>
-                                <span class="text-sm text-slate-500">2x enojna postelja, 2 osebi</span>
-                            </div>
-                            <span class="text-2xl font-bold text-teal-600">230 €</span>
-                        </div>
-                        <div class="flex justify-between items-center py-4">
-                            <div>
-                                <span class="font-bold block flex items-center gap-2">
-                                    🏰 Stolpna soba
-                                </span>
-                                <span class="text-sm text-slate-500">Queen-size postelja, 2 osebi</span>
-                            </div>
-                            <span class="text-2xl font-bold text-teal-600">280 €</span>
-                        </div>
+                <div class="bg-white rounded-3xl p-10 border border-slate-200 shadow-sm">
+
+                    <div class="text-5xl mb-6">
+                        📍
                     </div>
-                    <div class="mt-6 p-4 bg-teal-50 rounded-xl border border-teal-200">
-                        <p class="text-sm text-slate-600">
-                            <span class="font-semibold">💡 Opomba:</span> Cene vključujejo zajtrk in uporabo vseh skupnih prostorov
+
+                    <h2 class="text-3xl font-extrabold text-slate-900 mb-6">
+                        Lokacija
+                    </h2>
+
+                    <p class="text-slate-600 leading-relaxed mb-6">
+                        Predjama 1, Postojna, Slovenija
+                    </p>
+
+                    <div class="bg-slate-100 rounded-2xl p-6">
+                        <p class="font-semibold text-slate-700">
+                            Koordinate
+                        </p>
+
+                        <p class="text-slate-600">
+                            45.8150,14.1279
                         </p>
                     </div>
+
                 </div>
 
 
 
-                <div class="space-y-6">
-                    <div class="bg-gradient-to-br from-blue-50 to-teal-50 rounded-3xl p-8 border-2 border-blue-200">
-                        <h3 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-                            <span class="text-3xl">📅</span> Razpoložljivost
-                        </h3>
-                        <p class="text-slate-700 mb-4 leading-relaxed">
-                            Prenočišče je na voljo vse dni v tednu, vendar je zelo priljubljeno in ga je potrebno rezervirati vsaj 2 meseca vnaprej.
-                        </p>
-                        <div class="space-y-3">
-                            <div class="flex items-start gap-2">
-                                <span class="text-teal-600 font-bold">✓</span>
-                                <span class="text-slate-700 text-sm">Možna rezervacija vse dni v letu</span>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="text-teal-600 font-bold">✓</span>
-                                <span class="text-slate-700 text-sm">Check-in: 16:00 / Check-out: 11:00</span>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="text-teal-600 font-bold">✓</span>
-                                <span class="text-slate-700 text-sm">Minimalno bivanje: 1 noč</span>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="text-teal-600 font-bold">✓</span>
-                                <span class="text-slate-700 text-sm">Odpoved možna do 30 dni pred prihodom</span>
-                            </div>
+
+                <div class="bg-white rounded-3xl p-10 border border-slate-200 shadow-sm">
+
+                    <div class="text-5xl mb-6">
+                        ✨
+                    </div>
+
+                    <h2 class="text-3xl font-extrabold text-slate-900 mb-6">
+                        Zakaj izbrati to prenočišče?
+                    </h2>
+
+                    <div class="space-y-4">
+
+                        <div class="flex items-center gap-3">
+                            <span class="text-teal-600 text-xl">✓</span>
+                            <span class="text-slate-600">
+                                Edinstvena zgodovinska lokacija
+                            </span>
                         </div>
+
+                        <div class="flex items-center gap-3">
+                            <span class="text-teal-600 text-xl">✓</span>
+                            <span class="text-slate-600">
+                                Primerno za do 6 gostov
+                            </span>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <span class="text-teal-600 text-xl">✓</span>
+                            <span class="text-slate-600">
+                                Premium izkušnja bivanja
+                            </span>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <span class="text-teal-600 text-xl">✓</span>
+                            <span class="text-slate-600">
+                                Visoka ocena gostov
+                            </span>
+                        </div>
+
                     </div>
 
-                    <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 border-2 border-purple-200">
-                        <h3 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-                            <span class="text-3xl">ℹ️</span> Pomembno vedeti
-                        </h3>
-                        <ul class="space-y-3 text-slate-700 text-sm">
-                            <li class="flex items-start gap-2">
-                                <span class="text-purple-600 font-bold">→</span>
-                                <span>V gradu zna biti biti hladno, priporočamo topla oblačila</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-purple-600 font-bold">→</span>
-                                <span>Stopnišča niso primerna za osebe z omejeno mobilnostjo</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-purple-600 font-bold">→</span>
-                                <span>Hišni ljubljenčki niso dovoljeni</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-purple-600 font-bold">→</span>
-                                <span>Ekskluzivna uporaba - brez drugih gostov brez doplačila</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-purple-600 font-bold">→</span>
-                                <span>Potrebna je 30% akontacija pri rezervaciji</span>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
+
             </div>
+
         </div>
+
     </section>
 
-    <!--CTA sekcija-->
+
+
+
+
+
+
+    <!-- CTA -->
     <section class="py-24 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-teal-900 text-white">
+
         <div class="max-w-4xl mx-auto text-center">
-            <div class="text-6xl mb-6">🏰</div>
+
+            <div class="text-6xl mb-6">
+                🏰
+            </div>
+
+
             <h2 class="text-4xl md:text-6xl font-extrabold mb-6">
-                Rezervirajte svoje prenočišče v gradu
+                Rezerviraj svoje prenočišče
             </h2>
+
+
             <p class="text-xl text-white/80 mb-10 max-w-2xl mx-auto leading-relaxed">
-                Ekskluzivna izkušnja, ki jo bo vaša družina ali skupina prijateljev za vedno pomnila. Omejeno število terminov na leto.
+                Preveri razpoložljivost in rezerviraj bivanje
+                v enem najbolj ikoničnih gradov v Sloveniji.
             </p>
-            <div class="flex flex-wrap justify-center gap-4 mb-8">
-                <div class="bg-white/10 backdrop-blur-md rounded-2xl px-6 py-4">
-                    <div class="text-3xl font-bold text-teal-400">600€</div>
-                    <div class="text-sm text-white/70">na noč (do 6 oseb)</div>
-                </div>
-                <div class="bg-white/10 backdrop-blur-md rounded-2xl px-6 py-4">
-                    <div class="text-3xl font-bold text-blue-400">4.9★</div>
-                    <div class="text-sm text-white/70">127 ocen gostov</div>
-                </div>
-                <div class="bg-white/10 backdrop-blur-md rounded-2xl px-6 py-4">
-                    <div class="text-3xl font-bold text-purple-400">750+</div>
-                    <div class="text-sm text-white/70">let zgodovine</div>
-                </div>
-            </div>
+
+
+
             <div class="flex flex-wrap justify-center gap-4">
+
                 <button class="px-10 py-5 rounded-full bg-gradient-to-r from-teal-500 to-blue-500 text-white font-bold text-lg hover:scale-105 transition-all duration-200 shadow-2xl">
-                    Preverite razpoložljivost
+                    Preveri razpoložljivost
                 </button>
+
+
                 <button class="px-10 py-5 rounded-full bg-white/10 backdrop-blur-md text-white font-bold text-lg hover:bg-white/20 transition-all duration-200">
-                    Kontaktirajte nas
+                    Kontakt
                 </button>
+
             </div>
+
         </div>
+
     </section>
 
-    <!--v bližini-->
-    <section class="py-24 px-6 bg-slate-50">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">
-                    Odkrijte tudi
-                </h2>
-                <p class="text-xl text-slate-600">
-                    Druge edinstvene destinacije v Sloveniji
-                </p>
-            </div>
 
-            <div class="grid md:grid-cols-3 gap-6">
-                <article class="destination-card bg-[url('images/jama.jpg')]">
-                    <div>
-                        <span class="destination-badge">🗿 Celo leto</span>
-                        <h3 class="destination-title">Postojnska jama</h3>
-                        <p class="destination-text">Najbolj znana jama v Sloveniji</p>
-                    </div>
-                </article>
 
-                <article class="destination-card bg-[url('images/slovenija.jpg')]">
-                    <div>
-                        <span class="destination-badge">🏔️ Poletje</span>
-                        <h3 class="destination-title">Bled</h3>
-                        <p class="destination-text">Alpska pravljica z jezerom</p>
-                    </div>
-                </article>
 
-                <article class="destination-card bg-[url('images/amsterdam.jpg')]">
-                    <div>
-                        <span class="destination-badge">🌊 Celo leto</span>
-                        <h3 class="destination-title">Ljubljana</h3>
-                        <p class="destination-text">Čarobna prestolnica</p>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
 
-    <!--avtor oglasa-->
-    <section class="py-24 px-6 bg-white">
-        <div class="max-w-4xl mx-auto">
-            <div class="bg-gradient-to-br from-slate-50 to-blue-50 rounded-3xl p-10 border-2 border-slate-200">
-                <div class="flex flex-col md:flex-row gap-8 items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-teal-500 to-blue-600 flex items-center justify-center text-white text-5xl font-bold shadow-xl">
-                            MP
-                        </div>
-                    </div>
-                    
-                    <div class="flex-grow text-center md:text-left">
-                        <div class="mb-3">
-                            <span class="inline-block px-3 py-1 rounded-full bg-teal-100 text-teal-700 font-bold text-xs uppercase tracking-wider mb-2">
-                                Gostitelj
-                            </span>
-                        </div>
-                        
-                        <h3 class="text-3xl font-extrabold text-slate-900 mb-2">
-                            Marko Predjamski
-                        </h3>
-                        
-                        <p class="text-lg text-slate-600 mb-4">
-                            Kustos Predjamskega gradu, zgodovinar in gostitelj
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-6">
-                            <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-semibold text-sm">
-                                ⭐ Superhost
-                            </span>
-                            <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-700 font-semibold text-sm">
-                                👥 127 gostov
-                            </span>
-                            <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 font-semibold text-sm">
-                                ✓ Preverjeno
-                            </span>
-                        </div>
-                        
-                        <p class="text-slate-600 leading-relaxed mb-6">
-                            "Že 15 let delam kot kustos Predjamskega gradu in vsak obisk z gosti je zame posebno doživetje. Rad delim zgodbe o Erazmu Predjamskem in skrivnostih tega čudovitega gradu. Moja strast je, da vsak gost odide z nepozabnimi spomini in globljim razumevanjem slovenske zgodovine."
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-4 justify-center md:justify-start">
-                            <button class="px-6 py-3 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all">
-                                Kontaktirajte gostitelja
-                            </button>
-                            <button class="px-6 py-3 rounded-full bg-white border-2 border-slate-300 text-slate-900 font-bold hover:border-slate-900 transition-all">
-                                Več o meni
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mt-8 pt-8 border-t border-slate-200">
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                        <div>
-                            <div class="text-3xl font-bold text-teal-600 mb-1">4.9</div>
-                            <div class="text-sm text-slate-600">Povprečna ocena</div>
-                        </div>
-                        <div>
-                            <div class="text-3xl font-bold text-blue-600 mb-1">127</div>
-                            <div class="text-sm text-slate-600">Ocen</div>
-                        </div>
-                        <div>
-                            <div class="text-3xl font-bold text-purple-600 mb-1">15</div>
-                            <div class="text-sm text-slate-600">Let izkušenj</div>
-                        </div>
-                        <div>
-                            <div class="text-3xl font-bold text-green-600 mb-1">100%</div>
-                            <div class="text-sm text-slate-600">Odzivnost</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!--footer-->
+
+    <!-- FOOTER -->
     <footer class="bg-slate-950 text-white px-6 pt-20 pb-10">
+
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-4 gap-10 border-b border-white/10 pb-10">
+
             <div>
-                <h3 class="text-2xl font-bold mb-4">UniqueStays</h3>
+
+                <h3 class="text-2xl font-bold mb-4">
+                    UniqueStays
+                </h3>
+
                 <p class="text-white/60 leading-relaxed mb-5">
                     Najdite svoj popoln pobeg na najbolj posebnih krajih sveta.
                 </p>
+
             </div>
 
-            <div>
-                <h3 class="font-bold text-lg mb-4">Hitre povezave</h3>
-                <ul class="space-y-3 text-white/60">
-                    <li><a href="index.html" class="hover:text-white transition">Domov</a></li>
-                    <li><a href="index.html#destinations" class="hover:text-white transition">Destinacije</a></li>
-                    <li><a href="iskanje.html" class="hover:text-white transition">Iskanje</a></li>
-                </ul>
-            </div>
+
 
             <div>
-                <h3 class="font-bold text-lg mb-4">Podpora</h3>
+
+                <h3 class="font-bold text-lg mb-4">
+                    Hitre povezave
+                </h3>
+
                 <ul class="space-y-3 text-white/60">
-                    <li><a href="#" class="hover:text-white transition">Pomoč center</a></li>
-                    <li><a href="#" class="hover:text-white transition">Kontakt</a></li>
-                    <li><a href="#" class="hover:text-white transition">Pogosta vprašanja</a></li>
+
+                    <li>
+                        <a href="#" class="hover:text-white transition">
+                            Domov
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="hover:text-white transition">
+                            Destinacije
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="hover:text-white transition">
+                            Iskanje
+                        </a>
+                    </li>
+
                 </ul>
+
             </div>
 
+
+
+
             <div>
-                <h3 class="font-bold text-lg mb-4">Pravno</h3>
+
+                <h3 class="font-bold text-lg mb-4">
+                    Podpora
+                </h3>
+
                 <ul class="space-y-3 text-white/60">
-                    <li><a href="pogoji.html" class="hover:text-white transition">Pogoji uporabe</a></li>
-                    <li><a href="zasebnost.html" class="hover:text-white transition">Politika zasebnosti</a></li>
+
+                    <li>
+                        <a href="#" class="hover:text-white transition">
+                            Pomoč center
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="hover:text-white transition">
+                            Kontakt
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="hover:text-white transition">
+                            Pogosta vprašanja
+                        </a>
+                    </li>
+
                 </ul>
+
             </div>
+
+
+
+
+            <div>
+
+                <h3 class="font-bold text-lg mb-4">
+                    Pravno
+                </h3>
+
+                <ul class="space-y-3 text-white/60">
+
+                    <li>
+                        <a href="#" class="hover:text-white transition">
+                            Pogoji uporabe
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="hover:text-white transition">
+                            Politika zasebnosti
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
         </div>
+
+
 
         <div class="max-w-7xl mx-auto pt-8 text-center text-white/40 text-sm">
             © 2026 UniqueStays. Vse pravice pridržane.
         </div>
+
     </footer>
 
 </body>
