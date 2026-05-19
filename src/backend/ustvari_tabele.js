@@ -65,11 +65,7 @@ await knex.schema.createTable('Prenocisce', (table) => {
     table.string('naslov').notNullable();
     table.integer('max_gostov');
     table.integer('stevilo_sob');
-    table.integer('TK_uporabnik')
-        .unsigned()
-        .references('ID_uporabnik')
-        .inTable('Uporabnik');
-
+    table.integer('TK_uporabnik').unsigned().references('ID_uporabnik').inTable('Uporabnik');
 });
 
         console.log('Tabela prenocisce ustvarjena.');
