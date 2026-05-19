@@ -55,16 +55,22 @@ async function napolniBazo() {
 
 
     // PRENOCISCE
-        await knex.schema.createTable('Prenocisce' , (table) => {
-            table.increments('ID_prenocisce');
-            table.string('naziv').notNullable();
-            table.string('tip_prenocisca').notNullable();
-            table.string('opis_prenocisca').notNullable();
-            table.decimal('cena_na_noc', 6, 2);
-            table.string('koordinate', 50).notNullable();
-            table.string('naslov').notNullable();
-            table.integer('TK_uporabnik').unsigned().references('ID_uporabnik').inTable('Uporabnik');
-        });
+await knex.schema.createTable('Prenocisce', (table) => {
+    table.increments('ID_prenocisce');
+    table.string('naziv').notNullable();
+    table.string('tip_prenocisca').notNullable();
+    table.string('opis_prenocisca').notNullable();
+    table.decimal('cena_na_noc', 6, 2);
+    table.string('koordinate', 50).notNullable();
+    table.string('naslov').notNullable();
+    table.integer('max_gostov');
+    table.integer('stevilo_sob');
+    table.integer('TK_uporabnik')
+        .unsigned()
+        .references('ID_uporabnik')
+        .inTable('Uporabnik');
+
+});
 
         console.log('Tabela prenocisce ustvarjena.');
 
@@ -84,6 +90,8 @@ async function napolniBazo() {
               cena_na_noc: 230,
               koordinate: '45.8150,14.1279',
               naslov: 'Predjama 1, Postojna, Slovenija',
+              max_gostov: 6,
+              stevilo_sob: 3,
               TK_uporabnik: 2
             },
 
