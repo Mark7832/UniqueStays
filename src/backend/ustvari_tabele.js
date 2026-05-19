@@ -28,6 +28,7 @@ async function napolniBazo() {
             table.string('ime_uporabnika').notNullable();
             table.string('priimek_uporabnika').notNullable();
             table.string('email').notNullable();
+            table.string('drzava').notNullable();
             table.string('geslo').notNullable();
             table.string('opis');
             table.date('ustvarjen_od').notNullable();
@@ -36,16 +37,16 @@ async function napolniBazo() {
         console.log('Tabela uporabnik uspesno ustvarjena.');
 
         const Uporabnik = [
-            {ime_uporabnika: 'Jože', priimek_uporabnika: 'Krajnc', email: 'joze@gmail.com', geslo: 'geslo123', ustvarjen_od: '2024-01-15' },
-            {ime_uporabnika: 'Meta', priimek_uporabnika: 'Bezeg', email: 'meta@gmail.com', geslo: 'mocno_geslo', ustvarjen_od: '2024-01-15' },
-            {ime_uporabnika: 'Luka', priimek_uporabnika: 'Horvat', email: 'luka@gmail.com', geslo: 'luka456', ustvarjen_od: '2024-03-10'},
-            {ime_uporabnika: 'Ana', priimek_uporabnika: 'Novak', email: 'ana@gmail.com', geslo: 'ana789', ustvarjen_od: '2024-03-22'},
-            {ime_uporabnika: 'Tina', priimek_uporabnika: 'Zupan', email: 'tina@gmail.com', geslo: 'tina321', ustvarjen_od: '2024-04-05'},
-            {ime_uporabnika: 'Marko', priimek_uporabnika: 'Kovač', email: 'marko@gmail.com', geslo: 'marko654', ustvarjen_od: '2024-04-18'},
-            {ime_uporabnika: 'Nina', priimek_uporabnika: 'Potočnik', email: 'nina@gmail.com', geslo: 'nina987', ustvarjen_od: '2024-05-01'},
-            {ime_uporabnika: 'Rok', priimek_uporabnika: 'Mlinar', email: 'rok@gmail.com', geslo: 'rok111', ustvarjen_od: '2024-05-15'},
-            {ime_uporabnika: 'Petra', priimek_uporabnika: 'Mlakar', email: 'petra@gmail.com', geslo: 'petra222', ustvarjen_od: '2024-06-01'},
-            {ime_uporabnika: 'Urh', priimek_uporabnika: 'Vidmar', email: 'urh28@gmail.com', geslo: 'urh333', ustvarjen_od: '2024-06-10'}
+            {ime_uporabnika: 'Jože', priimek_uporabnika: 'Krajnc', email: 'joze@gmail.com', dzava: 'Slovenija', geslo: 'geslo123', ustvarjen_od: '2024-01-15' },
+            {ime_uporabnika: 'Meta', priimek_uporabnika: 'Bezeg', email: 'meta@gmail.com', dzava: 'Slovenija', geslo: 'mocno_geslo', ustvarjen_od: '2024-01-15' },
+            {ime_uporabnika: 'Luka', priimek_uporabnika: 'Horvat', email: 'luka@gmail.com', dzava: 'Italija', geslo: 'luka456', ustvarjen_od: '2024-03-10'},
+            {ime_uporabnika: 'Ana', priimek_uporabnika: 'Novak', email: 'ana@gmail.com', dzava: 'Slovenija', geslo: 'ana789', ustvarjen_od: '2024-03-22'},
+            {ime_uporabnika: 'Tina', priimek_uporabnika: 'Zupan', email: 'tina@gmail.com', dzava: 'Avstija', geslo: 'tina321', ustvarjen_od: '2024-04-05'},
+            {ime_uporabnika: 'Marko', priimek_uporabnika: 'Kovač', email: 'marko@gmail.com', dzava: 'Slovenija',geslo: 'marko654', ustvarjen_od: '2024-04-18'},
+            {ime_uporabnika: 'Nina', priimek_uporabnika: 'Potočnik', email: 'nina@gmail.com', dzava: 'Rusija', geslo: 'nina987', ustvarjen_od: '2024-05-01'},
+            {ime_uporabnika: 'Rok', priimek_uporabnika: 'Mlinar', email: 'rok@gmail.com', dzava: 'Madzarska', geslo: 'rok111', ustvarjen_od: '2024-05-15'},
+            {ime_uporabnika: 'Petra', priimek_uporabnika: 'Mlakar', email: 'petra@gmail.com', dzava: 'Estonija', geslo: 'petra222', ustvarjen_od: '2024-06-01'},
+            {ime_uporabnika: 'Urh', priimek_uporabnika: 'Vidmar', email: 'urh28@gmail.com', dzava: 'Slovenija', geslo: 'urh333', ustvarjen_od: '2024-06-10'}
         ];
 
         await knex('Uporabnik').insert(Uporabnik); //funkcija ki podatke vnese v tebelo
@@ -54,16 +55,22 @@ async function napolniBazo() {
 
 
     // PRENOCISCE
-        await knex.schema.createTable('Prenocisce' , (table) => {
-            table.increments('ID_prenocisce');
-            table.string('naziv').notNullable();
-            table.string('tip_prenocisca').notNullable();
-            table.string('opis_prenocisca').notNullable();
-            table.decimal('cena_na_noc', 6, 2);
-            table.string('koordinate', 50).notNullable();
-            table.string('naslov').notNullable();
-            table.integer('TK_uporabnik').unsigned().references('ID_uporabnik').inTable('Uporabnik');
-        });
+await knex.schema.createTable('Prenocisce', (table) => {
+    table.increments('ID_prenocisce');
+    table.string('naziv').notNullable();
+    table.string('tip_prenocisca').notNullable();
+    table.string('opis_prenocisca').notNullable();
+    table.decimal('cena_na_noc', 6, 2);
+    table.string('koordinate', 50).notNullable();
+    table.string('naslov').notNullable();
+    table.integer('max_gostov');
+    table.integer('stevilo_sob');
+    table.integer('TK_uporabnik')
+        .unsigned()
+        .references('ID_uporabnik')
+        .inTable('Uporabnik');
+
+});
 
         console.log('Tabela prenocisce ustvarjena.');
 
@@ -83,6 +90,8 @@ async function napolniBazo() {
               cena_na_noc: 230,
               koordinate: '45.8150,14.1279',
               naslov: 'Predjama 1, Postojna, Slovenija',
+              max_gostov: 6,
+              stevilo_sob: 3,
               TK_uporabnik: 2
             },
 
