@@ -3,11 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Predjamski grad - UniqueStays</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-
     <script>
         tailwind.config = {
             theme: {
@@ -20,726 +17,550 @@
             }
         }
     </script>
-
 </head>
 
 <body class="bg-slate-100 text-slate-800 antialiased">
 
-
-
     <!-- HEADER -->
     <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-xl">
-
         <nav class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
-
             <div class="text-2xl font-extrabold text-slate-900">
-                <a href="index.html">
-                    ✨ UniqueStays
-                </a>
+                <a href="index.html">✨ UniqueStays</a>
             </div>
-
-
             <div class="flex flex-wrap items-center justify-center gap-5">
-
-                <a href="index.html"
-                   class="font-semibold hover:text-blue-600 transition">
-                    Destinacije
-                </a>
-
-                <a href="#"
-                   class="font-semibold hover:text-blue-600 transition">
-                    O nas
-                </a>
-
-                <a href="#"
-                   class="font-semibold hover:text-blue-600 transition">
-                    Kontakt
-                </a>
-
-
+                <a href="index.html" class="font-semibold hover:text-blue-600 transition">Destinacije</a>
+                <a href="#" class="font-semibold hover:text-blue-600 transition">O nas</a>
+                <a href="#" class="font-semibold hover:text-blue-600 transition">Kontakt</a>
                 <button class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
                     Rezerviraj
                 </button>
-
             </div>
-
         </nav>
-
     </header>
 
-
-
-
+    <!-- DEBUG INFO -->
+    <div id="debugInfo" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 max-w-7xl mx-auto mt-4 rounded" style="display: none;">
+        <p class="font-bold">🔍 Debug informacije:</p>
+        <p id="debugText">Nalaganje...</p>
+    </div>
 
     <!-- HERO -->
     <section class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-teal-900 text-white">
-
         <div class="absolute inset-0 opacity-10">
             <div class="absolute top-10 left-10 text-9xl">🏰</div>
             <div class="absolute bottom-10 right-10 text-9xl">✨</div>
         </div>
 
-
         <div class="relative z-10 max-w-7xl mx-auto px-6 py-32">
-
             <div class="inline-block mb-6 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md">
-                <span class="text-sm font-bold uppercase tracking-wider">
-                    🏰 Grad • Slovenija
+                <span class="text-sm font-bold uppercase tracking-wider" id="tipPrenocisca">
+                    🏰 Nalaganje...
                 </span>
             </div>
 
-
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
-                Predjamski grad
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6" id="nazivPrenocisca">
+                Nalaganje podatkov...
             </h1>
 
-
-            <p class="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl leading-relaxed">
-                Predjamski grad, vklesan v mogočno skalo.
-                Edinstveno prenočišče v enem najbolj ikoničnih gradov v Sloveniji.
+            <p class="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl leading-relaxed" id="opisPrenocisca">
+                Prosimo počakajte...
             </p>
-
-
 
             <!-- stats -->
             <div class="flex flex-wrap gap-4 mb-10">
-
                 <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
-                    <div class="text-sm text-white/70">
-                        Cena na noč
-                    </div>
-
-                    <div class="text-3xl font-bold">
-                        230 €
-                    </div>
+                    <div class="text-sm text-white/70">Cena na noč</div>
+                    <div class="text-3xl font-bold" id="cenaNaNoc">-</div>
                 </div>
 
-
                 <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
-                    <div class="text-sm text-white/70">
-                        Gostov
-                    </div>
-
-                    <div class="text-3xl font-bold">
-                        6
-                    </div>
+                    <div class="text-sm text-white/70">Gostov</div>
+                    <div class="text-3xl font-bold" id="maxGostov">-</div>
                 </div>
 
-
                 <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
-                    <div class="text-sm text-white/70">
-                        Spalnic
-                    </div>
-
-                    <div class="text-3xl font-bold">
-                        3
-                    </div>
+                    <div class="text-sm text-white/70">Spalnic</div>
+                    <div class="text-3xl font-bold" id="steviloSob">-</div>
                 </div>
 
-
                 <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
-                    <div class="text-sm text-white/70">
-                        Ocena
-                    </div>
-
-                    <div class="text-3xl font-bold">
-                        4.9
-                    </div>
+                    <div class="text-sm text-white/70">Ocena</div>
+                    <div class="text-3xl font-bold" id="povprecnaOcena">-</div>
                 </div>
-
             </div>
-
-
 
             <!-- buttons -->
             <div class="flex flex-wrap gap-4">
-
                 <button class="px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-105 transition-all duration-200 shadow-lg">
                     Rezerviraj zdaj
                 </button>
-
-
                 <button class="px-8 py-4 rounded-full bg-white/10 backdrop-blur-md text-white font-bold hover:bg-white/20 transition-all duration-200">
                     Poglej lokacijo
                 </button>
-
             </div>
-
         </div>
-
     </section>
-
-
-
-
-
 
     <!-- O PRENOČIŠČU -->
     <section class="py-24 px-6 bg-white">
-
         <div class="max-w-6xl mx-auto">
-
             <div class="text-center mb-16">
-
                 <span class="inline-block px-4 py-2 rounded-full bg-teal-100 text-teal-700 font-bold text-sm uppercase tracking-widest mb-4">
                     Edinstvena izkušnja
                 </span>
-
 
                 <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">
                     O prenočišču
                 </h2>
 
-
-                <p class="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
-                    Predjamski grad je eno najbolj znanih zgodovinskih prenočišč v Sloveniji.
-                    Nahaja se v mogočni kraški steni in združuje zgodovino,
-                    naravo ter moderno udobje v nepozabno izkušnjo.
+                <p class="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed" id="opisPodrobno">
+                    Nalaganje...
                 </p>
-
             </div>
-
-
-
 
             <!-- CARDS -->
             <div class="grid md:grid-cols-4 gap-6">
-
                 <div class="text-center p-8 rounded-3xl bg-gradient-to-br from-slate-50 to-white border border-slate-200 shadow-sm">
-
-                    <div class="text-5xl mb-4">
-                        🏰
-                    </div>
-
-                    <h3 class="text-3xl font-bold text-slate-900 mb-2">
-                        Grad
-                    </h3>
-
-                    <p class="text-slate-600">
-                        Tip prenočišča
-                    </p>
-
+                    <div class="text-5xl mb-4">🏰</div>
+                    <h3 class="text-3xl font-bold text-slate-900 mb-2" id="tipCard">-</h3>
+                    <p class="text-slate-600">Tip prenočišča</p>
                 </div>
 
-
-
                 <div class="text-center p-8 rounded-3xl bg-gradient-to-br from-slate-50 to-white border border-slate-200 shadow-sm">
-
-                    <div class="text-5xl mb-4">
-                        👥
-                    </div>
-
-                    <h3 class="text-3xl font-bold text-slate-900 mb-2">
-                        6
-                    </h3>
-
-                    <p class="text-slate-600">
-                        Maksimalno gostov
-                    </p>
-
+                    <div class="text-5xl mb-4">👥</div>
+                    <h3 class="text-3xl font-bold text-slate-900 mb-2" id="maxGostovCard">-</h3>
+                    <p class="text-slate-600">Maksimalno gostov</p>
                 </div>
 
-
-
                 <div class="text-center p-8 rounded-3xl bg-gradient-to-br from-slate-50 to-white border border-slate-200 shadow-sm">
-
-                    <div class="text-5xl mb-4">
-                        🛏️
-                    </div>
-
-                    <h3 class="text-3xl font-bold text-slate-900 mb-2">
-                        3
-                    </h3>
-
-                    <p class="text-slate-600">
-                        Spalnice
-                    </p>
-
+                    <div class="text-5xl mb-4">🛏️</div>
+                    <h3 class="text-3xl font-bold text-slate-900 mb-2" id="steviloSobCard">-</h3>
+                    <p class="text-slate-600">Spalnice</p>
                 </div>
 
-
-
                 <div class="text-center p-8 rounded-3xl bg-gradient-to-br from-slate-50 to-white border border-slate-200 shadow-sm">
-
-                    <div class="text-5xl mb-4">
-                        ⭐
-                    </div>
-
-                    <h3 class="text-3xl font-bold text-slate-900 mb-2">
-                        4.9
-                    </h3>
-
-                    <p class="text-slate-600">
-                        Povprečna ocena
-                    </p>
-
+                    <div class="text-5xl mb-4">⭐</div>
+                    <h3 class="text-3xl font-bold text-slate-900 mb-2" id="povprecnaOcenaCard">-</h3>
+                    <p class="text-slate-600">Povprečna ocena</p>
                 </div>
-
             </div>
-
         </div>
-
     </section>
 
     <!-- PAKETI DOŽIVETIJ -->
-<section class="py-24 px-6 bg-white">
-
-    <div class="max-w-6xl mx-auto">
-
-        <!-- title -->
-        <div class="text-center mb-16">
-
-            <span class="inline-block px-4 py-2 rounded-full bg-orange-100 text-orange-700 font-bold text-sm uppercase tracking-widest mb-4">
-                Dodatna doživetja
-            </span>
-
-            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">
-                Paketi doživetij
-            </h2>
-
-            <p class="text-xl text-slate-600 max-w-3xl mx-auto">
-                Svoje bivanje lahko nadgradiš z ekskluzivnimi izkušnjami.
-            </p>
-
-        </div>
-
-
-
-        <!-- cards -->
-        <div class="grid md:grid-cols-2 gap-8">
-
-
-
-
-            <!-- paket 1 -->
-            <div class="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white p-10 shadow-2xl">
-
-                <!-- glow -->
-                <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
-
-
-                <div class="relative z-10">
-
-                    <div class="w-20 h-20 rounded-3xl bg-white/10 backdrop-blur-md flex items-center justify-center text-4xl mb-8 border border-white/10">
-                        🔦
-                    </div>
-
-
-                    <div class="flex items-start justify-between gap-4 mb-6">
-
-                        <div>
-
-                            <h3 class="text-3xl font-extrabold mb-3">
-                                Raziskovanje skrivnih rovov
-                            </h3>
-
-                            <p class="text-white/80 leading-relaxed">
-                                Ekskluziven ogled podzemnih rovov in skrivnih prehodov pod Predjamskim gradom.
-                            </p>
-
-                        </div>
-
-
-                        <div class="bg-white/10 backdrop-blur-md rounded-2xl px-5 py-4 text-center min-w-[120px]">
-
-                            <div class="text-sm text-white/60">
-                                Doplačilo
-                            </div>
-
-                            <div class="text-2xl font-bold">
-                                34.99 €
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <button class="mt-4 px-6 py-3 rounded-2xl bg-white text-slate-900 font-bold hover:scale-105 transition">
-                        Dodaj paket
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-
-
-
-
-            <!-- paket 2 -->
-            <div class="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 text-white p-10 shadow-2xl">
-
-                <!-- glow -->
-                <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
-
-
-                <div class="relative z-10">
-
-                    <div class="w-20 h-20 rounded-3xl bg-white/10 backdrop-blur-md flex items-center justify-center text-4xl mb-8 border border-white/10">
-                        🍷
-                    </div>
-
-
-                    <div class="flex items-start justify-between gap-4 mb-6">
-
-                        <div>
-
-                            <h3 class="text-3xl font-extrabold mb-3">
-                                Viteška večerja
-                            </h3>
-
-                            <p class="text-white/80 leading-relaxed">
-                                Večerja ob svečah v grajski dvorani z viteškim menijem in srednjeveško glasbo.
-                            </p>
-
-                        </div>
-
-
-                        <div class="bg-white/10 backdrop-blur-md rounded-2xl px-5 py-4 text-center min-w-[120px]">
-
-                            <div class="text-sm text-white/60">
-                                Doplačilo
-                            </div>
-
-                            <div class="text-2xl font-bold">
-                                52.99 €
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <button class="mt-4 px-6 py-3 rounded-2xl bg-white text-slate-900 font-bold hover:scale-105 transition">
-                        Dodaj paket
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-<section class="py-24 px-6 bg-slate-50">
-
-    <div class="max-w-6xl mx-auto">
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-
-
-            <!-- LOKACIJA -->
-            <a
-                href="https://www.google.com/maps?q=45.8150,14.1279"
-                target="_blank"
-                class="group block h-full"
-            >
-
-                <div class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-teal-900 rounded-[32px] p-10 text-white shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 h-full">
-
-                    <!-- glow -->
-                    <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
-
-                    <!-- icon -->
-                    <div class="relative z-10 flex items-center justify-between mb-10">
-
-                        <div class="w-20 h-20 rounded-3xl bg-white/10 backdrop-blur-md flex items-center justify-center text-4xl border border-white/10">
-                            📍
-                        </div>
-
-                        <div class="text-white/60 text-sm font-semibold group-hover:text-white transition">
-                            Odpri zemljevid →
-                        </div>
-
-                    </div>
-
-
-
-                    <div class="relative z-10">
-
-                        <h2 class="text-4xl font-extrabold mb-4">
-                            Lokacija
-                        </h2>
-
-                        <p class="text-white/80 text-lg leading-relaxed mb-8">
-                            Predjama 1, Postojna, Slovenija
-                        </p>
-
-                    </div>
-
-
-
-                    <div class="relative z-10 bg-white/10 backdrop-blur-md border border-white/10 rounded-3xl p-6">
-
-                        <p class="text-white/60 text-sm uppercase tracking-wider mb-2">
-                            Koordinate
-                        </p>
-
-                        <p class="text-2xl font-bold tracking-wide">
-                            45.8150, 14.1279
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </a>
-
-
-
-
-
-
-            <!-- WHY CHOOSE -->
-            <div class="bg-white rounded-[32px] p-10 border border-slate-200 shadow-xl h-full">
-
-                <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-teal-100 to-blue-100 flex items-center justify-center text-4xl mb-10">
-                    ✨
-                </div>
-
-
-                <h2 class="text-4xl font-extrabold text-slate-900 mb-8">
-                    Zakaj izbrati to prenočišče?
+    <section class="py-24 px-6 bg-slate-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-bold text-sm uppercase tracking-widest mb-4">
+                    Ekskluzivno
+                </span>
+
+                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">
+                    Paketi doživetij
                 </h2>
 
-
-
-                <div class="space-y-5">
-
-                    <div class="flex items-center gap-4 bg-slate-50 rounded-2xl p-5">
-
-                        <div class="w-12 h-12 rounded-2xl bg-teal-100 flex items-center justify-center text-teal-700 font-bold">
-                            ✓
-                        </div>
-
-                        <span class="text-slate-700 text-lg">
-                            Edinstvena zgodovinska lokacija
-                        </span>
-
-                    </div>
-
-
-
-                    <div class="flex items-center gap-4 bg-slate-50 rounded-2xl p-5">
-
-                        <div class="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-700 font-bold">
-                            ✓
-                        </div>
-
-                        <span class="text-slate-700 text-lg">
-                            Primerno za do 6 gostov
-                        </span>
-
-                    </div>
-
-
-
-                    <div class="flex items-center gap-4 bg-slate-50 rounded-2xl p-5">
-
-                        <div class="w-12 h-12 rounded-2xl bg-purple-100 flex items-center justify-center text-purple-700 font-bold">
-                            ✓
-                        </div>
-
-                        <span class="text-slate-700 text-lg">
-                            Premium izkušnja bivanja
-                        </span>
-
-                    </div>
-
-
-
-                    <div class="flex items-center gap-4 bg-slate-50 rounded-2xl p-5">
-
-                        <div class="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-700 font-bold">
-                            ✓
-                        </div>
-
-                        <span class="text-slate-700 text-lg">
-                            Visoka ocena gostov
-                        </span>
-
-                    </div>
-
-                </div>
-
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+                    Izberite paket in ustvarite nepozabne spomine
+                </p>
             </div>
 
+            <div class="grid md:grid-cols-3 gap-8" id="dozivetjaContainer">
+                <div class="text-center text-slate-600">Nalaganje doživetij...</div>
+            </div>
         </div>
+    </section>
 
-    </div>
+    <!-- OCENE GOSTOV -->
+    <section class="py-24 px-6 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-2 rounded-full bg-yellow-100 text-yellow-700 font-bold text-sm uppercase tracking-widest mb-4">
+                    Mnenja gostov
+                </span>
 
-</section>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">
+                    Kaj pravijo naši gostje?
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8" id="komentarjiContainer">
+                <div class="text-center text-slate-600">Nalaganje komentarjev...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOKACIJA -->
+    <section class="py-24 px-6 bg-slate-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- LOKACIJA -->
+                <a href="#" class="group relative overflow-hidden rounded-[32px] bg-gradient-to-br from-slate-900 via-blue-900 to-teal-900 p-10 text-white shadow-2xl transition-all hover:scale-[1.02]">
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="absolute top-1/4 left-1/4 text-9xl">📍</div>
+                        <div class="absolute bottom-1/4 right-1/4 text-9xl">🗺️</div>
+                    </div>
+
+                    <div class="relative z-10">
+                        <h2 class="text-4xl font-extrabold mb-4">Lokacija</h2>
+                        <p class="text-white/80 text-lg leading-relaxed mb-8" id="naslovLokacija">
+                            Nalaganje...
+                        </p>
+                    </div>
+
+                    <div class="relative z-10 bg-white/10 backdrop-blur-md border border-white/10 rounded-3xl p-6">
+                        <p class="text-white/60 text-sm uppercase tracking-wider mb-2">Koordinate</p>
+                        <p class="text-2xl font-bold tracking-wide" id="koordinateLokacija">-</p>
+                    </div>
+                </a>
+
+                <!-- WHY CHOOSE -->
+                <div class="bg-white rounded-[32px] p-10 border border-slate-200 shadow-xl h-full">
+                    <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-teal-100 to-blue-100 flex items-center justify-center text-4xl mb-10">
+                        ✨
+                    </div>
+
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-8">
+                        Zakaj izbrati to prenočišče?
+                    </h2>
+
+                    <div class="space-y-5">
+                        <div class="flex items-center gap-4 bg-slate-50 rounded-2xl p-5">
+                            <div class="w-12 h-12 rounded-2xl bg-teal-100 flex items-center justify-center text-teal-700 font-bold">✓</div>
+                            <span class="text-slate-700 text-lg">Edinstvena zgodovinska lokacija</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 bg-slate-50 rounded-2xl p-5">
+                            <div class="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-700 font-bold">✓</div>
+                            <span class="text-slate-700 text-lg" id="gostjeInfo">Primerno za goste</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 bg-slate-50 rounded-2xl p-5">
+                            <div class="w-12 h-12 rounded-2xl bg-purple-100 flex items-center justify-center text-purple-700 font-bold">✓</div>
+                            <span class="text-slate-700 text-lg">Premium izkušnja bivanja</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 bg-slate-50 rounded-2xl p-5">
+                            <div class="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-700 font-bold">✓</div>
+                            <span class="text-slate-700 text-lg">Visoka ocena gostov</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- CTA -->
     <section class="py-24 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-teal-900 text-white">
-
         <div class="max-w-4xl mx-auto text-center">
-
-            <div class="text-6xl mb-6">
-                🏰
-            </div>
-
+            <div class="text-6xl mb-6">🏰</div>
 
             <h2 class="text-4xl md:text-6xl font-extrabold mb-6">
                 Rezerviraj svoje prenočišče
             </h2>
 
-
             <p class="text-xl text-white/80 mb-10 max-w-2xl mx-auto leading-relaxed">
-                Preveri razpoložljivost in rezerviraj bivanje
-                v enem najbolj ikoničnih gradov v Sloveniji.
+                Preveri razpoložljivost in rezerviraj bivanje v enem najbolj ikoničnih gradov v Sloveniji.
             </p>
 
-
-
             <div class="flex flex-wrap justify-center gap-4">
-
                 <button class="px-10 py-5 rounded-full bg-gradient-to-r from-teal-500 to-blue-500 text-white font-bold text-lg hover:scale-105 transition-all duration-200 shadow-2xl">
                     Preveri razpoložljivost
                 </button>
 
-
                 <button class="px-10 py-5 rounded-full bg-white/10 backdrop-blur-md text-white font-bold text-lg hover:bg-white/20 transition-all duration-200">
                     Kontakt
                 </button>
-
             </div>
-
         </div>
-
     </section>
-
-
-
-
-
-
 
     <!-- FOOTER -->
     <footer class="bg-slate-950 text-white px-6 pt-20 pb-10">
-
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-4 gap-10 border-b border-white/10 pb-10">
-
             <div>
-
-                <h3 class="text-2xl font-bold mb-4">
-                    UniqueStays
-                </h3>
-
+                <h3 class="text-2xl font-bold mb-4">UniqueStays</h3>
                 <p class="text-white/60 leading-relaxed mb-5">
                     Najdite svoj popoln pobeg na najbolj posebnih krajih sveta.
                 </p>
-
             </div>
-
-
 
             <div>
-
-                <h3 class="font-bold text-lg mb-4">
-                    Hitre povezave
-                </h3>
-
+                <h3 class="font-bold text-lg mb-4">Hitre povezave</h3>
                 <ul class="space-y-3 text-white/60">
-
-                    <li>
-                        <a href="index.html" class="hover:text-white transition">
-                            Domov
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="index.html" class="hover:text-white transition">
-                            Destinacije
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="iskanje.html" class="hover:text-white transition">
-                            Iskanje
-                        </a>
-                    </li>
-
+                    <li><a href="index.html" class="hover:text-white transition">Domov</a></li>
+                    <li><a href="index.html" class="hover:text-white transition">Destinacije</a></li>
+                    <li><a href="iskanje.html" class="hover:text-white transition">Iskanje</a></li>
                 </ul>
-
             </div>
-
-
-
 
             <div>
-
-                <h3 class="font-bold text-lg mb-4">
-                    Podpora
-                </h3>
-
+                <h3 class="font-bold text-lg mb-4">Podpora</h3>
                 <ul class="space-y-3 text-white/60">
-
-                    <li>
-                        <a href="#" class="hover:text-white transition">
-                            Pomoč center
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#" class="hover:text-white transition">
-                            Kontakt
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#" class="hover:text-white transition">
-                            Pogosta vprašanja
-                        </a>
-                    </li>
-
+                    <li><a href="#" class="hover:text-white transition">Pomoč center</a></li>
+                    <li><a href="#" class="hover:text-white transition">Kontakt</a></li>
+                    <li><a href="#" class="hover:text-white transition">Pogosta vprašanja</a></li>
                 </ul>
-
             </div>
-
-
-
 
             <div>
-
-                <h3 class="font-bold text-lg mb-4">
-                    Pravno
-                </h3>
-
+                <h3 class="font-bold text-lg mb-4">Pravno</h3>
                 <ul class="space-y-3 text-white/60">
-
-                    <li>
-                        <a href="pogoji.html" class="hover:text-white transition">
-                            Pogoji uporabe
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="zasebnost.html" class="hover:text-white transition">
-                            Politika zasebnosti
-                        </a>
-                    </li>
-
+                    <li><a href="pogoji.html" class="hover:text-white transition">Pogoji uporabe</a></li>
+                    <li><a href="zasebnost.html" class="hover:text-white transition">Politika zasebnosti</a></li>
                 </ul>
-
             </div>
-
         </div>
-
-
 
         <div class="max-w-7xl mx-auto pt-8 text-center text-white/40 text-sm">
             © 2026 UniqueStays. Vse pravice pridržane.
         </div>
-
     </footer>
+
+    <!-- JavaScript -->
+    <script>
+        console.log('🚀 Skripta se zaganja...');
+        
+        const API_URL = 'http://localhost:3000/api';
+        const PRENOCISCE_ID = 2;
+
+        // Debug funkcija
+        function showDebug(message, isError = false) {
+            console.log(isError ? '❌' : '✅', message);
+            const debugDiv = document.getElementById('debugInfo');
+            const debugText = document.getElementById('debugText');
+            debugDiv.style.display = 'block';
+            debugDiv.className = isError 
+                ? 'bg-red-100 border-l-4 border-red-500 text-red-700 p-4 max-w-7xl mx-auto mt-4 rounded'
+                : 'bg-green-100 border-l-4 border-green-500 text-green-700 p-4 max-w-7xl mx-auto mt-4 rounded';
+            debugText.textContent = message;
+        }
+
+        // Glavna funkcija za nalaganje podatkov
+        async function naloziPodatke() {
+            try {
+                showDebug(`Nalagam podatke iz ${API_URL}/prenocisce/${PRENOCISCE_ID}...`);
+                
+                const response = await fetch(`${API_URL}/prenocisce/${PRENOCISCE_ID}`);
+                
+                showDebug(`Odgovor prejet! Status: ${response.status}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP napaka! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                console.log('📦 Prejeti podatki:', data);
+                showDebug('Podatki uspešno naloženi! Prikažem na strani...');
+                
+                prikaziPodatke(data);
+                
+                // Skrij debug info po 3 sekundah
+                setTimeout(() => {
+                    document.getElementById('debugInfo').style.display = 'none';
+                }, 3000);
+                
+            } catch (error) {
+                console.error('❌ NAPAKA:', error);
+                showDebug(`NAPAKA: ${error.message}. Preveri da server teče na ${API_URL}`, true);
+                prikaziNapako(error);
+            }
+        }
+
+        // Funkcija za prikaz podatkov
+        function prikaziPodatke(data) {
+            const { prenocisce, slike, dozivetja, komentarji, povprecnaOcena } = data;
+
+            console.log('📝 Prenočišče:', prenocisce);
+
+            // Preveri če podatki obstajajo
+            if (!prenocisce) {
+                showDebug('NAPAKA: Prenočišče ne obstaja v bazi!', true);
+                return;
+            }
+
+            // Osnovni podatki
+            setElementText('nazivPrenocisca', prenocisce.naziv || 'Ni podatka');
+            setElementText('tipPrenocisca', `🏰 ${prenocisce.tip_prenocisca || 'Neznano'} • Slovenija`);
+            setElementText('opisPrenocisca', prenocisce.opis_prenocisca || 'Ni opisa');
+            setElementText('opisPodrobno', prenocisce.opis_prenocisca || 'Ni opisa');
+
+            // Statistike
+            setElementText('cenaNaNoc', prenocisce.cena_na_noc ? `${prenocisce.cena_na_noc} €` : 'N/A');
+            setElementText('maxGostov', prenocisce.max_gostov || 'N/A');
+            setElementText('steviloSob', prenocisce.stevilo_sob || 'N/A');
+            setElementText('povprecnaOcena', povprecnaOcena || '0');
+
+            // Cards
+            setElementText('tipCard', prenocisce.tip_prenocisca || 'Neznano');
+            setElementText('maxGostovCard', prenocisce.max_gostov || 'N/A');
+            setElementText('steviloSobCard', prenocisce.stevilo_sob || 'N/A');
+            setElementText('povprecnaOcenaCard', povprecnaOcena || '0');
+
+            // Lokacija
+            setElementText('naslovLokacija', prenocisce.naslov || 'Neznana lokacija');
+            setElementText('koordinateLokacija', prenocisce.koordinate || 'N/A');
+
+            // Gostje info
+            setElementText('gostjeInfo', `Primerno za do ${prenocisce.max_gostov || '?'} gostov`);
+
+            // Doživetja
+            prikaziDozivetja(dozivetja || []);
+
+            // Komentarji
+            prikaziKomentarje(komentarji || []);
+        }
+
+        // Pomožna funkcija za nastavljanje teksta
+        function setElementText(id, text) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = text;
+            } else {
+                console.warn(`⚠️ Element z ID "${id}" ne obstaja!`);
+            }
+        }
+
+        // Funkcija za prikaz doživetij
+function prikaziDozivetja(dozivetja) {
+    console.log('🎭 DOŽIVETJA:', dozivetja);
+    
+    const container = document.getElementById('dozivetjaContainer');
+    if (!container) return;
+    
+    container.innerHTML = '';
+
+    if (!dozivetja || dozivetja.length === 0) {
+        container.innerHTML = '<p class="text-slate-600 col-span-full text-center">Trenutno ni dodatnih doživetij.</p>';
+        return;
+    }
+
+    dozivetja.forEach(dozivetje => {
+        const card = document.createElement('div');
+        card.className = 'group relative overflow-hidden rounded-3xl bg-white border-2 border-slate-200 p-8 transition-all hover:border-blue-500 hover:shadow-2xl hover:-translate-y-2';
+        
+        card.innerHTML = `
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-teal-100 flex items-center justify-center text-3xl mb-6">
+                🎭
+            </div>
+
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">
+                ${dozivetje.naziv || 'Neznano doživetje'}
+            </h3>
+
+            <p class="text-slate-600 mb-6 leading-relaxed">
+                ${dozivetje.opis || 'Ni opisa'}
+            </p>
+
+            <div class="flex items-center justify-between">
+                <div class="text-3xl font-extrabold text-blue-600">
+                    ${dozivetje.doplacilo || '0'} €
+                </div>
+
+                <button class="px-6 py-3 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all">
+                    Dodaj
+                </button>
+            </div>
+        `;
+        
+        container.appendChild(card);
+    });
+}
+            
+
+
+        // Funkcija za prikaz komentarjev
+        function prikaziKomentarje(komentarji) {
+            const container = document.getElementById('komentarjiContainer');
+            if (!container) return;
+            
+            container.innerHTML = '';
+
+            if (komentarji.length === 0) {
+                container.innerHTML = '<p class="text-slate-600 col-span-full text-center">Trenutno ni komentarjev.</p>';
+                return;
+            }
+
+            komentarji.forEach(komentar => {
+                const card = document.createElement('div');
+                card.className = 'p-8 rounded-3xl bg-slate-50 border border-slate-200';
+                
+                const datum = new Date(komentar.datum_komentar);
+                const formatiraniDatum = datum.toLocaleDateString('sl-SI', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+
+                const inicialiIme = (komentar.ime_uporabnika || 'U').charAt(0);
+                const inicialiPriimek = (komentar.priimek_uporabnika || 'N').charAt(0);
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center text-white font-bold text-xl">
+                            ${inicialiIme}${inicialiPriimek}
+                        </div>
+
+                        <div>
+                            <div class="font-bold text-slate-900">
+                                ${komentar.ime_uporabnika || 'Neznano'} ${komentar.priimek_uporabnika || ''}
+                            </div>
+                            <div class="text-sm text-slate-500">
+                                ${komentar.drzava || 'Neznano'} • ${formatiraniDatum}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-4">
+                        ${'⭐'.repeat(komentar.ocena_splosna || 0)}
+                        <span class="text-slate-600 font-semibold">${komentar.ocena_splosna || 0}/5</span>
+                    </div>
+
+                    ${komentar.komentar ? `
+                        <p class="text-slate-700 leading-relaxed mb-4">
+                            "${komentar.komentar}"
+                        </p>
+                    ` : ''}
+
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <div class="px-3 py-2 rounded-lg bg-white">
+                            <div class="text-slate-500">Udobje</div>
+                            <div class="font-bold">${komentar.ocena_udobje || 0}/5</div>
+                        </div>
+                        <div class="px-3 py-2 rounded-lg bg-white">
+                            <div class="text-slate-500">Unikatnost</div>
+                            <div class="font-bold">${komentar.ocena_unikatnost || 0}/5</div>
+                        </div>
+                        <div class="px-3 py-2 rounded-lg bg-white">
+                            <div class="text-slate-500">Lokacija</div>
+                            <div class="font-bold">${komentar.ocena_lokacija || 0}/5</div>
+                        </div>
+                        <div class="px-3 py-2 rounded-lg bg-white">
+                            <div class="text-slate-500">Doživetje</div>
+                            <div class="font-bold">${komentar.ocena_dozivetje || 0}/5</div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Funkcija za prikaz napake
+        function prikaziNapako(error) {
+            document.getElementById('nazivPrenocisca').textContent = 'Napaka pri nalaganju';
+            document.getElementById('opisPrenocisca').textContent = `Napaka: ${error.message}. Preveri da server teče!`;
+        }
+
+        // Zaženi nalaganje ob nalaganju strani
+        console.log('🎬 Dodajam event listener...');
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 DOM je naložen, začenjam nalaganje podatkov...');
+            naloziPodatke();
+        });
+        
+        console.log('✅ Skripta naložena!');
+    </script>
 
 </body>
 </html>
