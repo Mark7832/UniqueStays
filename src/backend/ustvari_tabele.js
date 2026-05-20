@@ -55,22 +55,18 @@ async function napolniBazo() {
 
 
     // PRENOCISCE
-await knex.schema.createTable('Prenocisce', (table) => {
-    table.increments('ID_prenocisce');
-    table.string('naziv').notNullable();
-    table.string('tip_prenocisca').notNullable();
-    table.string('opis_prenocisca').notNullable();
-    table.decimal('cena_na_noc', 6, 2);
-    table.string('koordinate', 50).notNullable();
-    table.string('naslov').notNullable();
-    table.integer('max_gostov');
-    table.integer('stevilo_sob');
-    table.integer('TK_uporabnik')
-        .unsigned()
-        .references('ID_uporabnik')
-        .inTable('Uporabnik');
-
-});
+        await knex.schema.createTable('Prenocisce', (table) => {
+            table.increments('ID_prenocisce');
+            table.string('naziv').notNullable();
+            table.string('tip_prenocisca').notNullable();
+            table.string('opis_prenocisca').notNullable();
+            table.decimal('cena_na_noc', 6, 2);
+            table.string('koordinate', 50).notNullable();
+            table.string('naslov').notNullable();
+            table.integer('max_gostov').notNullable();
+            table.integer('stevilo_sob').notNullable();
+            table.integer('TK_uporabnik').unsigned().references('ID_uporabnik').inTable('Uporabnik');
+        });
 
         console.log('Tabela prenocisce ustvarjena.');
 
@@ -81,6 +77,8 @@ await knex.schema.createTable('Prenocisce', (table) => {
               cena_na_noc: 180,
               koordinate: '46.8182,8.2275',
               naslov: 'Zermatt, Švica',
+              max_gostov: 6,
+              stevilo_sob: 3,
               TK_uporabnik: 1
             },
 
@@ -101,16 +99,20 @@ await knex.schema.createTable('Prenocisce', (table) => {
               cena_na_noc: 310,
               koordinate: '64.9631,-19.0208',
               naslov: 'Hella, Islandija',
+              max_gostov: 6,
+              stevilo_sob: 3,
               TK_uporabnik: 3
             },
 
             { naziv: 'Cave Hideaway',
               tip_prenocisca: 'Jama',
-               opis_prenocisca: 'Prespite v skrivnostni jami z mehko svetlobo lantern, naravno hladnim zrakom in občutkom, kot da ste odkrili skriti svet pod zemljo.',
-               cena_na_noc: 167,
-               koordinate: '8.6431,34.8270',
-               naslov: 'Göreme, Kapakodija, Turčija',
-               TK_uporabnik: 4
+              opis_prenocisca: 'Prespite v skrivnostni jami z mehko svetlobo lantern, naravno hladnim zrakom in občutkom, kot da ste odkrili skriti svet pod zemljo.',
+              cena_na_noc: 167,
+              koordinate: '8.6431,34.8270',
+              naslov: 'Göreme, Kapakodija, Turčija',
+              max_gostov: 6,
+              stevilo_sob: 3,
+              TK_uporabnik: 4
             },
 
             { naziv: 'Jungle Treehouse Hideaway',
@@ -119,6 +121,8 @@ await knex.schema.createTable('Prenocisce', (table) => {
               cena_na_noc: 420,
               koordinate: '9.7489,-83.7534',
               naslov: 'Monteverde, Kostarika',
+              max_gostov: 6,
+              stevilo_sob: 3,
               TK_uporabnik: 5
             },
 
@@ -127,7 +131,9 @@ await knex.schema.createTable('Prenocisce', (table) => {
               opis_prenocisca: 'Podvodni hotel na Maldivih ponuja nepozabno spanje med koralnimi grebeni, kjer skozi steklene stene opazujete pisane ribe, morske želve in čarobni svet oceana, kar iz udobja svoje sobe.',
               cena_na_noc: 333,
               koordinate: '3.2028,73.2207',
-               naslov: 'Male Atoll, Maldivi',
+              naslov: 'Male Atoll, Maldivi',
+              max_gostov: 6,
+              stevilo_sob: 3,
               TK_uporabnik: 6
             },
 
@@ -135,8 +141,10 @@ await knex.schema.createTable('Prenocisce', (table) => {
               tip_prenocisca: 'Barka',
               opis_prenocisca: 'Majhna plavajoča hiška na mirni reki, kjer vas zjutraj namesto alarma zbudijo račke, valovi in vonj sveže kave.',
               cena_na_noc: 140,
-               koordinate: '52.3676,4.9041',
+              koordinate: '52.3676,4.9041',
               naslov: 'Amsterdam Center, Nizozemska',
+              max_gostov: 6,
+              stevilo_sob: 3,
               TK_uporabnik: 7
             },
 
@@ -146,6 +154,8 @@ await knex.schema.createTable('Prenocisce', (table) => {
               cena_na_noc: 210,
               koordinate: '46.2276,2.2137',
               naslov: 'Lyon, Francija',
+              max_gostov: 6,
+              stevilo_sob: 3,
               TK_uporabnik: 8
             },
 
@@ -155,6 +165,8 @@ await knex.schema.createTable('Prenocisce', (table) => {
               cena_na_noc: 90,
               koordinate: '-40.9006,174.8860',
               naslov: 'Rotorua, Nova Zelandija',
+              max_gostov: 6,
+              stevilo_sob: 3,
               TK_uporabnik: 9
             }
         ];
