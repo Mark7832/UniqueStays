@@ -1,6 +1,6 @@
 console.log('Skripta se je zagnala');
 const knex = require('knex')({
-    client: 'mysql2' ,
+    client: 'mysql2',
     connection: {
         host: '127.0.0.1',
         user: 'root',
@@ -8,6 +8,7 @@ const knex = require('knex')({
         database: 'uniquestays'
     }
 });
+const bcrypt = require('bcryptjs');
 
 async function napolniBazo() {
     try {
@@ -36,20 +37,21 @@ async function napolniBazo() {
 
         console.log('Tabela uporabnik uspesno ustvarjena.');
 
+        // Hashiraj vsa gesla
         const Uporabnik = [
-            {ime_uporabnika: 'Jože', priimek_uporabnika: 'Krajnc', email: 'joze@gmail.com', drzava: 'Slovenija', geslo: 'geslo123', ustvarjen_od: '2024-01-15' },
-            {ime_uporabnika: 'Meta', priimek_uporabnika: 'Bezeg', email: 'meta@gmail.com', drzava: 'Slovenija', geslo: 'mocno_geslo', ustvarjen_od: '2024-01-15' },
-            {ime_uporabnika: 'Luka', priimek_uporabnika: 'Horvat', email: 'luka@gmail.com', drzava: 'Italija', geslo: 'luka456', ustvarjen_od: '2024-03-10'},
-            {ime_uporabnika: 'Ana', priimek_uporabnika: 'Novak', email: 'ana@gmail.com', drzava: 'Slovenija', geslo: 'ana789', ustvarjen_od: '2024-03-22'},
-            {ime_uporabnika: 'Tina', priimek_uporabnika: 'Zupan', email: 'tina@gmail.com', drzava: 'Avstija', geslo: 'tina321', ustvarjen_od: '2024-04-05'},
-            {ime_uporabnika: 'Marko', priimek_uporabnika: 'Kovač', email: 'marko@gmail.com', drzava: 'Slovenija',geslo: 'marko654', ustvarjen_od: '2024-04-18'},
-            {ime_uporabnika: 'Nina', priimek_uporabnika: 'Potočnik', email: 'nina@gmail.com', drzava: 'Rusija', geslo: 'nina987', ustvarjen_od: '2024-05-01'},
-            {ime_uporabnika: 'Rok', priimek_uporabnika: 'Mlinar', email: 'rok@gmail.com', drzava: 'Madzarska', geslo: 'rok111', ustvarjen_od: '2024-05-15'},
-            {ime_uporabnika: 'Petra', priimek_uporabnika: 'Mlakar', email: 'petra@gmail.com', drzava: 'Estonija', geslo: 'petra222', ustvarjen_od: '2024-06-01'},
-            {ime_uporabnika: 'Urh', priimek_uporabnika: 'Vidmar', email: 'urh28@gmail.com', drzava: 'Slovenija', geslo: 'urh333', ustvarjen_od: '2024-06-10'}
+            {ime_uporabnika: 'Jože', priimek_uporabnika: 'Krajnc', email: 'joze@gmail.com', drzava: 'Slovenija', geslo: await bcrypt.hash('geslo123', 10), ustvarjen_od: '2024-01-15' },
+            {ime_uporabnika: 'Meta', priimek_uporabnika: 'Bezeg', email: 'meta@gmail.com', drzava: 'Slovenija', geslo: await bcrypt.hash('mocno_geslo', 10), ustvarjen_od: '2024-01-15' },
+            {ime_uporabnika: 'Luka', priimek_uporabnika: 'Horvat', email: 'luka@gmail.com', drzava: 'Italija', geslo: await bcrypt.hash('luka456', 10), ustvarjen_od: '2024-03-10'},
+            {ime_uporabnika: 'Ana', priimek_uporabnika: 'Novak', email: 'ana@gmail.com', drzava: 'Slovenija', geslo: await bcrypt.hash('ana789', 10), ustvarjen_od: '2024-03-22'},
+            {ime_uporabnika: 'Tina', priimek_uporabnika: 'Zupan', email: 'tina@gmail.com', drzava: 'Avstija', geslo: await bcrypt.hash('tina321', 10), ustvarjen_od: '2024-04-05'},
+            {ime_uporabnika: 'Marko', priimek_uporabnika: 'Kovač', email: 'marko@gmail.com', drzava: 'Slovenija', geslo: await bcrypt.hash('marko654', 10), ustvarjen_od: '2024-04-18'},
+            {ime_uporabnika: 'Nina', priimek_uporabnika: 'Potočnik', email: 'nina@gmail.com', drzava: 'Rusija', geslo: await bcrypt.hash('nina987', 10), ustvarjen_od: '2024-05-01'},
+            {ime_uporabnika: 'Rok', priimek_uporabnika: 'Mlinar', email: 'rok@gmail.com', drzava: 'Madzarska', geslo: await bcrypt.hash('rok111', 10), ustvarjen_od: '2024-05-15'},
+            {ime_uporabnika: 'Petra', priimek_uporabnika: 'Mlakar', email: 'petra@gmail.com', drzava: 'Estonija', geslo: await bcrypt.hash('petra222', 10), ustvarjen_od: '2024-06-01'},
+            {ime_uporabnika: 'Urh', priimek_uporabnika: 'Vidmar', email: 'urh28@gmail.com', drzava: 'Slovenija', geslo: await bcrypt.hash('urh333', 10), ustvarjen_od: '2024-06-10'}
         ];
 
-        await knex('Uporabnik').insert(Uporabnik); //funkcija ki podatke vnese v tebelo
+        await knex('Uporabnik').insert(Uporabnik);
 
         console.log('Uporabniki uspesno dodani.');
 
@@ -71,108 +73,18 @@ async function napolniBazo() {
         console.log('Tabela prenocisce ustvarjena.');
 
         const Prenocisce = [
-            { naziv: 'Alpine Ski Lodge',
-              tip_prenocisca: 'Gorska koča',
-              opis_prenocisca: 'Koča obdana s prečudovitim razgledom na zasnežene gorske vrhove, zasebno savno in idealno lokacijo blizu večjih smučišč.',
-              cena_na_noc: 180,
-              koordinate: '46.8182,8.2275',
-              naslov: 'Zermatt, Švica',
-              max_gostov: 6,
-              stevilo_sob: 3,
-              TK_uporabnik: 1
-            },
-
-            { naziv: 'Predjamski grad',
-              tip_prenocisca: 'Grad',
-              opis_prenocisca: 'Predjamski grad, vklesan v mogočno skalno steno, ponuja pravljično doživetje s pridihom zgodovine, skrivnostnih rovov in čudovitega razgleda na kraško pokrajino.',
-              cena_na_noc: 230,
-              koordinate: '45.8150,14.1279',
-              naslov: 'Predjama 1, Postojna, Slovenija',
-              max_gostov: 6,
-              stevilo_sob: 3,
-              TK_uporabnik: 2
-            },
-
-            { naziv: 'Aurora Bubble Lodge',
-              tip_prenocisca: 'Steklena kupola / glamping',
-              opis_prenocisca: 'Prosojna ogrevana kupola sredi islandske narave ponuja čarobno noč pod zvezdami in severnim sijem, idealno za romantičen pobeg v tišini gozda.',
-              cena_na_noc: 310,
-              koordinate: '64.9631,-19.0208',
-              naslov: 'Hella, Islandija',
-              max_gostov: 6,
-              stevilo_sob: 3,
-              TK_uporabnik: 3
-            },
-
-            { naziv: 'Cave Hideaway',
-              tip_prenocisca: 'Jama',
-              opis_prenocisca: 'Prespite v skrivnostni jami z mehko svetlobo lantern, naravno hladnim zrakom in občutkom, kot da ste odkrili skriti svet pod zemljo.',
-              cena_na_noc: 167,
-              koordinate: '8.6431,34.8270',
-              naslov: 'Göreme, Kapakodija, Turčija',
-              max_gostov: 6,
-              stevilo_sob: 3,
-              TK_uporabnik: 4
-            },
-
-            { naziv: 'Jungle Treehouse Hideaway',
-              tip_prenocisca: 'Drevesna hišica',
-              opis_prenocisca: 'Drevesna hišica sredi kostariške džungle, kjer vas zjutraj zbudijo tropske ptice, zvečer pa uspava zvok dežja med krošnjami.',
-              cena_na_noc: 420,
-              koordinate: '9.7489,-83.7534',
-              naslov: 'Monteverde, Kostarika',
-              max_gostov: 6,
-              stevilo_sob: 3,
-              TK_uporabnik: 5
-            },
-
-            { naziv: 'Under the sea hotel',
-              tip_prenocisca: 'Vila pod vodo',
-              opis_prenocisca: 'Podvodni hotel na Maldivih ponuja nepozabno spanje med koralnimi grebeni, kjer skozi steklene stene opazujete pisane ribe, morske želve in čarobni svet oceana, kar iz udobja svoje sobe.',
-              cena_na_noc: 333,
-              koordinate: '3.2028,73.2207',
-              naslov: 'Male Atoll, Maldivi',
-              max_gostov: 6,
-              stevilo_sob: 3,
-              TK_uporabnik: 6
-            },
-
-            { naziv: 'Quack & Coffee Houseboat',
-              tip_prenocisca: 'Barka',
-              opis_prenocisca: 'Majhna plavajoča hiška na mirni reki, kjer vas zjutraj namesto alarma zbudijo račke, valovi in vonj sveže kave.',
-              cena_na_noc: 140,
-              koordinate: '52.3676,4.9041',
-              naslov: 'Amsterdam Center, Nizozemska',
-              max_gostov: 6,
-              stevilo_sob: 3,
-              TK_uporabnik: 7
-            },
-
-            { naziv: 'Sleepy Train Carriage',
-              tip_prenocisca: 'Prenovljen star vagon',
-              opis_prenocisca: 'Prespite v vintage vagonu, kjer notranjost izgleda kot potovanje v preteklost, zunaj pa vas čaka mirna narava.',
-              cena_na_noc: 210,
-              koordinate: '46.2276,2.2137',
-              naslov: 'Lyon, Francija',
-              max_gostov: 6,
-              stevilo_sob: 3,
-              TK_uporabnik: 8
-            },
-
-            { naziv: 'Mushroom Forest Hut',
-              tip_prenocisca: 'Pravljična gozdna hiška',
-              opis_prenocisca: 'Majhna okrogla hiška med drevesi, ki izgleda kot iz pravljice, z mehko svetlobo in vonjem po gozdu.',
-              cena_na_noc: 90,
-              koordinate: '-40.9006,174.8860',
-              naslov: 'Rotorua, Nova Zelandija',
-              max_gostov: 6,
-              stevilo_sob: 3,
-              TK_uporabnik: 9
-            }
+            { naziv: 'Alpine Ski Lodge', tip_prenocisca: 'Gorska koča', opis_prenocisca: 'Koča obdana s prečudovitim razgledom na zasnežene gorske vrhove, zasebno savno in idealno lokacijo blizu večjih smučišč.', cena_na_noc: 180, koordinate: '46.8182,8.2275', naslov: 'Zermatt, Švica', max_gostov: 6, stevilo_sob: 3, TK_uporabnik: 1 },
+            { naziv: 'Predjamski grad', tip_prenocisca: 'Grad', opis_prenocisca: 'Predjamski grad, vklesan v mogočno skalno steno, ponuja pravljično doživetje s pridihom zgodovine, skrivnostnih rovov in čudovitega razgleda na kraško pokrajino.', cena_na_noc: 230, koordinate: '45.8150,14.1279', naslov: 'Predjama 1, Postojna, Slovenija', max_gostov: 6, stevilo_sob: 3, TK_uporabnik: 2 },
+            { naziv: 'Aurora Bubble Lodge', tip_prenocisca: 'Steklena kupola / glamping', opis_prenocisca: 'Prosojna ogrevana kupola sredi islandske narave ponuja čarobno noč pod zvezdami in severnim sijem, idealno za romantičen pobeg v tišini gozda.', cena_na_noc: 310, koordinate: '64.9631,-19.0208', naslov: 'Hella, Islandija', max_gostov: 6, stevilo_sob: 3, TK_uporabnik: 3 },
+            { naziv: 'Cave Hideaway', tip_prenocisca: 'Jama', opis_prenocisca: 'Prespite v skrivnostni jami z mehko svetlobo lantern, naravno hladnim zrakom in občutkom, kot da ste odkrili skriti svet pod zemljo.', cena_na_noc: 167, koordinate: '8.6431,34.8270', naslov: 'Göreme, Kapakodija, Turčija', max_gostov: 6, stevilo_sob: 3, TK_uporabnik: 4 },
+            { naziv: 'Jungle Treehouse Hideaway', tip_prenocisca: 'Drevesna hišica', opis_prenocisca: 'Drevesna hišica sredi kostariške džungle, kjer vas zjutraj zbudijo tropske ptice, zvečer pa uspava zvok dežja med krošnjami.', cena_na_noc: 420, koordinate: '9.7489,-83.7534', naslov: 'Monteverde, Kostarika', max_gostov: 6, stevilo_sob: 3, TK_uporabnik: 5 },
+            { naziv: 'Under the sea hotel', tip_prenocisca: 'Vila pod vodo', opis_prenocisca: 'Podvodni hotel na Maldivih ponuja nepozabno spanje med koralnimi grebeni, kjer skozi steklene stene opazujete pisane ribe, morske želve in čarobni svet oceana, kar iz udobja svoje sobe.', cena_na_noc: 333, koordinate: '3.2028,73.2207', naslov: 'Male Atoll, Maldivi', max_gostov: 6, stevilo_sob: 3, TK_uporabnik: 6 },
+            { naziv: 'Quack & Coffee Houseboat', tip_prenocisca: 'Barka', opis_prenocisca: 'Majhna plavajoča hiška na mirni reki, kjer vas zjutraj namesto alarma zbudijo račke, valovi in vonj sveže kave.', cena_na_noc: 140, koordinate: '52.3676,4.9041', naslov: 'Amsterdam Center, Nizozemska', max_gostov: 6, stevilo_sob: 3, TK_uporabnik: 7 },
+            { naziv: 'Sleepy Train Carriage', tip_prenocisca: 'Prenovljen star vagon', opis_prenocisca: 'Prespite v vintage vagonu, kjer notranjost izgleda kot potovanje v preteklost, zunaj pa vas čaka mirna narava.', cena_na_noc: 210, koordinate: '46.2276,2.2137', naslov: 'Lyon, Francija', max_gostov: 6, stevilo_sob: 3, TK_uporabnik: 8 },
+            { naziv: 'Mushroom Forest Hut', tip_prenocisca: 'Pravljična gozdna hiška', opis_prenocisca: 'Majhna okrogla hiška med drevesi, ki izgleda kot iz pravljice, z mehko svetlobo in vonjem po gozdu.', cena_na_noc: 90, koordinate: '-40.9006,174.8860', naslov: 'Rotorua, Nova Zelandija', max_gostov: 6, stevilo_sob: 3, TK_uporabnik: 9 }
         ];
 
         await knex('Prenocisce').insert(Prenocisce);
-
         console.log('Prenocisca uspesno dodana.');
 
     // NERAZPOLOZLJIV TERMIN
@@ -195,7 +107,6 @@ async function napolniBazo() {
         ];
 
         await knex('Nerazpolozljiv_termin').insert(Nerazpolozljiv_termin);
-
         console.log('Nerazpolozljivi termini uspesno dodani.');
 
     // REZERVACIJA
@@ -235,7 +146,6 @@ async function napolniBazo() {
         ];
 
         await knex('Rezervacija').insert(Rezervacija);
-
         console.log('Rezervacije uspesno dodane.');
 
     // DOZIVETJE
@@ -251,127 +161,31 @@ async function napolniBazo() {
         console.log('Tabela Dozivetje uspesno ustvarjena.');
         
         const Dozivetje = [
-            { naziv:'Zasebna wellness noč',
-              opis:'Večerni dostop do zasebne savne in jacuzzija s pogledom na zasnežene Alpe.',
-              doplacilo:59.99,
-              TK_prenocisce: 1,
-              TK_rezervacija: 1
-            },
-
-            { naziv:'Nočno sankanje',
-              opis:'Sankanje pod zvezdami.',
-              doplacilo:14.99,
-              TK_prenocisce: 1,
-              TK_rezervacija: 2 
-            },
-
-            { naziv:'Raziskovanje skrivnih rovov',
-              opis:'Ekskluziven ogled podzemnih rovov in skrivnih prehodov pod Predjamskim gradom.',
-              doplacilo:34.99,
-              TK_prenocisce: 2,
-              TK_rezervacija: 3
-            },
-
-            {  naziv:'Viteška večerja',
-              opis:'Večerja ob svečah v grajski dvorani z viteškim menijem in srednjeveško glasbo.',
-              doplacilo: 52.99,
-              TK_prenocisce: 2,
-              TK_rezervacija: 4
-            },
-
-            { naziv:'Lov na severni sij',     
-              opis:'Nočni izlet z vodičem za opazovanje severnega sija daleč od mestnih luči.',
-              doplacilo: 99.99,
-              TK_prenocisce: 3,
-              TK_rezervacija: 5
-            },
-
-            { naziv:'Zajtrk pod zvezdami',
-              opis:'Romantičen islandski zajtrk postrežen neposredno ob stekleni kupoli.',
-              doplacilo:'24.99',
-              TK_prenocisce: 3,
-              TK_rezervacija: 6
-            },
-
-            { naziv:'Večer ob lanternah',
-              opis:'Posebna večerja v jami ob lanternah in tradicionalni turški glasbi.',
-              doplacilo: 36.99,
-              TK_prenocisce: 4,
-              TK_rezervacija: 7
-            },
-
-            { naziv:'Polet balonov nad Kapadokijo',
-              opis:'Jutranji polet z balonom nad znamenitimi skalnimi formacijami Kapadokije.',
-              doplacilo: 139.99,
-              TK_prenocisce: 4,
-              TK_rezervacija: 8
-            },
-
-            { naziv:'Nočni sprehod po džungli',
-              opis:'Voden sprehod po tropski džungli z opazovanjem nočnih živali.',
-              doplacilo: 55.99,
-              TK_prenocisce: 5,
-              TK_rezervacija: 9
-            },
-
-            { naziv:'Joga med krošnjami',
-              opis:'Jutranja joga na panoramski terasi visoko med drevesnimi krošnjami.',
-              doplacilo: 29.99,
-              TK_prenocisce: 5,
-              TK_rezervacija: 10
-            },
-
-            { naziv:'Plavanje z morskimi psi',
-              opis:'Organizirano snorklanje med koralnimi grebeni in morskimi psi.',
-              doplacilo: 74.99,
-              TK_prenocisce: 6,
-              TK_rezervacija: 11
-            },
-
-            { naziv:'Podvodno fotografiranje',
-              opis:'Profesionalno fotografiranje med raziskovanjem podvodnega sveta.',
-              doplacilo: 110,
-              TK_prenocisce: 6,
-              TK_rezervacija: 12
-            },
-
-            { naziv:'Nočno snorklanje z modro svetlečim planktonom',
-              opis:'',
-              doplacilo: 89.99,
-              TK_prenocisce: 6,
-              TK_rezervacija: 13
-            },
-
-            { naziv:'Plavajoči zajtrk',
-              opis:'Svež zajtrk postrežen na leseni plavajoči mizi ob sončnem vzhodu.',
-              doplacilo:15.99,
-              TK_prenocisce: 7,
-              TK_rezervacija: 14
-            },
-
-            { naziv: 'Escape room Orient Express',
-              opis: 'Interaktivna skrivnostna igra pobega v stilu stare železnice.',
-              doplacilo: 34.99,
-              TK_prenocisce: 8,
-              TK_rezervacija: 15
-            },
-
-            { naziv: 'Večer čarobnih lantern',
-              opis: 'Nočni sprehod skozi osvetljen gozd z lebdečimi lanternami.',
-              doplacilo: 22.99,
-              TK_prenocisce: 9,
-              TK_rezervacija: 16
-            }
+            { naziv:'Zasebna wellness noč', opis:'Večerni dostop do zasebne savne in jacuzzija s pogledom na zasnežene Alpe.', doplacilo:59.99, TK_prenocisce: 1, TK_rezervacija: 1 },
+            { naziv:'Nočno sankanje', opis:'Sankanje pod zvezdami.', doplacilo:14.99, TK_prenocisce: 1, TK_rezervacija: 2 },
+            { naziv:'Raziskovanje skrivnih rovov', opis:'Ekskluziven ogled podzemnih rovov in skrivnih prehodov pod Predjamskim gradom.', doplacilo:34.99, TK_prenocisce: 2, TK_rezervacija: 3 },
+            { naziv:'Viteška večerja', opis:'Večerja ob svečah v grajski dvorani z viteškim menijem in srednjeveško glasbo.', doplacilo: 52.99, TK_prenocisce: 2, TK_rezervacija: 4 },
+            { naziv:'Lov na severni sij', opis:'Nočni izlet z vodičem za opazovanje severnega sija daleč od mestnih luči.', doplacilo: 99.99, TK_prenocisce: 3, TK_rezervacija: 5 },
+            { naziv:'Zajtrk pod zvezdami', opis:'Romantičen islandski zajtrk postrežen neposredno ob stekleni kupoli.', doplacilo: 24.99, TK_prenocisce: 3, TK_rezervacija: 6 },
+            { naziv:'Večer ob lanternah', opis:'Posebna večerja v jami ob lanternah in tradicionalni turški glasbi.', doplacilo: 36.99, TK_prenocisce: 4, TK_rezervacija: 7 },
+            { naziv:'Polet balonov nad Kapadokijo', opis:'Jutranji polet z balonom nad znamenitimi skalnimi formacijami Kapadokije.', doplacilo: 139.99, TK_prenocisce: 4, TK_rezervacija: 8 },
+            { naziv:'Nočni sprehod po džungli', opis:'Voden sprehod po tropski džungli z opazovanjem nočnih živali.', doplacilo: 55.99, TK_prenocisce: 5, TK_rezervacija: 9 },
+            { naziv:'Joga med krošnjami', opis:'Jutranja joga na panoramski terasi visoko med drevesnimi krošnjami.', doplacilo: 29.99, TK_prenocisce: 5, TK_rezervacija: 10 },
+            { naziv:'Plavanje z morskimi psi', opis:'Organizirano snorklanje med koralnimi grebeni in morskimi psi.', doplacilo: 74.99, TK_prenocisce: 6, TK_rezervacija: 11 },
+            { naziv:'Podvodno fotografiranje', opis:'Profesionalno fotografiranje med raziskovanjem podvodnega sveta.', doplacilo: 110, TK_prenocisce: 6, TK_rezervacija: 12 },
+            { naziv:'Nočno snorklanje z modro svetlečim planktonom', opis:'Snorklanje z bioluminiscentnim planktonom.', doplacilo: 89.99, TK_prenocisce: 6, TK_rezervacija: 13 },
+            { naziv:'Plavajoči zajtrk', opis:'Svež zajtrk postrežen na leseni plavajoči mizi ob sončnem vzhodu.', doplacilo: 15.99, TK_prenocisce: 7, TK_rezervacija: 14 },
+            { naziv: 'Escape room Orient Express', opis: 'Interaktivna skrivnostna igra pobega v stilu stare železnice.', doplacilo: 34.99, TK_prenocisce: 8, TK_rezervacija: 15 },
+            { naziv: 'Večer čarobnih lantern', opis: 'Nočni sprehod skozi osvetljen gozd z lebdečimi lanternami.', doplacilo: 22.99, TK_prenocisce: 9, TK_rezervacija: 16 }
         ];
 
         await knex('Dozivetje').insert(Dozivetje);
-
         console.log('Dozivjetja uspesno dodana.');
 
     // SLIKE
         await knex.schema.createTable('Slika', (table) => {
             table.increments('ID_slika');
-            table.string('pot_slike')
+            table.string('pot_slike');
             table.boolean('cover').defaultTo(false);
             table.integer('TK_uporabnik').unsigned().references('ID_uporabnik').inTable('Uporabnik');
             table.integer('TK_prenocisce').unsigned().references('ID_prenocisce').inTable('Prenocisce');
@@ -381,81 +195,23 @@ async function napolniBazo() {
         console.log('Tabela Slika uspesno ustvarjena.');
 
         const Slika = [
-            {   pot_slike:'/images/svica.jpg',
-                cover: true,
-                TK_prenocisce: 1
-            },
-
-            {   pot_slike:'/images/slovenija.jpg',
-                cover: true,
-                TK_prenocisce: 2
-            },
-
-            {   pot_slike:'/images/predjama.png',
-                cover: false,
-                TK_prenocisce: 2
-            },
-
-            {   pot_slike:'/images/kraljeva.png',
-                cover: false,
-                TK_prenocisce: 2
-            },
-
-            {   pot_slike:'/images/stolpna.png',
-                cover: false,
-                TK_prenocisce: 2
-            },
-
-            {   pot_slike:'/images/viteska.png',
-                cover: false,
-                TK_prenocisce: 2
-            },
-
-            {   pot_slike:'/images/islandija.jpg',
-                cover: true,
-                TK_prenocisce: 3
-            },
-
-            {   pot_slike:'/images/islandija-hotel.jpg',
-                cover: true,
-                TK_prenocisce: 3
-            },
-
-            {   pot_slike:'/images/jama.jpg',
-                cover: true,
-                TK_prenocisce: 4
-            },
-
-            {   pot_slike:'/images/kostarika.jpg',
-                cover: true,
-                TK_prenocisce: 5
-            },
-
-            {   pot_slike:'/images/maldivi.jpg',
-                cover: true,
-                TK_prenocisce: 6
-            },
-
-            {   pot_slike:'/images/amsterdam.jpg',
-                cover: true,
-                TK_prenocisce: 7
-            },
-
-            {   pot_slike:'/images/vlak.jpg',
-                cover: true,
-                TK_prenocisce: 8
-            },
-
-            {   pot_slike:'/images/mushroom.jpg',
-                cover: true,
-                TK_prenocisce: 9
-            },
-
-            
+            { pot_slike:'/images/svica.jpg', cover: true, TK_prenocisce: 1 },
+            { pot_slike:'/images/slovenija.jpg', cover: true, TK_prenocisce: 2 },
+            { pot_slike:'/images/predjama.png', cover: false, TK_prenocisce: 2 },
+            { pot_slike:'/images/kraljeva.png', cover: false, TK_prenocisce: 2 },
+            { pot_slike:'/images/stolpna.png', cover: false, TK_prenocisce: 2 },
+            { pot_slike:'/images/viteska.png', cover: false, TK_prenocisce: 2 },
+            { pot_slike:'/images/islandija.jpg', cover: true, TK_prenocisce: 3 },
+            { pot_slike:'/images/islandija-hotel.jpg', cover: true, TK_prenocisce: 3 },
+            { pot_slike:'/images/jama.jpg', cover: true, TK_prenocisce: 4 },
+            { pot_slike:'/images/kostarika.jpg', cover: true, TK_prenocisce: 5 },
+            { pot_slike:'/images/maldivi.jpg', cover: true, TK_prenocisce: 6 },
+            { pot_slike:'/images/amsterdam.jpg', cover: true, TK_prenocisce: 7 },
+            { pot_slike:'/images/vlak.jpg', cover: true, TK_prenocisce: 8 },
+            { pot_slike:'/images/mushroom.jpg', cover: true, TK_prenocisce: 9 }
         ];
 
         await knex('Slika').insert(Slika);
-
         console.log('Slike uspesno dodane.');
 
     // SPOROCILA
@@ -474,12 +230,11 @@ async function napolniBazo() {
             {vprasanje: 'Ali je parkirišče brezplačno?', odgovor: 'Da, parkirišče je brezplačno za vse goste.', datum_sporocila: '2024-05-10', TK_uporabnik: 1, TK_prenocisce: 1},
             {vprasanje: 'Ali so hišni ljubljenčki dovoljeni?', odgovor: 'Žal hišnih ljubljenčkov ne sprejemamo.', datum_sporocila: '2024-05-15', TK_uporabnik: 2, TK_prenocisce: 9},
             {vprasanje: 'Kdaj je možen zgodnji prihod?', odgovor: 'Zgodnji prihod je možen od 10:00 dalje po dogovoru.', datum_sporocila: '2024-06-01', TK_uporabnik: 3, TK_prenocisce: 3},
-            {vprasanje: 'Ali je na voljo WiFi?', odgovor: 'Da, na voljo je brezplačen WiFi.', datum_sporocila: '2024-06-10', TK_uporabnik: 4, TK_prenocisce: 5}, 
+            {vprasanje: 'Ali je na voljo WiFi?', odgovor: 'Da, na voljo je brezplačen WiFi.', datum_sporocila: '2024-06-10', TK_uporabnik: 4, TK_prenocisce: 5},
             {vprasanje: 'Ali je možna brezplacna odpoved rezervacije?', odgovor: 'Brezplačna odpoved je možna do 7 dni pred prihodom.', datum_sporocila: '2024-06-20', TK_uporabnik: 5, TK_prenocisce: 5}
         ];
 
         await knex('Sporocila').insert(Sporocila);
-
         console.log('Sporocila uspesno dodana.');
 
     // PRILJUBLJENO
@@ -501,13 +256,12 @@ async function napolniBazo() {
         ];
 
         await knex('Priljubljeno').insert(Priljubljeno);
-
         console.log('Priljubljeno uspesno dodano.');
 
     // KOMENTAR
         await knex.schema.createTable('Komentar', (table) => {
             table.increments('ID_komentar');
-            table.string('komentar');                                    
+            table.string('komentar');
             table.date('datum_komentar').notNullable();
             table.integer('ocena_splosna').notNullable();
             table.integer('ocena_udobje').notNullable();
@@ -530,7 +284,6 @@ async function napolniBazo() {
         ];
 
         await knex('Komentar').insert(Komentar);
-
         console.log('Komentarji uspesno dodani.');
 
     } catch(err) {
@@ -539,7 +292,6 @@ async function napolniBazo() {
     } finally {
         knex.destroy();
     }
-    
 }
 
 napolniBazo();
