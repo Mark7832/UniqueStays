@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const knex = require('knex');
+const authRouter = require('./routes/auth');
 
 const app = express();
 const PORT = 3000;
@@ -19,6 +20,15 @@ const db = knex({
         database: 'uniquestays'
     }
 });
+
+// Dodaj db na vsak request
+app.use((req, res, next) => {
+    req.db = db;
+    next();
+});
+
+// Auth router (registracija in prijava)
+app.use('/api/auth', authRouter);
 
 // API endpoint za pridobivanje podatkov o prenočišču
 app.get('/api/prenocisce/:id', async (req, res) => {
