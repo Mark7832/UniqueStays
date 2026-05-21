@@ -15,7 +15,7 @@ const db = knex({
     client: 'mysql2',
     connection: {
         host: '127.0.0.1',
-        user: 'root',
+        user: 'uniquestays',
         password: 'geslo',
         database: 'uniquestays'
     }
@@ -101,6 +101,88 @@ app.get('/api/prenocisca', async (req, res) => {
     } catch (error) {
         console.error('Napaka pri pridobivanju seznama:', error);
         res.status(500).json({ error: 'Napaka pri pridobivanju seznama' });
+    }
+});
+
+//ISKANJE PRENOČIŠČ
+app.get('/isci_prenocisca', async (req, res) => {
+    try {
+        //osnovna poizvedba s cover sliko
+        let query = db('Prenocisce')
+            .leftJoin('Slika', function() {
+                this.on('Prenocisce.ID_prenocisce', '=', 'Slika.TK_prenocisce')
+                    .andOn('Slika.cover', '=', db.raw('1'));
+            })
+            .select(
+                'Prenocisce.ID_prenocisce',
+                'Prenocisce.naziv',
+                'Prenocisce.tip_prenocisca',
+                'Prenocisce.opis_prenocisca',
+                'Prenocisce.cena_na_noc',
+                'Prenocisce.koordinate',
+                'Prenocisce.naslov',
+                'Prenocisce.max_gostov',
+                'Prenocisce.stevilo_sob',
+                'Prenocisce.sezona',
+                'Slika.pot_slike as cover_slika'
+            );
+
+        //filtri
+        if (req.query.destinacija && req.query.destinacija !== '') {
+            query.where(function () {
+                this.where('naslov', 'like', `%${req.query.destinacija}%`)
+                .orWhere('naziv', 'like', `%${req.query.destinacija}%`);
+            });
+        }
+
+        if (req.query.tip_prenocisca && req.query.tip_prenocisca !== '') {
+            query.where('tip_prenocisca', req.query.tip_prenocisca);
+        }
+
+        if (req.query.cena_min) {
+            query.where('cena_na_noc', '>=', Number(req.query.cena_min));
+        }
+
+        if (req.query.cena_max) {
+            query.where('cena_na_noc', '<=', Number(req.query.cena_max));
+        }
+
+        //razvrščanje
+        if (req.query.sort === 'price_asc') {
+            query.orderBy('cena_na_noc', 'asc');
+        } else if (req.query.sort === 'price_desc') {
+            query.orderBy('cena_na_noc', 'desc');
+        }
+
+        let prenocisca = await query;
+
+        //dodaj povprečno oceno za vsako prenočišče
+        for (let p of prenocisca) {
+            const komentarji = await db('Komentar')
+                .where('TK_prenocisce', p.ID_prenocisce)
+                .select('ocena_splosna');
+
+            p.povprecna_ocena = komentarji.length > 0
+                ? (komentarji.reduce((sum, k) => sum + k.ocena_splosna, 0) / komentarji.length).toFixed(1)
+                : null;
+        }
+
+        //filter po oceni (po izračunu)
+        if (req.query.ocena) {
+            const minOcena = parseFloat(req.query.ocena);
+            prenocisca = prenocisca.filter(p => p.povprecna_ocena && parseFloat(p.povprecna_ocena) >= minOcena);
+        }
+
+        //razvrščanje po oceni
+        if (req.query.sort === 'rating_desc') {
+            prenocisca.sort((a, b) => (parseFloat(b.povprecna_ocena) || 0) - (parseFloat(a.povprecna_ocena) || 0));
+        }
+
+        res.json(prenocisca);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Napaka pri iskanju' });
     }
 });
 
