@@ -1,14 +1,22 @@
 const express = require('express');
 const cors = require('cors');
 const knex = require('knex');
+const multer = require('multer');
+const fs = require('fs');
 const authRouter = require('./routes/auth');
 
 const app = express();
 const PORT = 3000;
 
+// Ustvari mapo za slike, če ne obstaja
+if (!fs.existsSync('images')) fs.mkdirSync('images');
+
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Serviraj statične slike
+app.use('/images', express.static('images'));
 
 // Knex konfiguracija
 const db = knex({
@@ -26,6 +34,16 @@ app.use((req, res, next) => {
     req.db = db;
     next();
 });
+
+// Multer konfiguracija za shranjevanje slik v mapo /images/
+const storage = multer.diskStorage({
+    destination: 'images/',
+    filename: (req, file, cb) => {
+        const unikat = Date.now() + '-' + file.originalname;
+        cb(null, unikat);
+    }
+});
+const upload = multer({ storage });
 
 // Auth router (registracija in prijava)
 app.use('/api/auth', authRouter);
@@ -185,6 +203,64 @@ app.get('/isci_prenocisca', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri iskanju' });
     }
 });
+
+
+// DODAJ PRENOČIŠČE 
+app.post('/dodaj-prenocisce', upload.fields([
+    { name: 'slike',             maxCount: 20 },
+    { name: 'dozivetje_slika[]', maxCount: 10 }
+]), async (req, res) => {
+    const body = req.body;
+    try {
+        //  Vstavi prenočišče
+        const [idPrenocisce] = await db('Prenocisce').insert({
+            naziv:           body.naziv,
+            tip_prenocisca:  body.tip_prenocisca,
+            opis_prenocisca: body.opis_prenocisca,
+            cena_na_noc:     body.cena_na_noc,
+            koordinate:      body.koordinate || null,
+            naslov:          body.naslov,
+            max_gostov:      body.max_gostov,
+            stevilo_sob:     body.stevilo_sob,
+            TK_uporabnik:    req.session?.userId ?? 1  
+        });
+ 
+        // Vstavi slike prenočišča
+        const coverIndex = parseInt(body.cover_slika_index) || 0;
+        const slikePren  = req.files['slike'] || [];
+        for (let i = 0; i < slikePren.length; i++) {
+            await db('Slika').insert({
+                pot_slike:     '/images/' + slikePren[i].filename,
+                cover:         (i === coverIndex),
+                TK_prenocisce: idPrenocisce,
+                TK_uporabnik:  null,
+                TK_dozivetje:  null
+            });
+        }
+ 
+        // Vstavi nedosegljive termine
+        const terminiOd     = [].concat(body['termin_od[]']     || []);
+        const terminiDo     = [].concat(body['termin_do[]']     || []);
+        const terminiRazlog = [].concat(body['termin_razlog[]'] || []);
+        for (let i = 0; i < terminiOd.length; i++) {
+            if (terminiOd[i] && terminiDo[i]) {
+                await db('Nerazpolozljiv_termin').insert({
+                    datum_od:      terminiOd[i],
+                    datum_do:      terminiDo[i],
+                    razlog:        terminiRazlog[i] || '',
+                    TK_prenocisce: idPrenocisce
+                });
+            }
+        }
+ 
+        // Preusmeri na domačo stran
+        res.redirect('/');
+    } catch (err) {
+        console.error('Napaka pri shranjevanju:', err);
+        res.status(500).send('Prišlo je do napake pri shranjevanju. Prosimo, poskusite znova.');
+    }
+});
+
 
 // Zagon strežnika
 app.listen(PORT, () => {
