@@ -1,4 +1,5 @@
 function prikaziSlike(input) {
+            if (!input) return;
             var seznam = document.getElementById('slike-seznam');
             seznam.innerHTML = '';
 
