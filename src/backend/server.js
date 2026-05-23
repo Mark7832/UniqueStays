@@ -147,8 +147,17 @@ app.get('/isci_prenocisca', async (req, res) => {
                 'Prenocisce.cena_na_noc',
                 'Prenocisce.koordinate',
                 'Prenocisce.naslov',
+                'Prenocisce.sezona',
                 'Prenocisce.max_gostov',
                 'Prenocisce.stevilo_sob',
+                'Prenocisce.wifi',        
+                'Prenocisce.bazen', 
+                'Prenocisce.parking', 
+                'Prenocisce.zajtrk',    
+                'Prenocisce.razgled',     
+                'Prenocisce.ljubljencki',
+                'Prenocisce.trajnostno',
+                'Prenocisce.tagi',
                 'Slika.slika as cover_slika',
                 'Slika.ime_slike'
             );
@@ -179,6 +188,15 @@ app.get('/isci_prenocisca', async (req, res) => {
         } else if (req.query.sort === 'price_desc') {
             query.orderBy('cena_na_noc', 'desc');
         }
+
+        if (req.query.ljubljencki === 'on') query.where('ljubljencki', true);
+        if (req.query.bazen === 'on')       query.where('bazen', true);
+        if (req.query.trajnostno === 'on')  query.where('trajnostno', true);
+        if (req.query.parking === 'on')     query.where('parking', true);
+        if (req.query.razgled === 'on')     query.where('razgled', true);
+        if (req.query.zajtrk === 'on')      query.where('zajtrk', true);
+        if (req.query.wifi === 'on')        query.where('wifi', true);
+
 
         let prenocisca = await query;
         prenocisca = prenocisca.map(p => ({
@@ -227,6 +245,12 @@ app.post('/dodaj-prenocisce', upload.fields([
     const body = req.body;
     try {
         //  Vstavi prenočišče
+        const tagEmoji = [].concat(body['tag_emoji[]'] || []);
+        const tagNaziv = [].concat(body['tag_naziv[]'] || []);
+        const tagi = tagNaziv
+        .filter(n => n)
+        .map((naziv, i) => ({ emoji: tagEmoji[i] || '', naziv }));
+
         const [idPrenocisce] = await db('Prenocisce').insert({
             naziv:           body.naziv,
             tip_prenocisca:  body.tip_prenocisca,
@@ -236,8 +260,9 @@ app.post('/dodaj-prenocisce', upload.fields([
             naslov:          body.naslov,
             max_gostov:      body.max_gostov,
             stevilo_sob:     body.stevilo_sob,
-            TK_uporabnik:    req.session?.userId ?? 1  
-        });
+            tagi:            JSON.stringify(tagi),
+            TK_uporabnik:    req.session?.userId ?? 1
+    });
  
         // Vstavi slike prenočišča
         const coverIndex = parseInt(body.cover_slika_index) || 0;

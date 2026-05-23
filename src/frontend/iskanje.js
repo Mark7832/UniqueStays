@@ -32,6 +32,7 @@ async function isci() {
         prenocisca.forEach(p => {
             const ocena = p.povprecna_ocena ? `⭐ ${p.povprecna_ocena}` : '';
             const slika = p.cover_slika || 'images/default.jpg';
+            const tagi = p.tagi ? JSON.parse(p.tagi) : [];
 
             html += `
             <article class="group bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 grid lg:grid-cols-[380px_1fr]">
@@ -44,7 +45,7 @@ async function isci() {
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/10 to-transparent"></div>
 
                     <span class="absolute top-5 left-5 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-bold border border-white/30">
-                        ${p.tip_prenocisca}
+                        🏠 ${p.tip_prenocisca}
                     </span>
 
                     <span class="absolute bottom-5 left-5 px-4 py-2 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-sm font-bold">
@@ -55,13 +56,15 @@ async function isci() {
                 <!-- Vsebina -->
                 <div class="p-7 md:p-9 flex flex-col">
 
-                    <!-- Zgoraj: ocena -->
-                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
-                        <div></div>
-                        ${ocena ? `<span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">${ocena}</span>` : ''}
+                    <!--sezona & ocena-->
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="px-4 py-2 rounded-full bg-green-100 text-slate-700 text-sm font-bold">
+                            🌼 ${p.sezona}
+                        </span>
+                        ${ocena ? `<span class="px-3 py-1 rounded-full bg-amber-100 text-slate-700 text-sm font-bold">${ocena}</span>` : ''}
                     </div>
 
-                    <!-- Ime in lokacija -->
+                    <!--ime in lokacija-->
                     <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
                         ${p.naziv}
                     </h3>
@@ -70,22 +73,37 @@ async function isci() {
                         📍 ${p.naslov}
                     </p>
 
-                    <!-- Opis -->
+                    <!--opis-->
                     <p class="text-slate-500 leading-relaxed mb-7 max-w-3xl">
                         ${p.opis_prenocisca}
                     </p>
 
-                    <!-- Značke -->
+                    <!--značke-->
                     <div class="flex flex-wrap gap-3 mb-8">
                         <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
                             👥 do ${p.max_gostov} gostov
                         </span>
+
                         <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
                             🛏️ ${p.stevilo_sob} ${p.stevilo_sob === 1 ? 'soba' : 'sobe'}
                         </span>
+
+                        ${p.wifi == 1        ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">📶 Wi-Fi</span>` : ''}
+                        ${p.bazen == 1      ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">🏊 Zasebni bazen</span>` : ''}
+                        ${p.parking == 1     ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">🅿️ Parking</span>` : ''}
+                        ${p.zajtrk == 1      ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">🥐 Zajtrk vključen</span>` : ''}
+                        ${p.razgled == 1     ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">🌄 Panoramski razgled</span>` : ''}
+                        ${p.ljubljencki == 1 ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">🐾 Hišni ljubljenčki</span>` : ''}
+                        ${p.trajnostno == 1  ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">🌿 Trajnostno</span>` : ''}
+
+                        ${tagi.map(t => `
+                            <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                                ${t.emoji} ${t.naziv}
+                            </span>
+                        `).join('')}
                     </div>
 
-                    <!-- Cena in gumb -->
+                    <!--cena in gumb za ogled ponudbe-->
                     <div class="mt-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 pt-6 border-t border-slate-100">
                         <p class="text-slate-500 font-semibold">
                             od
