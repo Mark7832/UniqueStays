@@ -3,21 +3,23 @@ const cors = require('cors');
 const knex = require('knex');
 const multer = require('multer');
 const fs = require('fs');
+const path = require('path');
 const authRouter = require('./routes/auth');
 
 const app = express();
 const PORT = 3000;
 
-// Ustvari mapo za slike, če ne obstaja
-if (!fs.existsSync('images')) fs.mkdirSync('images');
+//ustvari mapo za slike, če ne obstaja
+const imagesDir = path.join(__dirname, '../frontend/images');
+if (!fs.existsSync(imagesDir)) fs.mkdirSync(imagesDir, {recursive: true});
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Serviraj statične slike
-app.use('/images', express.static('images'));
-app.use(express.static('../frontend'));
+// Serviraj frontend in slike
+app.use(express.static(path.join(__dirname, '../frontend')));
+app.use('/images', express.static(imagesDir));
 
 // Knex konfiguracija
 const db = knex({
@@ -36,9 +38,9 @@ app.use((req, res, next) => {
     next();
 });
 
-// Multer konfiguracija za shranjevanje slik v mapo /images/
+// Multer konfiguracija za shranjevanje slik v mapo /frontend/images/
 const storage = multer.diskStorage({
-    destination: 'images/',
+    destination: path.join(__dirname, '../frontend/images/'),
     filename: (req, file, cb) => {
         const unikat = Date.now() + '-' + file.originalname;
         cb(null, unikat);
@@ -66,7 +68,12 @@ app.get('/api/prenocisce/:id', async (req, res) => {
         // Pridobi slike
         const slike = await db('Slika')
             .where('TK_prenocisce', id)
-            .select('pot_slike', 'cover');
+            .select('slika', 'ime_slike', 'cover');
+
+        const slikeBase64 = slike.map(s => ({
+            ...s,
+            slika: s.slika ? `data:image/jpeg;base64,${s.slika.toString('base64')}` : null
+        }));
 
         // Pridobi doživetja
         const dozivetja = await db('Dozivetje')
@@ -92,7 +99,7 @@ app.get('/api/prenocisce/:id', async (req, res) => {
 
         res.json({
             prenocisce,
-            slike,
+            slike: slikeBase64,
             dozivetja,
             komentarji,
             povprecnaOcena
@@ -142,8 +149,8 @@ app.get('/isci_prenocisca', async (req, res) => {
                 'Prenocisce.naslov',
                 'Prenocisce.max_gostov',
                 'Prenocisce.stevilo_sob',
-                'Prenocisce.sezona',
-                'Slika.pot_slike as cover_slika'
+                'Slika.slika as cover_slika',
+                'Slika.ime_slike'
             );
 
         //filtri
@@ -174,6 +181,12 @@ app.get('/isci_prenocisca', async (req, res) => {
         }
 
         let prenocisca = await query;
+        prenocisca = prenocisca.map(p => ({
+        ...p,
+        cover_slika: p.cover_slika 
+            ? `data:image/jpeg;base64,${p.cover_slika.toString('base64')}` 
+            : null
+        }));
 
         //dodaj povprečno oceno za vsako prenočišče
         for (let p of prenocisca) {

@@ -185,30 +185,34 @@ async function napolniBazo() {
     // SLIKE
         await knex.schema.createTable('Slika', (table) => {
             table.increments('ID_slika');
-            table.string('pot_slike');
+            table.specificType('slika', 'LONGBLOB');
+            table.string('ime_slike'); 
             table.boolean('cover').defaultTo(false);
             table.integer('TK_uporabnik').unsigned().references('ID_uporabnik').inTable('Uporabnik');
             table.integer('TK_prenocisce').unsigned().references('ID_prenocisce').inTable('Prenocisce');
             table.integer('TK_dozivetje').unsigned().references('ID_dozivetje').inTable('Dozivetje');
         });
 
+        const fs = require('fs');
+        const path = require('path');
+
         console.log('Tabela Slika uspesno ustvarjena.');
 
         const Slika = [
-            { pot_slike:'/images/svica.jpg', cover: true, TK_prenocisce: 1 },
-            { pot_slike:'/images/slovenija.jpg', cover: true, TK_prenocisce: 2 },
-            { pot_slike:'/images/predjama.png', cover: false, TK_prenocisce: 2 },
-            { pot_slike:'/images/kraljeva.png', cover: false, TK_prenocisce: 2 },
-            { pot_slike:'/images/stolpna.png', cover: false, TK_prenocisce: 2 },
-            { pot_slike:'/images/viteska.png', cover: false, TK_prenocisce: 2 },
-            { pot_slike:'/images/islandija.jpg', cover: false, TK_prenocisce: 3 },
-            { pot_slike:'/images/islandija-hotel.jpg', cover: true, TK_prenocisce: 3 },
-            { pot_slike:'/images/jama.jpg', cover: true, TK_prenocisce: 4 },
-            { pot_slike:'/images/kostarika.jpg', cover: true, TK_prenocisce: 5 },
-            { pot_slike:'/images/maldivi.jpg', cover: true, TK_prenocisce: 6 },
-            { pot_slike:'/images/amsterdam.jpg', cover: true, TK_prenocisce: 7 },
-            { pot_slike:'/images/vlak.jpg', cover: true, TK_prenocisce: 8 },
-            { pot_slike:'/images/mushroom.jpg', cover: true, TK_prenocisce: 9 }
+            { slika:fs.readFileSync(path.join(__dirname, '../frontend/images/svica.jpg')), ime_slike:'svica.jpg', cover:true, TK_prenocisce: 1 },
+            { slika:fs.readFileSync(path.join(__dirname, '../frontend/images/slovenija.jpg')), ime_slike: 'slovenija.jpg', cover: true, TK_prenocisce: 2 },
+            { slika:fs.readFileSync(path.join(__dirname, '../frontend/images/predjama.png')), ime_slike: 'predjama.png',cover: false, TK_prenocisce: 2 },
+            { slika:fs.readFileSync(path.join(__dirname, '../frontend/images/kraljeva.png')), ime_slike: 'kraljeva.png',cover: false, TK_prenocisce: 2 },
+            { slika:fs.readFileSync(path.join(__dirname, '../frontend/images/stolpna.png')), ime_slike:'stolpna.png', cover: false, TK_prenocisce: 2 },
+            { slika:fs.readFileSync(path.join(__dirname, '../frontend/images/viteska.png')), ime_slike:'viteska.png', cover: false, TK_prenocisce: 2 },
+            { slika:fs.readFileSync(path.join(__dirname, '../frontend/images/islandija.jpg')), ime_slike:'islandija.jpg', cover: false, TK_prenocisce: 3 },
+            { slika:fs.readFileSync(path.join(__dirname, '../frontend/images/islandija-hotel.jpg')), ime_slike:'islandija-hotel.jpg', cover: true, TK_prenocisce: 3 },
+            { slika:fs.readFileSync(path.join(__dirname, '../frontend/images/jama.jpg')), ime_slike:'jama.jpg', cover: true, TK_prenocisce: 4 },
+            { slika:fs.readFileSync(path.join(__dirname, '../frontend/images/kostarika.jpg')), ime_slike:'kostarika.jpg',cover: true, TK_prenocisce: 5 },
+            { slika:fs.readFileSync(path.join(__dirname, '../frontend/images/maldivi.jpg')), ime_slike:'maldivi.jpg',cover: true, TK_prenocisce: 6 },
+            { slika:fs.readFileSync(path.join(__dirname, '../frontend/images/amsterdam.jpg')), ime_slike:'amsterdam.jpg',cover: true, TK_prenocisce: 7 },
+            { slika:fs.readFileSync(path.join(__dirname, '../frontend/images/vlak.jpg')), ime_slike:'vlak.jpg',cover: true, TK_prenocisce: 8 },
+            { slika:fs.readFileSync(path.join(__dirname, '../frontend/images/mushroom.jpg')),ime_slike:'mushroom.jpg', cover: true, TK_prenocisce: 9 }
         ];
 
         await knex('Slika').insert(Slika);
