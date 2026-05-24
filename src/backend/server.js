@@ -293,6 +293,14 @@ app.post('/dodaj-prenocisce', upload.fields([
             cena_na_noc:     body.cena_na_noc,
             koordinate:      body.koordinate || null,
             naslov:          body.naslov,
+            sezona:          body.sezona || null,
+            wifi:            body.wifi === 'on',
+            parking:         body.parking === 'on',
+            bazen:           body.bazen === 'on',
+            zajtrk:          body.zajtrk === 'on',
+            razgled:         body.razgled === 'on',
+            ljubljencki:     body.ljubljencki === 'on',
+            trajnostno:      body.trajnostno === 'on',
             max_gostov:      body.max_gostov,
             stevilo_sob:     body.stevilo_sob,
             tagi:            JSON.stringify(tagi),
@@ -304,7 +312,8 @@ app.post('/dodaj-prenocisce', upload.fields([
         const slikePren  = req.files['slike'] || [];
         for (let i = 0; i < slikePren.length; i++) {
             await db('Slika').insert({
-                pot_slike:     '/images/' + slikePren[i].filename,
+                slika:         fs.readFileSync(slikePren[i].path),
+                ime_slike:     slikePren[i].originalname,
                 cover:         (i === coverIndex),
                 TK_prenocisce: idPrenocisce,
                 TK_uporabnik:  null,
@@ -328,10 +337,10 @@ app.post('/dodaj-prenocisce', upload.fields([
         }
  
         // Preusmeri na domačo stran
-        res.redirect('/');
+        res.json({ uspeh: true });
     } catch (err) {
         console.error('Napaka pri shranjevanju:', err);
-        res.status(500).send('Prišlo je do napake pri shranjevanju. Prosimo, poskusite znova.');
+        res.status(500).json({ uspeh: false, napaka: 'Napaka pri shranjevanju.' });
     }
 });
 

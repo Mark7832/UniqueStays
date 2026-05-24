@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="sl">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,10 +20,10 @@
     </script>
     <link rel="stylesheet" href="style.css" />
 </head>
-<body   onload="prikaziSlike();"
-        class="bg-slate-50 text-slate-700 antialiased">
 
-    
+<body onload="prikaziSlike();" class="bg-slate-50 text-slate-700 antialiased">
+
+
     <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-xl">
         <nav class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
             <a href="index.html" class="text-2xl font-extrabold text-slate-900">
@@ -33,25 +34,27 @@
                 <a href="index.html#experiences" class="font-semibold hover:text-blue-600 transition">Izkušnje</a>
                 <a href="index.html#about" class="font-semibold hover:text-blue-600 transition">O nas</a>
                 <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Novo</span>
-                <a href="login.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                <a href="login.html"
+                    class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
                     Prijava
                 </a>
-                <a href="register.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                <a href="register.html"
+                    class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
                     Registracija
                 </a>
             </div>
         </nav>
     </header>
 
-    
+
     <section class="py-16 px-6">
         <div class="max-w-3xl mx-auto">
             <form action="/dodaj-prenocisce" method="POST" enctype="multipart/form-data" class="space-y-10">
 
-                
+
                 <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
-                    
-                    
+
+
                     <h2 class="text-2xl font-extrabold text-slate-900 mb-6">Osnovni podatki</h2>
 
                     <div class="space-y-5">
@@ -59,45 +62,33 @@
                             <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
                                 Naziv prenočišča
                             </label>
-                            <input
-                                type="text"
-                                name="naziv"
-                                placeholder=""
-                                required
-                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition"
-                            />
+                            <input type="text" name="naziv" placeholder="" required
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
                         </div>
                         <div>
                             <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
                                 Tip prenočišča
                             </label>
-                            <input
-                                type="text"
-                                name="tip_prenocisca"
-                                placeholder="Grad, iglu, drevesna hišica, glamping..."
-                                required
-                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition"
-                            />
+                            <input type="text" name="tip_prenocisca"
+                                placeholder="Grad, iglu, drevesna hišica, glamping..." required
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
                         </div>
                         <div>
                             <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
                                 Opis prenočišča
                             </label>
-                            <textarea
-                                name="opis_prenocisca"
-                                rows="4"
+                            <textarea name="opis_prenocisca" rows="4"
                                 placeholder="Opišite vaše prenočišče — kaj je posebnega, kakšna je izkušnja, kaj gost lahko pričakuje..."
                                 required
-                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition resize-none"
-                            ></textarea>
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition resize-none"></textarea>
                         </div>
 
                     </div>
                 </div>
 
-                
+
                 <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
-                  
+
                     <h2 class="text-2xl font-extrabold text-slate-900 mb-6">Lokacija</h2>
 
                     <div class="space-y-5">
@@ -105,33 +96,25 @@
                             <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
                                 Naslov
                             </label>
-                            <input
-                                type="text"
-                                name="naslov"
-                                placeholder="Ulica 1, Mesto, Država"
-                                required
-                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition"
-                            />
+                            <input type="text" name="naslov" placeholder="Ulica 1, Mesto, Država" required
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
                         </div>
                         <div>
                             <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
                                 Koordinate (GPS)
                             </label>
-                            <input
-                                type="text"
-                                name="koordinate"
-                                placeholder="45.8150, 14.1279"
-                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition"
-                            />
+                            <input type="text" name="koordinate" placeholder="45.8150, 14.1279"
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
                             <p class="text-xs text-slate-400 mt-2">
-                                Koordinate najdete na Google Maps — z desnim klikom na lokacijo. Preverite, da sta vrednosti pravilni pred objavo.
+                                Koordinate najdete na Google Maps — z desnim klikom na lokacijo. Preverite, da sta
+                                vrednosti pravilni pred objavo.
                             </p>
                         </div>
 
                     </div>
                 </div>
 
-                
+
                 <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
                     <h2 class="text-2xl font-extrabold text-slate-900 mb-6">Zmogljivost in cena</h2>
 
@@ -141,48 +124,56 @@
                             <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
                                 Cena na noč (EUR)
                             </label>
-                            <input
-                                type="number"
-                                name="cena_na_noc"
-                                placeholder="230"
-                                min="1"
-                                required
-                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition"
-                            />
+                            <input type="number" name="cena_na_noc" placeholder="230" min="1" required
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
                         </div>
 
                         <div>
                             <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
                                 Max. število gostov
                             </label>
-                            <input
-                                type="number"
-                                name="max_gostov"
-                                placeholder="6"
-                                min="1"
-                                required
-                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition"
-                            />
+                            <input type="number" name="max_gostov" placeholder="6" min="1" required
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
                         </div>
 
                         <div>
                             <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
                                 Število sob
                             </label>
-                            <input
-                                type="number"
-                                name="stevilo_sob"
-                                placeholder="3"
-                                min="1"
-                                required
-                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition"
-                            />
+                            <input type="number" name="stevilo_sob" placeholder="3" min="1" required
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
                         </div>
 
                     </div>
                 </div>
 
-                
+                <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+                    <h2 class="text-2xl font-extrabold text-slate-900 mb-6">Ugodnosti</h2>
+                    <div class="flex flex-wrap gap-4">
+                        <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-600">
+                            <input type="checkbox" name="wifi" class="w-4 h-4 accent-teal-500"> Wi-Fi
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-600">
+                            <input type="checkbox" name="parking" class="w-4 h-4 accent-teal-500"> Parking
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-600">
+                            <input type="checkbox" name="bazen" class="w-4 h-4 accent-teal-500"> Zasebni bazen
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-600">
+                            <input type="checkbox" name="zajtrk" class="w-4 h-4 accent-teal-500"> Zajtrk vključen
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-600">
+                            <input type="checkbox" name="razgled" class="w-4 h-4 accent-teal-500"> Panoramski razgled
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-600">
+                            <input type="checkbox" name="ljubljencki" class="w-4 h-4 accent-teal-500"> Hišni ljubljenčki
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-600">
+                            <input type="checkbox" name="trajnostno" class="w-4 h-4 accent-teal-500"> Trajnostno
+                        </label>
+                    </div>
+                </div>
+
                 <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
                     <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Slike</h2>
                     <p class="text-slate-500 text-sm mb-6">
@@ -193,15 +184,9 @@
                         <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
                             Izberi slike
                         </label>
-                        <input
-                            type="file"
-                            id="slike-input"
-                            name="slike"
-                            accept="image/*"
-                            multiple
+                        <input type="file" id="slike-input" name="slike" accept="image/*" multiple
                             onchange="prikaziSlike(this)"
-                            class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition cursor-pointer"
-                        />
+                            class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition cursor-pointer" />
                         <p class="text-xs text-slate-400 mt-2">
                             Podprti formati: JPG, PNG, WEBP.
                         </p>
@@ -212,9 +197,9 @@
                     <input type="hidden" name="cover_slika_index" id="cover-index" value="0" />
                 </div>
 
-                
+
                 <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
-                   
+
                     <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Nedosegljivi termini</h2>
                     <p class="text-slate-500 text-sm mb-6">
                         Vnesite datume, ko prenočišče ni na voljo (zasebna prireditev, vzdrževanje, dopust...).
@@ -222,67 +207,51 @@
 
                     <div id="termini-container" class="space-y-4">
 
-                        <div class="termin-vnos grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                        <div
+                            class="termin-vnos grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
 
                             <div>
                                 <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
                                     Datum od
                                 </label>
-                                <input
-                                    type="date"
-                                    name="termin_od[]"
-                                    class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-white font-semibold outline-none focus:border-teal-400 transition"
-                                />
+                                <input type="date" name="termin_od[]"
+                                    class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-white font-semibold outline-none focus:border-teal-400 transition" />
                             </div>
 
                             <div>
                                 <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
                                     Datum do
                                 </label>
-                                <input
-                                    type="date"
-                                    name="termin_do[]"
-                                    class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-white font-semibold outline-none focus:border-teal-400 transition"
-                                />
+                                <input type="date" name="termin_do[]"
+                                    class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-white font-semibold outline-none focus:border-teal-400 transition" />
                             </div>
 
                             <div>
                                 <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
                                     Razlog
                                 </label>
-                                <input
-                                    type="text"
-                                    name="termin_razlog[]"
-                                    placeholder="Vzdrževanje"
-                                    class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-white font-semibold outline-none focus:border-teal-400 transition"
-                                />
+                                <input type="text" name="termin_razlog[]" placeholder="Vzdrževanje"
+                                    class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-white font-semibold outline-none focus:border-teal-400 transition" />
                             </div>
 
                         </div>
 
                     </div>
 
-                    <button
-                        type="button"
-                        onclick="dodajTermin()"
-                        class="mt-4 px-5 py-2.5 rounded-full border-2 border-slate-300 text-slate-600 font-bold text-sm hover:border-teal-400 hover:text-teal-600 transition"
-                    >
+                    <button type="button" onclick="dodajTermin()"
+                        class="mt-4 px-5 py-2.5 rounded-full border-2 border-slate-300 text-slate-600 font-bold text-sm hover:border-teal-400 hover:text-teal-600 transition">
                         + Dodaj termin
                     </button>
                 </div>
 
-                
+
                 <div class="flex justify-end gap-4">
-                    <a
-                        href="index.html"
-                        class="px-8 py-4 rounded-full border-2 border-slate-300 text-slate-600 font-bold hover:border-slate-400 transition"
-                    >
+                    <a href="index.html"
+                        class="px-8 py-4 rounded-full border-2 border-slate-300 text-slate-600 font-bold hover:border-slate-400 transition">
                         Prekliči
                     </a>
-                    <button
-                        type="submit"
-                        class="px-10 py-4 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold text-lg hover:scale-[1.02] transition-all duration-200 shadow-lg"
-                    >
+                    <button type="submit"
+                        class="px-10 py-4 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold text-lg hover:scale-[1.02] transition-all duration-200 shadow-lg">
                         Objavi prenočišče
                     </button>
                 </div>
@@ -291,7 +260,7 @@
         </div>
     </section>
 
-    
+
     <footer class="bg-slate-950 text-white px-6 pt-20 pb-10">
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-4 gap-10 border-b border-white/10 pb-10">
             <div>
@@ -333,4 +302,5 @@
     <script src='dodaj_prenocisce.js'></script>
 
 </body>
+
 </html>
