@@ -258,6 +258,7 @@ app.post('/dodaj-prenocisce', upload.fields([
             cena_na_noc:     body.cena_na_noc,
             koordinate:      body.koordinate || null,
             naslov:          body.naslov,
+            sezona:          body.sezona || null,
             max_gostov:      body.max_gostov,
             stevilo_sob:     body.stevilo_sob,
             tagi:            JSON.stringify(tagi),
@@ -269,7 +270,8 @@ app.post('/dodaj-prenocisce', upload.fields([
         const slikePren  = req.files['slike'] || [];
         for (let i = 0; i < slikePren.length; i++) {
             await db('Slika').insert({
-                pot_slike:     '/images/' + slikePren[i].filename,
+                slika:         fs.readFileSync(slikePren[i].path),
+                ime_slike:     slikePren[i].originalname,
                 cover:         (i === coverIndex),
                 TK_prenocisce: idPrenocisce,
                 TK_uporabnik:  null,
