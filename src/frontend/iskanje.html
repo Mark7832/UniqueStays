@@ -66,60 +66,86 @@
     </p>
 
     <form id="isciForma"
-          class="overflow-hidden rounded-[28px] bg-white text-slate-900 shadow-2xl border border-white/10">
-
-        <!--search-->
-        <div class="grid xl:grid-cols-6 md:grid-cols-2">
-
+      class="overflow-hidden rounded-[28px] bg-white text-slate-900 shadow-2xl border border-white/10">
+ 
+        <div class="grid xl:grid-cols-4 md:grid-cols-2">
+ 
             <div class="p-5 border-b xl:border-b-0 xl:border-r">
                 <label class="text-xs font-bold text-slate-400 uppercase">Destinacija</label>
-                <input name="destinacija" type="text" placeholder="Kam greste?"
-                       class="w-full font-semibold outline-none bg-transparent">
+                <input name="destinacija" type="text" placeholder="Kam greste?" class="w-full font-semibold outline-none bg-transparent">
             </div>
-
+ 
             <div class="p-5 border-b xl:border-b-0 xl:border-r">
-                <label class="text-xs font-bold text-slate-400 uppercase">Tip</label>
-                <select name="tip_prenocisca" class="w-full font-semibold bg-transparent outline-none">
-                    <option value="">Vse</option>
-                    <option>Gorska koča</option>
-                    <option>Grad</option>
-                    <option>Jama</option>
-                    <option>Drevesna hišica</option>
-                    <option>Glamping</option>
-                    <option>Vila pod vodo</option>
-                    <option>Barka</option>
-                </select>
+                <label class="text-xs font-bold text-slate-400 uppercase">Prihod</label>
+                <input name="datum_od" type="date" class="w-full font-semibold outline-none bg-transparent">
             </div>
-
-            <div class="p-5 border-b xl:border-b-0 xl:border-r">
-                <label class="text-xs font-bold text-slate-400 uppercase">Min cena € / noč</label>
-                <input name="cena_min" type="number" class="w-full font-semibold outline-none bg-transparent">
-            </div>
-
-            <div class="p-5 border-b xl:border-b-0 xl:border-r">
-                <label class="text-xs font-bold text-slate-400 uppercase">Max cena € / noč</label>
-                <input name="cena_max" type="number" class="w-full font-semibold outline-none bg-transparent">
-            </div>
-
-            <div class="p-5 border-b xl:border-b-0 xl:border-r">
-                <label class="text-xs font-bold text-slate-400 uppercase">Ocena</label>
-                <select name="ocena" class="w-full font-semibold bg-transparent outline-none">
-                    <option value="">Vse</option>
-                    <option value="4">4+</option>
-                    <option value="4.5">4.5+</option>
-                    <option value="4.8">4.8+</option>
-                </select>
-            </div>
-
-            <div class="p-5 flex items-center justify-center">
-                <button type="button"
-                        onclick="isci()"
-                        class="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.03] transition-all duration-200 shadow-lg text-center">
-                    Iskanje
-                </button>
-            </div>
-
+ 
+        <div class="p-5 border-b xl:border-b-0 xl:border-r">
+            <label class="text-xs font-bold text-slate-400 uppercase">Odhod</label>
+            <input name="datum_do" type="date" class="w-full font-semibold outline-none bg-transparent">
         </div>
+ 
+        <div class="p-5 border-b xl:border-b-0">
+            <label class="text-xs font-bold text-slate-400 uppercase">Gostje</label>
+            <select name="stevilo_gostov" class="w-full font-semibold bg-transparent outline-none">
+                <option value="1">1 gost</option>
+                <option value="2">2 gosta</option>
+                <option value="3">3 gosti</option>
+                <option value="4">4 gosti</option>
+                <option value="5">5+ gostov</option>
+            </select>
+        </div>
+ 
+    </div>
+ 
+    <!-- Druga vrstica -->
+    <div class="grid xl:grid-cols-5 md:grid-cols-2 border-t border-slate-100">
+ 
+        <div class="p-5 border-b xl:border-b-0 xl:border-r">
+            <label class="text-xs font-bold text-slate-400 uppercase">Tip</label>
+            <select name="tip_prenocisca" class="w-full font-semibold bg-transparent outline-none">
+                <option value="">Vse</option>
+                <option>Gorska koča</option>
+                <option>Grad</option>
+                <option>Jama</option>
+                <option>Drevesna hišica</option>
+                <option>Glamping</option>
+                <option>Vila pod vodo</option>
+                <option>Barka</option>
+            </select>
+        </div>
+ 
+        <div class="p-5 border-b xl:border-b-0 xl:border-r">
+            <label class="text-xs font-bold text-slate-400 uppercase">Min cena € / noč</label>
+            <input name="cena_min" type="number" placeholder="0"
+                   class="w-full font-semibold outline-none bg-transparent">
+        </div>
+ 
+        <div class="p-5 border-b xl:border-b-0 xl:border-r">
+            <label class="text-xs font-bold text-slate-400 uppercase">Max cena € / noč</label>
+            <input name="cena_max" type="number" placeholder="∞"
+                   class="w-full font-semibold outline-none bg-transparent">
+        </div>
+ 
+        <div class="p-5 border-b xl:border-b-0 xl:border-r">
+            <label class="text-xs font-bold text-slate-400 uppercase">Ocena</label>
+            <select name="ocena" class="w-full font-semibold bg-transparent outline-none">
+                <option value="">Vse</option>
+                <option value="4">4+</option>
+                <option value="4.5">4.5+</option>
+                <option value="4.8">4.8+</option>
+            </select>
+        </div>
+ 
+        <div class="p-5 flex items-center justify-center">
+            <button type="button" onclick="isci()"
+                    class="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.03] transition-all duration-200 shadow-lg text-center">
+                Iskanje
+            </button>
+        </div>
+ 
+    </div>
+
 
         <!--filtri-->
         <div class="border-t bg-slate-50 px-5 py-4 flex flex-wrap gap-3">
