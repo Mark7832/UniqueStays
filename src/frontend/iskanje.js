@@ -26,6 +26,13 @@ async function isci() {
 
         const prenocisca = await res.json();
 
+        zadnjaPrenocisca = Array.isArray(prenocisca) ? prenocisca : [];
+
+        // Če je zemljevid aktiven, ga posodobi
+        if (!document.getElementById('zemljevidView').classList.contains('hidden')) {
+            prikaziZemljevid();
+        }
+
         const container = document.getElementById('rezultati');
         const count = document.getElementById('resultsCount');
 
@@ -187,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('input[name="destinacija"]').addEventListener('input', isci);
 });
 
-// Funkcija za preusmeritev iz index.html
+//Funkcija za preusmeritev iz index.html na iskanje.html
 function isciInPreusmeri() {
     const form = document.getElementById('isciForma');
     const data = new FormData(form);
@@ -195,4 +202,68 @@ function isciInPreusmeri() {
     window.location.href = `iskanje.html?${params.toString()}`;
 }
 
-    
+//Funkcija za prikaz zemljevida
+let map = null;
+let markers = [];
+
+function preklop(tip) {
+    const seznam = document.getElementById('seznamView');
+    const zemljevidView = document.getElementById('zemljevidView');
+    const btnSeznam = document.getElementById('btnSeznam');
+    const btnZemljevid = document.getElementById('btnZemljevid');
+
+    if (tip === 'zemljevid') {
+        seznam.classList.add('hidden');
+        zemljevidView.classList.remove('hidden');
+        btnSeznam.className = 'flex items-center gap-2 px-6 py-3 rounded-full bg-white border-2 border-slate-200 text-slate-700 font-bold text-sm shadow-lg hover:border-blue-400 hover:text-blue-600 transition-all duration-200 hover:-translate-y-1';
+        btnZemljevid.className = 'flex items-center gap-2 px-6 py-3 rounded-full bg-slate-900 text-white font-bold text-sm shadow-lg hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1';
+        prikaziZemljevid();
+    } else {
+        seznam.classList.remove('hidden');
+        zemljevidView.classList.add('hidden');
+        btnSeznam.className = 'flex items-center gap-2 px-6 py-3 rounded-full bg-slate-900 text-white font-bold text-sm shadow-lg hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1';
+        btnZemljevid.className = 'flex items-center gap-2 px-6 py-3 rounded-full bg-white border-2 border-slate-200 text-slate-700 font-bold text-sm shadow-lg hover:border-blue-400 hover:text-blue-600 transition-all duration-200 hover:-translate-y-1';
+    }
+}
+
+let zadnjaPrenocisca = [];
+
+function prikaziZemljevid() {
+    if (!map) {
+        map = L.map('zemljevid').setView([20, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+    }
+
+    // Zbriši stare markerje
+    markers.forEach(m => m.remove());
+    markers = [];
+
+    zadnjaPrenocisca.forEach(p => {
+        if (!p.koordinate) return;
+        const [lat, lng] = p.koordinate.split(',').map(Number);
+        if (isNaN(lat) || isNaN(lng)) return;
+
+        const marker = L.marker([lat, lng]).addTo(map);
+        marker.bindPopup(`
+            <div style="min-width:200px">
+                <strong style="font-size:16px">${p.naziv}</strong><br>
+                <span style="color:#6b7280">📍 ${p.naslov}</span><br>
+                <span style="font-size:18px;font-weight:bold">${p.cena_na_noc} €</span> / noč<br>
+                ${p.povprecna_ocena ? `⭐ ${p.povprecna_ocena}<br>` : ''}
+                <a href="podrobnosti.html?id=${p.ID_prenocisce}" 
+                   style="display:inline-block;margin-top:8px;padding:6px 14px;background:#2563eb;color:white;border-radius:20px;text-decoration:none;font-weight:bold;font-size:13px">
+                    Ogled ponudbe
+                </a>
+            </div>
+        `);
+        markers.push(marker);
+    });
+
+    // Prilagodi pogled na markerje
+    if (markers.length > 0) {
+        const group = L.featureGroup(markers);
+        map.fitBounds(group.getBounds().pad(0.2));
+    }
+}
