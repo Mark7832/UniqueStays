@@ -80,152 +80,115 @@
             </p>
 
             <!--search-->
-            <form class="overflow-hidden rounded-[28px] bg-white text-slate-900 shadow-2xl border border-white/10">
-
-                <div class="grid xl:grid-cols-6 md:grid-cols-2">
-
-                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
-                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
-                            Destinacija
-                        </label>
-
-                        <input
-                            type="text"
-                            placeholder="Kam greste?"
-                            class="w-full bg-transparent outline-none font-semibold"
-                        />
+            <form id="isciForma" class="overflow-hidden rounded-[28px] bg-white text-slate-900 shadow-2xl border border-white/10">
+ 
+                <div class="grid xl:grid-cols-4 md:grid-cols-2">
+ 
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r">
+                        <label class="text-xs font-bold text-slate-400 uppercase">Destinacija</label>
+                        <input name="destinacija" type="text" placeholder="Kam greste?" class="w-full font-semibold outline-none bg-transparent">
                     </div>
-
-                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
-                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
-                            Prihod
-                        </label>
-
-                        <input
-                            type="date"
-                            class="w-full bg-transparent outline-none font-semibold"
-                        />
+ 
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r">
+                        <label class="text-xs font-bold text-slate-400 uppercase">Prihod</label>
+                        <input name="datum_od" type="date" class="w-full font-semibold outline-none bg-transparent">
                     </div>
-
-                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
-                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
-                            Odhod
-                        </label>
-
-                        <input
-                            type="date"
-                            class="w-full bg-transparent outline-none font-semibold"
-                        />
+ 
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r">
+                        <label class="text-xs font-bold text-slate-400 uppercase">Odhod</label>
+                        <input name="datum_do" type="date" class="w-full font-semibold outline-none bg-transparent">
                     </div>
-
-                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
-                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
-                            Gostje
-                        </label>
-
-                        <select class="w-full bg-transparent outline-none font-semibold appearance-none cursor-pointer">
-                            <option>1 gost</option>
-                            <option>2 gosta</option>
-                            <option>3 gostje</option>
-                            <option>4 gostje</option>
-                            <option>5+ gostov</option>
+ 
+                    <div class="p-5 border-b xl:border-b-0">
+                        <label class="text-xs font-bold text-slate-400 uppercase">Gostje</label>
+                        <select name="stevilo_gostov" class="w-full font-semibold bg-transparent outline-none">
+                            <option value="1">1 gost</option>
+                            <option value="2">2 gosta</option>
+                            <option value="3">3 gosti</option>
+                            <option value="4">4 gosti</option>
+                            <option value="5">5+ gostov</option>
                         </select>
                     </div>
-
-                    <div class="p-5 border-b xl:border-b-0 xl:border-r border-slate-200">
-                        <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
-                            Tip lokacije
-                        </label>
-
-                        <select class="w-full bg-transparent outline-none font-semibold appearance-none cursor-pointer">
-                            <option>Vse vrste</option>
-                            <option>Drevesna hiška</option>
+                </div>
+ 
+                <div class="grid xl:grid-cols-5 md:grid-cols-2 border-t border-slate-100">
+ 
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r">
+                        <label class="text-xs font-bold text-slate-400 uppercase">Tip</label>
+                        <select name="tip_prenocisca" class="w-full font-semibold bg-transparent outline-none">
+                            <option value="">Vse</option>
                             <option>Gorska koča</option>
-                            <option>Glamping šotor</option>
-                            <option>Iglu</option>
-                            <option>Luksuzna vila</option>
-                            <option>Pod/na/ob vodi</option>
+                            <option>Grad</option>
+                            <option>Jama</option>
+                            <option>Drevesna hišica</option>
+                            <option>Glamping</option>
+                            <option>Vila pod vodo</option>
+                            <option>Barka</option>
                         </select>
                     </div>
-
-                    <div class="p-4 flex items-center justify-center">
-                        <button class="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.02] transition-all duration-200 shadow-lg">
+ 
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r">
+                        <label class="text-xs font-bold text-slate-400 uppercase">Min cena € / noč</label>
+                        <input name="cena_min" type="number" placeholder="0" class="w-full font-semibold outline-none bg-transparent">
+                    </div>
+ 
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r">
+                        <label class="text-xs font-bold text-slate-400 uppercase">Max cena € / noč</label>
+                        <input name="cena_max" type="number" placeholder="∞" class="w-full font-semibold outline-none bg-transparent">
+                    </div>
+ 
+                    <div class="p-5 border-b xl:border-b-0 xl:border-r">
+                        <label class="text-xs font-bold text-slate-400 uppercase">Ocena</label>
+                        <select name="ocena" class="w-full font-semibold bg-transparent outline-none">
+                            <option value="">Vse</option>
+                            <option value="4">4+</option>
+                            <option value="4.5">4.5+</option>
+                            <option value="4.8">4.8+</option>
+                        </select>
+                    </div>
+ 
+                    <div class="p-5 flex items-center justify-center">
+                        <button type="button" onclick="isciInPreusmeri()"
+                            class="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.03] transition-all duration-200 shadow-lg text-center">
                             Iskanje
                         </button>
                     </div>
+ 
                 </div>
+
                 <!--filtri-->
-                <div class="border-t border-slate-200 bg-slate-50 px-5 py-4 flex flex-wrap gap-3 items-center">
-
-                    <span class="text-xs uppercase tracking-widest font-bold text-slate-400">
-                        Filtri:
-                    </span>
-
-                    <select class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm">
-                        <option value="">Cena / noč</option>
-                        <option>Do 100 €</option>
-                        <option>100 - 250 €</option>
-                        <option>250 - 500 €</option>
-                        <option>500 €+</option>
-                    </select>
-
-                    <select class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm">
-                        <option value="">Vrsta izkušnje</option>
-                        <option>Romantični pobeg</option>
-                        <option>Družinske počitnice</option>
-                        <option>Avantura v naravi</option>
-                        <option>Luksuzni oddih</option>
-                        <option>Digitalni detox</option>
-                    </select>
-
-                    <select class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm">
-                        <option value="">Ocena</option>
-                        <option>4.0 in več</option>
-                        <option>4.5 in več</option>
-                        <option>4.75 in več</option>
-                        <option>Samo 5.0</option>
-                    </select>
-                </div>
-                <!--dodatne ugodnosti-->
-                <div class="border-t border-slate-200 bg-slate-100 px-5 py-4 flex flex-wrap gap-3 items-center">
+                <div class="border-t bg-slate-50 px-5 py-4 flex flex-wrap gap-3">
 
                     <span class="text-xs uppercase tracking-widest font-bold text-slate-400">
                         Ugodnosti:
-                    </span>
+                    </span> 
 
-                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
-                        <input type="checkbox"/>
-                        Hišni ljubljenčki
-                    </label>
-
-                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
-                        <input type="checkbox"/>
-                        Zasebni bazen
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" name="ljubljencki"> Hišni ljubljenčki
                     </label>
 
-                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
-                        <input type="checkbox"/>
-                        Trajnostno
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" name="bazen"> Zasebni bazen
                     </label>
 
-                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
-                        <input type="checkbox"/>
-                        Parking
-                    </label>
-                                        
-                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
-                        <input type="checkbox"/>
-                        Panoramski razgled
-                    </label>
-                                        
-                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
-                        <input type="checkbox"/>
-                        Zajtrk vključen
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" name="trajnostno"> Trajnostno
                     </label>
 
-                    <label class="px-4 py-2 rounded-full border border-slate-200 bg-white font-semibold text-sm flex items-center gap-2 cursor-pointer hover:bg-slate-900 hover:text-white transition">
-                        <input type="checkbox"/>
-                        Wi-Fi
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" name="parking"> Parking
+                    </label>
+
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" name="razgled"> Panoramski razgled
+                    </label>
+
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" name="zajtrk"> Zajtrk vključen
+                    </label>
+
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" name="wifi"> Wi-Fi
                     </label>
                 </div>
             </form>
@@ -419,7 +382,7 @@
                 </div>
             </article>
 
-            <a href="predjama.html" class="destination-card bg-[url('images/slovenija.jpg')]">
+            <a href="podrobnosti.html?id=2" class="destination-card bg-[url('images/slovenija.jpg')]">
                 <div>
                     <span class="destination-badge">🏰 Ekskluzivno</span>
                     <h3 class="destination-title">Predjamski grad</h3>
@@ -526,6 +489,7 @@
             © 2026 UniqueStays. Vse pravice pridržane.
         </div>
     </footer>
-
+    <!--JavaScript-->
+    <script src="iskanje.js"></script>
 </body>
 </html>

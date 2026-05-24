@@ -1,8 +1,24 @@
 async function isci() {
+    if (!document.getElementById('rezultati')) return;
     try {
         const form = document.getElementById('isciForma');
         const data = new FormData(form);
         const params = new URLSearchParams(data);
+
+        const datumOd = document.querySelector('input[name="datum_od"]').value;
+        const datumDo = document.querySelector('input[name="datum_do"]').value;
+
+        // Preveri da je odhod po prihodu
+        if (datumOd && datumDo && datumOd >= datumDo) {
+            document.getElementById('rezultati').innerHTML = `
+                <div class="text-center py-20 text-red-400">
+                    <p class="text-5xl mb-4">📅</p>
+                    <p class="text-xl font-semibold">Datum odhoda mora biti po datumu prihoda.</p>
+                </div>
+            `;
+            document.getElementById('resultsCount').textContent = '0 rezultatov';
+            return;
+        }
 
         const res = await fetch(
             `http://localhost:3000/isci_prenocisca?${params.toString()}`
@@ -14,9 +30,9 @@ async function isci() {
         const count = document.getElementById('resultsCount');
 
         container.innerHTML = '';
-        count.textContent = `${prenocisca.length} rezultatov`;
+        count.textContent = Array.isArray(prenocisca) ? `${prenocisca.length} rezultatov` : '0 rezultatov';
 
-        if (prenocisca.length === 0) {
+        if (!Array.isArray(prenocisca) || prenocisca.length === 0) {
             container.innerHTML = `
                 <div class="text-center py-20 text-slate-400">
                     <p class="text-5xl mb-4">🔍</p>
@@ -33,6 +49,17 @@ async function isci() {
             const ocena = p.povprecna_ocena ? `⭐ ${p.povprecna_ocena}` : '';
             const slika = p.cover_slika || 'images/default.jpg';
             const tagi = p.tagi ? JSON.parse(p.tagi) : [];
+            const zdaj = new Date();
+            const dodano = new Date(p.datum_dodano);
+            const dniRazlika = (zdaj - dodano) / (1000 * 60 * 60 * 24);
+
+            const znacke = [];
+            if (p.povprecna_ocena >= 4.8) 
+                znacke.push(`<span class="px-3 py-2 rounded-full bg-purple-100 text-purple-700 text-sm font-bold">🏆 Gostova izbira</span>`);
+            if (p.cena_na_noc > 300) 
+                znacke.push(`<span class="px-3 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-bold">💎 Premium</span>`);
+            if (dniRazlika <= 30) 
+                znacke.push(`<span class="px-3 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold">✨ Novo</span>`);
 
             html += `
             <article class="group bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 grid lg:grid-cols-[380px_1fr]">
@@ -57,11 +84,14 @@ async function isci() {
                 <div class="p-7 md:p-9 flex flex-col">
 
                     <!--sezona & ocena-->
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="px-4 py-2 rounded-full bg-green-100 text-slate-700 text-sm font-bold">
-                            🌼 ${p.sezona}
-                        </span>
-                        ${ocena ? `<span class="px-3 py-1 rounded-full bg-amber-100 text-slate-700 text-sm font-bold">${ocena}</span>` : ''}
+                    <div class="flex flex-wrap items-center justify-between mb-3 gap-2">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="px-4 py-2 rounded-full bg-pink-100 text-pink-700 text-sm font-bold">
+                                🌼 ${p.sezona}
+                            </span>
+                            ${znacke.join('')}
+                        </div>
+                        ${ocena ? `<span class="px-3 py-2 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">${ocena}</span>` : ''}
                     </div>
 
                     <!--ime in lokacija-->
@@ -89,7 +119,7 @@ async function isci() {
                         </span>
 
                         ${p.wifi == 1        ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">📶 Wi-Fi</span>` : ''}
-                        ${p.bazen == 1      ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">🏊 Zasebni bazen</span>` : ''}
+                        ${p.bazen == 1       ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">🏊 Zasebni bazen</span>` : ''}
                         ${p.parking == 1     ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">🅿️ Parking</span>` : ''}
                         ${p.zajtrk == 1      ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">🥐 Zajtrk vključen</span>` : ''}
                         ${p.razgled == 1     ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">🌄 Panoramski razgled</span>` : ''}
@@ -135,3 +165,34 @@ async function isci() {
         `;
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Zapolni formo iz URL parametrov (ko prideš iz index.html)
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.forEach((value, key) => {
+        const el = document.querySelector(`[name="${key}"]`);
+        if (!el) return;
+        if (el.type === 'checkbox') {
+            el.checked = value === 'on';
+        } else {
+            el.value = value;
+        }
+    });
+
+    isci();
+
+    document.querySelectorAll('#isciForma input[type="date"], #isciForma input[type="number"], #isciForma select, #isciForma input[type="checkbox"]').forEach(el => {
+        el.addEventListener('change', isci);
+    });
+    document.querySelector('input[name="destinacija"]').addEventListener('input', isci);
+});
+
+// Funkcija za preusmeritev iz index.html
+function isciInPreusmeri() {
+    const form = document.getElementById('isciForma');
+    const data = new FormData(form);
+    const params = new URLSearchParams(data);
+    window.location.href = `iskanje.html?${params.toString()}`;
+}
+
+    

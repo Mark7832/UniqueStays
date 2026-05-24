@@ -59,6 +59,7 @@ async function napolniBazo() {
     // PRENOCISCE
         await knex.schema.createTable('Prenocisce', (table) => {
             table.increments('ID_prenocisce');
+            table.timestamp('datum_dodano').defaultTo(knex.fn.now());
             table.string('naziv').notNullable();
             table.string('tip_prenocisca').notNullable();
             table.string('opis_prenocisca').notNullable();
@@ -82,15 +83,15 @@ async function napolniBazo() {
         console.log('Tabela prenocisce ustvarjena.');
 
         const Prenocisce = [
-            { naziv: 'Alpine Ski Lodge', tip_prenocisca: 'Gorska koča', opis_prenocisca: 'Koča obdana s prečudovitim razgledom na zasnežene gorske vrhove, zasebno savno in idealno lokacijo blizu večjih smučišč.', cena_na_noc: 180, koordinate: '46.8182,8.2275', naslov: 'Zermatt, Švica', sezona: 'Zima', max_gostov: 4, stevilo_sob: 2, wifi: true, parking: true, razgled: true, bazen: true, tagi: JSON.stringify([{ emoji: '🧖', naziv: 'Zasebna savna & jacuzzi' },{ emoji: '⛷️', naziv: 'Smučanje' },{ emoji: '🛷', naziv: 'Nočno sankanje' },{ emoji: '🏔️', naziv: 'Pohodništvo' }]), TK_uporabnik: 1 },
-            { naziv: 'Predjamski grad', tip_prenocisca: 'Grad', opis_prenocisca: 'Predjamski grad, vklesan v mogočno skalno steno, ponuja pravljično doživetje s pridihom zgodovine, skrivnostnih rovov in čudovitega razgleda na kraško pokrajino.', cena_na_noc: 230, koordinate: '45.8150,14.1279', naslov: 'Postojna, Slovenija', sezona: 'Pomlad / Poletje', max_gostov: 6, stevilo_sob: 3, wifi: true, parking: true, razgled: true, tagi: JSON.stringify([{ emoji: '👑', naziv: 'Plemič za en dan' },{ emoji: '🍲', naziv: 'Viteška strežba' },{ emoji: '👁️‍🗨️', naziv: 'Raziskovanje skrivnostnih rovov' },{ emoji: '📚', naziv: 'Zgodovina' },{ emoji: '🐎', naziv: 'Bližina Lipice' }]), TK_uporabnik: 2 },
-            { naziv: 'Aurora Bubble Lodge', tip_prenocisca: 'Glamping', opis_prenocisca: 'Prosojna ogrevana kupola sredi islandske narave ponuja čarobno noč pod zvezdami in severnim sijem, idealno za romantičen pobeg v tišini gozda.', cena_na_noc: 310, koordinate: '64.9631,-19.0208', naslov: 'Hella, Islandija', sezona: 'Jesen / Zima', max_gostov: 2, stevilo_sob: 1, wifi: true, parking: true, razgled: true, ljubljencki: true, trajnostno: true, zajtrk: true, tagi: JSON.stringify([{ emoji: '💫', naziv: 'Romantični pobeg' },{ emoji: '🌠', naziv: 'Lov na severni sij' },{ emoji: '🔥', naziv: 'Ogrevana kupola' }]), TK_uporabnik: 3 },
-            { naziv: 'Cave Hideaway', tip_prenocisca: 'Jama', opis_prenocisca: 'Prespite v skrivnostni jami z mehko svetlobo lantern, naravno hladnim zrakom in občutkom, kot da ste odkrili skriti svet pod zemljo.', cena_na_noc: 167, koordinate: '8.6431,34.8270', naslov: 'Göreme, Kapakodija, Turčija', sezona: 'Celo leto', max_gostov: 4, stevilo_sob: 2, trajnostno: true, tagi: JSON.stringify([{ emoji: '🌡️', naziv: 'Naravno hlajenje' },{ emoji: '🕯️', naziv: 'Večer ob svečah' },{ emoji: '🍷', naziv: 'Degustacija vina' },{ emoji: '🏺', naziv: 'Starodavno vzdušje'},{ emoji: '🔦', naziv: 'Vodeni ogled jame'},{ emoji: '🦇', naziv: 'Večerni polet netopirjev'},{ emoji: '🌌', naziv: 'Spanje v tišini'},{ emoji: '🎈', naziv: 'Polet balonov'}]), TK_uporabnik: 4 },
-            { naziv: 'Jungle Treehouse Hideaway', tip_prenocisca: 'Drevesna hišica', opis_prenocisca: 'Drevesna hišica sredi kostariške džungle, kjer vas zjutraj zbudijo tropske ptice, zvečer pa uspava zvok dežja med krošnjami.', cena_na_noc: 420, koordinate: '9.7489,-83.7534', naslov: 'Monteverde, Kostarika', sezona: 'Poletje', max_gostov: 8, stevilo_sob: 4, wifi: true, parking: true, razgled: true, ljubljencki: true, trajnostno: true, zajtrk: true, tagi: JSON.stringify([{ emoji: '🧘', naziv: 'Joga na terasi' },{ emoji: '📵', naziv: 'Digitalni detox' },{ emoji: '🛁', naziv: 'Zunanja kad' },{ emoji: '🌲', naziv: 'Pohod med krošnjami' },{ emoji: '🌲', naziv: 'Pohod med krošnjami' },{ emoji: '🦥', naziv: 'Jutranji obisk lenivcev' },{ emoji: '🐒', naziv: 'Opazovanje opic' },{ emoji: '🍍', naziv: 'Tropical breakfast basket' },{ emoji: '🔦', naziv: 'Nočni sprehod po džungli' },{ emoji: '🌧️', naziv: 'Zvok tropskega dežja' }]), TK_uporabnik: 5 },
-            { naziv: 'Under the sea hotel', tip_prenocisca: 'Vila pod vodo', opis_prenocisca: 'Podvodni hotel na Maldivih ponuja nepozabno spanje med koralnimi grebeni, kjer skozi steklene stene opazujete pisane ribe, morske želve in čarobni svet oceana, kar iz udobja svoje sobe.', cena_na_noc: 333, koordinate: '3.2028,73.2207', naslov: 'Male Atoll, Maldivi', sezona: 'Celo leto', max_gostov: 2, stevilo_sob: 1, wifi: true, parking: true, razgled: true, trajnostno: true, zajtrk: true, tagi: JSON.stringify([{ emoji: '🦈', naziv: 'Plavanje z morskimi psi' },{ emoji: '🧜', naziv: 'Podvodni spa tretma' },{ emoji: '🐠', naziv: 'Koralni greben' },{ emoji: '🤿', naziv: 'Nočno snorklanje z modro svetlečim planktonom' },{ emoji: '🍣', naziv: 'Sushi bar' },{ emoji: '📸', naziv: 'Podvodno fotografiranje' },{ emoji: '🐬', naziv: 'Jutranji izlet z delfini' },{ emoji: '🚁', naziv: 'Panoramski polet nad atoli' }]), TK_uporabnik: 6 },
-            { naziv: 'Quack & Coffee Houseboat', tip_prenocisca: 'Barka', opis_prenocisca: 'Majhna plavajoča hiška na mirni reki, kjer vas zjutraj namesto alarma zbudijo račke, valovi in vonj sveže kave.', cena_na_noc: 140, koordinate: '52.3676,4.9041', naslov: 'Amsterdam Center, Nizozemska', sezona: 'Pomlad / Poletje', max_gostov: 4, stevilo_sob: 2, wifi: true, trajnostno: true, zajtrk: true, tagi: JSON.stringify([{ emoji: '🦆', naziv: 'Naravna budnica z račkami' },{ emoji: '🦦', naziv: 'Možnost opazovanja vider' },{ emoji: '🎣', naziv: 'Mini ribiški komplet vključen' },{ emoji: '🌅', naziv: 'Sončni zahod s palube' }]), TK_uporabnik: 7 },
-            { naziv: 'Sleepy Train Carriage', tip_prenocisca: 'Prenovljen star vagon', opis_prenocisca: 'Prespite v vintage vagonu, kjer notranjost izgleda kot potovanje v preteklost, zunaj pa vas čaka mirna narava.', cena_na_noc: 210, koordinate: '46.2276,2.2137', naslov: 'Lyon, Francija', sezona: 'Celo leto', max_gostov: 6, stevilo_sob: 5, wifi: true, parking: true, zajtrk: true, tagi: JSON.stringify([{ emoji: '🔍', naziv: 'Orient express soba/vagon pobega' },{ emoji: '🛤️', naziv: 'Pogled na tirnice' },{ emoji: '🎟️', naziv: 'Mini vozovnica za spomin' },{ emoji: '🍸', naziv: 'Večerja v retro jedilnem vagonu' }]), TK_uporabnik: 8 },
-            { naziv: 'Mushroom Forest Hut', tip_prenocisca: 'Pravljična gozdna hiška', opis_prenocisca: 'Majhna okrogla hiška med drevesi, ki izgleda kot iz pravljice, z mehko svetlobo in vonjem po gozdu.', cena_na_noc: 90, koordinate: '-40.9006,174.8860', naslov: 'Rotorua, Nova Zelandija', sezona: 'Jesen', max_gostov: 2, stevilo_sob: 1, wifi: true, parking: true, ljubljencki: true, trajnostno: true, bazen: true, tagi: JSON.stringify([{ emoji: '🐿️', naziv: 'Jutranji obisk veveric' },{ emoji: '📜', naziv: 'Zemljevid skritih gozdnih kotičkov' },{ emoji: '🧚', naziv: 'Pravljična pot do hiške' },{ emoji: '📵', naziv: 'Digitalni detox' },{ emoji: '🕯️', naziv: 'Večerni “forest magic” paket' },{ emoji: '🧙', naziv: 'Večer ob lanternah' }]), TK_uporabnik: 9 }
+            { naziv: 'Alpine Ski Lodge', datum_dodano: '2026-05-20', tip_prenocisca: 'Gorska koča', opis_prenocisca: 'Koča obdana s prečudovitim razgledom na zasnežene gorske vrhove, zasebno savno in idealno lokacijo blizu večjih smučišč.', cena_na_noc: 180, koordinate: '46.8182,8.2275', naslov: 'Zermatt, Švica', sezona: 'Zima', max_gostov: 4, stevilo_sob: 2, wifi: true, parking: true, razgled: true, bazen: true, tagi: JSON.stringify([{ emoji: '🧖', naziv: 'Zasebna savna & jacuzzi' },{ emoji: '⛷️', naziv: 'Smučanje' },{ emoji: '🛷', naziv: 'Nočno sankanje' },{ emoji: '🏔️', naziv: 'Pohodništvo' }]), TK_uporabnik: 1 },
+            { naziv: 'Predjamski grad', datum_dodano: '2026-01-31', tip_prenocisca: 'Grad', opis_prenocisca: 'Predjamski grad, vklesan v mogočno skalno steno, ponuja pravljično doživetje s pridihom zgodovine, skrivnostnih rovov in čudovitega razgleda na kraško pokrajino.', cena_na_noc: 230, koordinate: '45.8150,14.1279', naslov: 'Postojna, Slovenija', sezona: 'Pomlad / Poletje', max_gostov: 6, stevilo_sob: 3, wifi: true, parking: true, razgled: true, tagi: JSON.stringify([{ emoji: '👑', naziv: 'Plemič za en dan' },{ emoji: '🍲', naziv: 'Viteška strežba' },{ emoji: '👁️‍🗨️', naziv: 'Raziskovanje skrivnostnih rovov' },{ emoji: '📚', naziv: 'Zgodovina' },{ emoji: '🐎', naziv: 'Bližina Lipice' }]), TK_uporabnik: 2 },
+            { naziv: 'Aurora Bubble Lodge', datum_dodano: '2025-08-08', tip_prenocisca: 'Glamping', opis_prenocisca: 'Prosojna ogrevana kupola sredi islandske narave ponuja čarobno noč pod zvezdami in severnim sijem, idealno za romantičen pobeg v tišini gozda.', cena_na_noc: 310, koordinate: '64.9631,-19.0208', naslov: 'Hella, Islandija', sezona: 'Jesen / Zima', max_gostov: 2, stevilo_sob: 1, wifi: true, parking: true, razgled: true, ljubljencki: true, trajnostno: true, zajtrk: true, tagi: JSON.stringify([{ emoji: '💫', naziv: 'Romantični pobeg' },{ emoji: '🌠', naziv: 'Lov na severni sij' },{ emoji: '🔥', naziv: 'Ogrevana kupola' }]), TK_uporabnik: 3 },
+            { naziv: 'Cave Hideaway', datum_dodano: '2026-03-17', tip_prenocisca: 'Jama', opis_prenocisca: 'Prespite v skrivnostni jami z mehko svetlobo lantern, naravno hladnim zrakom in občutkom, kot da ste odkrili skriti svet pod zemljo.', cena_na_noc: 167, koordinate: '8.6431,34.8270', naslov: 'Göreme, Kapakodija, Turčija', sezona: 'Celo leto', max_gostov: 4, stevilo_sob: 2, trajnostno: true, tagi: JSON.stringify([{ emoji: '🌡️', naziv: 'Naravno hlajenje' },{ emoji: '🕯️', naziv: 'Večer ob svečah' },{ emoji: '🍷', naziv: 'Degustacija vina' },{ emoji: '🏺', naziv: 'Starodavno vzdušje'},{ emoji: '🔦', naziv: 'Vodeni ogled jame'},{ emoji: '🦇', naziv: 'Večerni polet netopirjev'},{ emoji: '🌌', naziv: 'Spanje v tišini'},{ emoji: '🎈', naziv: 'Polet balonov'}]), TK_uporabnik: 4 },
+            { naziv: 'Jungle Treehouse Hideaway', datum_dodano: '2026-05-13', tip_prenocisca: 'Drevesna hišica', opis_prenocisca: 'Drevesna hišica sredi kostariške džungle, kjer vas zjutraj zbudijo tropske ptice, zvečer pa uspava zvok dežja med krošnjami.', cena_na_noc: 420, koordinate: '9.7489,-83.7534', naslov: 'Monteverde, Kostarika', sezona: 'Poletje', max_gostov: 8, stevilo_sob: 4, wifi: true, parking: true, razgled: true, ljubljencki: true, trajnostno: true, zajtrk: true, tagi: JSON.stringify([{ emoji: '🧘', naziv: 'Joga na terasi' },{ emoji: '📵', naziv: 'Digitalni detox' },{ emoji: '🛁', naziv: 'Zunanja kad' },{ emoji: '🌲', naziv: 'Pohod med krošnjami' },{ emoji: '🌲', naziv: 'Pohod med krošnjami' },{ emoji: '🦥', naziv: 'Jutranji obisk lenivcev' },{ emoji: '🐒', naziv: 'Opazovanje opic' },{ emoji: '🍍', naziv: 'Tropical breakfast basket' },{ emoji: '🔦', naziv: 'Nočni sprehod po džungli' },{ emoji: '🌧️', naziv: 'Zvok tropskega dežja' }]), TK_uporabnik: 5 },
+            { naziv: 'Under the sea hotel', datum_dodano: '2025-04-04', tip_prenocisca: 'Vila pod vodo', opis_prenocisca: 'Podvodni hotel na Maldivih ponuja nepozabno spanje med koralnimi grebeni, kjer skozi steklene stene opazujete pisane ribe, morske želve in čarobni svet oceana, kar iz udobja svoje sobe.', cena_na_noc: 333, koordinate: '3.2028,73.2207', naslov: 'Male Atoll, Maldivi', sezona: 'Celo leto', max_gostov: 2, stevilo_sob: 1, wifi: true, parking: true, razgled: true, trajnostno: true, zajtrk: true, tagi: JSON.stringify([{ emoji: '🦈', naziv: 'Plavanje z morskimi psi' },{ emoji: '🧜', naziv: 'Podvodni spa tretma' },{ emoji: '🐠', naziv: 'Koralni greben' },{ emoji: '🤿', naziv: 'Nočno snorklanje z modro svetlečim planktonom' },{ emoji: '🍣', naziv: 'Sushi bar' },{ emoji: '📸', naziv: 'Podvodno fotografiranje' },{ emoji: '🐬', naziv: 'Jutranji izlet z delfini' },{ emoji: '🚁', naziv: 'Panoramski polet nad atoli' }]), TK_uporabnik: 6 },
+            { naziv: 'Quack & Coffee Houseboat', datum_dodano: '2025-10-11', tip_prenocisca: 'Barka', opis_prenocisca: 'Majhna plavajoča hiška na mirni reki, kjer vas zjutraj namesto alarma zbudijo račke, valovi in vonj sveže kave.', cena_na_noc: 140, koordinate: '52.3676,4.9041', naslov: 'Amsterdam Center, Nizozemska', sezona: 'Pomlad / Poletje', max_gostov: 4, stevilo_sob: 2, wifi: true, trajnostno: true, zajtrk: true, tagi: JSON.stringify([{ emoji: '🦆', naziv: 'Naravna budnica z račkami' },{ emoji: '🦦', naziv: 'Možnost opazovanja vider' },{ emoji: '🎣', naziv: 'Mini ribiški komplet vključen' },{ emoji: '🌅', naziv: 'Sončni zahod s palube' }]), TK_uporabnik: 7 },
+            { naziv: 'Sleepy Train Carriage', datum_dodano: '2026-03-23', tip_prenocisca: 'Prenovljen star vagon', opis_prenocisca: 'Prespite v vintage vagonu, kjer notranjost izgleda kot potovanje v preteklost, zunaj pa vas čaka mirna narava.', cena_na_noc: 210, koordinate: '46.2276,2.2137', naslov: 'Lyon, Francija', sezona: 'Celo leto', max_gostov: 6, stevilo_sob: 5, wifi: true, parking: true, zajtrk: true, tagi: JSON.stringify([{ emoji: '🔍', naziv: 'Orient express soba/vagon pobega' },{ emoji: '🛤️', naziv: 'Pogled na tirnice' },{ emoji: '🎟️', naziv: 'Mini vozovnica za spomin' },{ emoji: '🍸', naziv: 'Večerja v retro jedilnem vagonu' }]), TK_uporabnik: 8 },
+            { naziv: 'Mushroom Forest Hut', datum_dodano: '2024-01-01', tip_prenocisca: 'Pravljična gozdna hiška', opis_prenocisca: 'Majhna okrogla hiška med drevesi, ki izgleda kot iz pravljice, z mehko svetlobo in vonjem po gozdu.', cena_na_noc: 90, koordinate: '-40.9006,174.8860', naslov: 'Rotorua, Nova Zelandija', sezona: 'Jesen', max_gostov: 2, stevilo_sob: 1, wifi: true, parking: true, ljubljencki: true, trajnostno: true, bazen: true, tagi: JSON.stringify([{ emoji: '🐿️', naziv: 'Jutranji obisk veveric' },{ emoji: '📜', naziv: 'Zemljevid skritih gozdnih kotičkov' },{ emoji: '🧚', naziv: 'Pravljična pot do hiške' },{ emoji: '📵', naziv: 'Digitalni detox' },{ emoji: '🕯️', naziv: 'Večerni “forest magic” paket' },{ emoji: '🧙', naziv: 'Večer ob lanternah' }]), TK_uporabnik: 9 }
         ];
 
         await knex('Prenocisce').insert(Prenocisce);
@@ -293,7 +294,66 @@ async function napolniBazo() {
             {komentar: 'Severni sij iz igluja je bil magičen prizor.', datum_komentar: '2024-07-15', ocena_splosna: 5, ocena_udobje: 4, ocena_unikatnost: 5, ocena_lokacija: 5, ocena_cenovna_ugodnost: 2, ocena_dozivetje: 5, TK_uporabnik: 2, TK_prenocisce: 3},
             {komentar: 'Drevesna hiška romantična, malo hladna ponoči.', datum_komentar: '2024-08-20', ocena_splosna: 4, ocena_udobje: 3, ocena_unikatnost: 4, ocena_lokacija: 4, ocena_cenovna_ugodnost: 4, ocena_dozivetje: 3, TK_uporabnik: 3, TK_prenocisce: 5},
             {komentar: 'Spanje med koralnimi grebeni je bilo kot iz sanj, ribe so plavale tik ob postelji.', datum_komentar: '2024-09-15', ocena_splosna: 5, ocena_udobje: 5, ocena_unikatnost: 5, ocena_lokacija: 5, ocena_cenovna_ugodnost: 3, ocena_dozivetje: 4, TK_uporabnik: 4, TK_prenocisce: 6},
-            {komentar: 'Podzemna soba hladna ampak super unikatna izkušnja.', datum_komentar: '2024-10-10', ocena_splosna: 4, ocena_udobje: 3, ocena_unikatnost: 5, ocena_lokacija: 4, ocena_cenovna_ugodnost: 4, ocena_dozivetje: 3, TK_uporabnik: 5, TK_prenocisce: 4}
+            {komentar: 'Podzemna soba hladna ampak super unikatna izkušnja.', datum_komentar: '2024-10-10', ocena_splosna: 4, ocena_udobje: 3, ocena_unikatnost: 5, ocena_lokacija: 4, ocena_cenovna_ugodnost: 4, ocena_dozivetje: 3, TK_uporabnik: 5, TK_prenocisce: 4},
+            {komentar: 'Čudovit razgled in zelo prijazno osebje. Zajtrk je bil odličen.',
+        datum_komentar: '2024-06-20',
+        ocena_splosna: 5,
+        ocena_udobje: 4,
+        ocena_unikatnost: 5,
+        ocena_lokacija: 5,
+        ocena_cenovna_ugodnost: 3,
+        ocena_dozivetje: 5,
+        TK_uporabnik: 1,
+        TK_prenocisce: 2
+    },
+    {
+        komentar: 'Soba je bila čista in moderna, lokacija pa zelo mirna.',
+        datum_komentar: '2024-07-12',
+        ocena_splosna: 4,
+        ocena_udobje: 5,
+        ocena_unikatnost: 4,
+        ocena_lokacija: 4,
+        ocena_cenovna_ugodnost: 5,
+        ocena_dozivetje: 4,
+        TK_uporabnik: 2,
+        TK_prenocisce: 2
+    },
+    {
+        komentar: 'Odlična izkušnja, vendar je bil internet precej počasen.',
+        datum_komentar: '2024-08-05',
+        ocena_splosna: 4,
+        ocena_udobje: 4,
+        ocena_unikatnost: 3,
+        ocena_lokacija: 5,
+        ocena_cenovna_ugodnost: 4,
+        ocena_dozivetje: 4,
+        TK_uporabnik: 3,
+        TK_prenocisce: 2
+    },
+    {
+        komentar: 'Zelo prijetno vzdušje in odlična lokacija blizu narave.',
+        datum_komentar: '2024-09-01',
+        ocena_splosna: 5,
+        ocena_udobje: 5,
+        ocena_unikatnost: 4,
+        ocena_lokacija: 5,
+        ocena_cenovna_ugodnost: 4,
+        ocena_dozivetje: 5,
+        TK_uporabnik: 4,
+        TK_prenocisce: 2
+    },
+    {
+        komentar: 'Prenočišče je bilo lepo urejeno, a nekoliko predrago za ponujeno.',
+        datum_komentar: '2024-10-18',
+        ocena_splosna: 3,
+        ocena_udobje: 4,
+        ocena_unikatnost: 4,
+        ocena_lokacija: 4,
+        ocena_cenovna_ugodnost: 2,
+        ocena_dozivetje: 3,
+        TK_uporabnik: 5,
+        TK_prenocisce: 2
+    }
         ];
 
         await knex('Komentar').insert(Komentar);
