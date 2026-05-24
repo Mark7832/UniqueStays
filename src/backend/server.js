@@ -245,8 +245,8 @@ app.post('/dodaj-prenocisce', upload.fields([
     const body = req.body;
     try {
         //  Vstavi prenočišče
-        const tagEmoji = [].concat(body['tag_emoji[]'] || []);
-        const tagNaziv = [].concat(body['tag_naziv[]'] || []);
+        const tagEmoji = [].concat(body['tag_emoji'] || body['tag_emoji[]'] || []);
+        const tagNaziv = [].concat(body['tag_naziv'] || body['tag_naziv[]'] || []);
         const tagi = tagNaziv
         .filter(n => n)
         .map((naziv, i) => ({ emoji: tagEmoji[i] || '', naziv }));

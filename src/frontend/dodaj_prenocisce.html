@@ -197,6 +197,23 @@
                     <input type="hidden" name="cover_slika_index" id="cover-index" value="0" />
                 </div>
 
+                <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+                    <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Tagi</h2>
+                    <p class="text-slate-500 text-sm mb-6">Dodajte informacije, ki jih želite poudariti pri vašem prenočišču.</p>
+
+                    <div id="tagi-container" class="flex flex-wrap gap-3 mb-4"></div>
+
+                    <div class="flex gap-3">
+                        <input type="text" id="tag-input" placeholder="npr. Smučanje, Zasebna savna, Romantično, Ob jezeru..."
+                            class="flex-1 px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
+                        <button type="button" onclick="dodajTag()"
+                            class="px-5 py-3 rounded-2xl border-2 border-slate-300 text-slate-600 font-bold hover:border-teal-400 hover:text-teal-600 transition">
+                            + Dodaj
+                        </button>
+                    </div>
+
+                    <div id="tagi-hidden"></div>
+                </div>
 
                 <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
 
