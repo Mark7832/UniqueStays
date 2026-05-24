@@ -293,10 +293,10 @@ app.post('/dodaj-prenocisce', upload.fields([
         }
  
         // Preusmeri na domačo stran
-        res.redirect('/');
+        res.json({ uspeh: true });
     } catch (err) {
         console.error('Napaka pri shranjevanju:', err);
-        res.status(500).send('Prišlo je do napake pri shranjevanju. Prosimo, poskusite znova.');
+        res.status(500).json({ uspeh: false, napaka: 'Napaka pri shranjevanju.' });
     }
 });
 
