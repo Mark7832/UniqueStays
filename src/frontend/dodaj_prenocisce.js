@@ -32,7 +32,7 @@ function oznaCiCover(index) {
     var input = document.getElementById('slike-input');
     var skupaj = input.files ? input.files.length : 0;
 
-    document.getElementById('cover-index'.value = index);
+    document.getElementById('cover-index').value = index;
 
     for (var i = 0; i < skupaj; i++) {
         var je_ta = (i === index);
@@ -113,3 +113,44 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+function dodajTag() {
+    var input = document.getElementById('tag-input');
+    var naziv = input.value.trim();
+    if (!naziv) return;
+
+    var container = document.getElementById('tagi-container');
+    var hidden = document.getElementById('tagi-hidden');
+    var id = 'tag-' + Date.now();
+
+    var tag = document.createElement('div');
+    tag.className = 'flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-700 font-bold text-sm';
+    tag.id = id;
+    tag.innerHTML = naziv + ' <button type="button" onclick="odstraniTag(\'' + id + '\')" class="text-slate-400 hover:text-red-500 font-bold ml-1">✕</button>';
+    container.appendChild(tag);
+
+    var hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'tag_naziv[]';
+    hiddenInput.value = naziv;
+    hiddenInput.id = 'hidden-' + id;
+    document.querySelector('form').appendChild(hiddenInput);
+
+    var hiddenEmoji = document.createElement('input');
+    hiddenEmoji.type = 'hidden';
+    hiddenEmoji.name = 'tag_emoji[]';
+    hiddenEmoji.value = '';
+    hiddenEmoji.id = 'emoji-' + id;
+    document.querySelector('form').appendChild(hiddenEmoji);
+
+    input.value = '';
+}
+
+function odstraniTag(id) {
+    var tag = document.getElementById(id);
+    var hidden = document.getElementById('hidden-' + id);
+    var emoji = document.getElementById('emoji-' + id);
+    if (tag) tag.remove();
+    if (hidden) hidden.remove();
+    if (emoji) emoji.remove();
+}
