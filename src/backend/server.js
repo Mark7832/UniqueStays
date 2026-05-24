@@ -142,6 +142,7 @@ app.get('/isci_prenocisca', async (req, res) => {
             .select(
                 'Prenocisce.ID_prenocisce',
                 'Prenocisce.naziv',
+                'Prenocisce.datum_dodano',
                 'Prenocisce.tip_prenocisca',
                 'Prenocisce.opis_prenocisca',
                 'Prenocisce.cena_na_noc',
@@ -197,6 +198,10 @@ app.get('/isci_prenocisca', async (req, res) => {
         if (req.query.zajtrk === 'on')      query.where('zajtrk', true);
         if (req.query.wifi === 'on')        query.where('wifi', true);
 
+        // Filter po številu gostov
+        if (req.query.stevilo_gostov) {
+            query.where('max_gostov', '>=', Number(req.query.stevilo_gostov));
+        }
 
         let prenocisca = await query;
         prenocisca = prenocisca.map(p => ({
@@ -205,6 +210,36 @@ app.get('/isci_prenocisca', async (req, res) => {
             ? `data:image/jpeg;base64,${p.cover_slika.toString('base64')}` 
             : null
         }));
+
+        // Filter po razpoložljivosti datumov
+        if (req.query.datum_od && req.query.datum_do) {
+            const od = req.query.datum_od;
+            const do_ = req.query.datum_do;
+
+            // Pridobi zasedena prenočišča iz rezervacij
+            const zasedeneRez = await db('Rezervacija')
+                .where('rezervirano', true)
+                .where(function() {
+                    this.where('datum_od', '<', do_)
+                    .andWhere('datum_do', '>', od);
+                })
+            .select('TK_prenocisce');
+
+                // Pridobi nedosegljive termine
+            const zasedeneNT = await db('Nerazpolozljiv_termin')
+            .where(function() {
+                this.where('datum_od', '<', do_)
+                    .andWhere('datum_do', '>', od);
+                })
+            .select('TK_prenocisce');
+
+            const zasedeniIdi = new Set([
+            ...zasedeneRez.map(r => r.TK_prenocisce),
+            ...zasedeneNT.map(r => r.TK_prenocisce)
+            ]);
+
+            prenocisca = prenocisca.filter(p => !zasedeniIdi.has(p.ID_prenocisce));
+        }
 
         //dodaj povprečno oceno za vsako prenočišče
         for (let p of prenocisca) {
