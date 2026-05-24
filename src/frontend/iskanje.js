@@ -194,3 +194,5 @@ function isciInPreusmeri() {
     const params = new URLSearchParams(data);
     window.location.href = `iskanje.html?${params.toString()}`;
 }
+
+    

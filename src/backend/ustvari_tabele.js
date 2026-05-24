@@ -294,7 +294,66 @@ async function napolniBazo() {
             {komentar: 'Severni sij iz igluja je bil magičen prizor.', datum_komentar: '2024-07-15', ocena_splosna: 5, ocena_udobje: 4, ocena_unikatnost: 5, ocena_lokacija: 5, ocena_cenovna_ugodnost: 2, ocena_dozivetje: 5, TK_uporabnik: 2, TK_prenocisce: 3},
             {komentar: 'Drevesna hiška romantična, malo hladna ponoči.', datum_komentar: '2024-08-20', ocena_splosna: 4, ocena_udobje: 3, ocena_unikatnost: 4, ocena_lokacija: 4, ocena_cenovna_ugodnost: 4, ocena_dozivetje: 3, TK_uporabnik: 3, TK_prenocisce: 5},
             {komentar: 'Spanje med koralnimi grebeni je bilo kot iz sanj, ribe so plavale tik ob postelji.', datum_komentar: '2024-09-15', ocena_splosna: 5, ocena_udobje: 5, ocena_unikatnost: 5, ocena_lokacija: 5, ocena_cenovna_ugodnost: 3, ocena_dozivetje: 4, TK_uporabnik: 4, TK_prenocisce: 6},
-            {komentar: 'Podzemna soba hladna ampak super unikatna izkušnja.', datum_komentar: '2024-10-10', ocena_splosna: 4, ocena_udobje: 3, ocena_unikatnost: 5, ocena_lokacija: 4, ocena_cenovna_ugodnost: 4, ocena_dozivetje: 3, TK_uporabnik: 5, TK_prenocisce: 4}
+            {komentar: 'Podzemna soba hladna ampak super unikatna izkušnja.', datum_komentar: '2024-10-10', ocena_splosna: 4, ocena_udobje: 3, ocena_unikatnost: 5, ocena_lokacija: 4, ocena_cenovna_ugodnost: 4, ocena_dozivetje: 3, TK_uporabnik: 5, TK_prenocisce: 4},
+            {komentar: 'Čudovit razgled in zelo prijazno osebje. Zajtrk je bil odličen.',
+        datum_komentar: '2024-06-20',
+        ocena_splosna: 5,
+        ocena_udobje: 4,
+        ocena_unikatnost: 5,
+        ocena_lokacija: 5,
+        ocena_cenovna_ugodnost: 3,
+        ocena_dozivetje: 5,
+        TK_uporabnik: 1,
+        TK_prenocisce: 2
+    },
+    {
+        komentar: 'Soba je bila čista in moderna, lokacija pa zelo mirna.',
+        datum_komentar: '2024-07-12',
+        ocena_splosna: 4,
+        ocena_udobje: 5,
+        ocena_unikatnost: 4,
+        ocena_lokacija: 4,
+        ocena_cenovna_ugodnost: 5,
+        ocena_dozivetje: 4,
+        TK_uporabnik: 2,
+        TK_prenocisce: 2
+    },
+    {
+        komentar: 'Odlična izkušnja, vendar je bil internet precej počasen.',
+        datum_komentar: '2024-08-05',
+        ocena_splosna: 4,
+        ocena_udobje: 4,
+        ocena_unikatnost: 3,
+        ocena_lokacija: 5,
+        ocena_cenovna_ugodnost: 4,
+        ocena_dozivetje: 4,
+        TK_uporabnik: 3,
+        TK_prenocisce: 2
+    },
+    {
+        komentar: 'Zelo prijetno vzdušje in odlična lokacija blizu narave.',
+        datum_komentar: '2024-09-01',
+        ocena_splosna: 5,
+        ocena_udobje: 5,
+        ocena_unikatnost: 4,
+        ocena_lokacija: 5,
+        ocena_cenovna_ugodnost: 4,
+        ocena_dozivetje: 5,
+        TK_uporabnik: 4,
+        TK_prenocisce: 2
+    },
+    {
+        komentar: 'Prenočišče je bilo lepo urejeno, a nekoliko predrago za ponujeno.',
+        datum_komentar: '2024-10-18',
+        ocena_splosna: 3,
+        ocena_udobje: 4,
+        ocena_unikatnost: 4,
+        ocena_lokacija: 4,
+        ocena_cenovna_ugodnost: 2,
+        ocena_dozivetje: 3,
+        TK_uporabnik: 5,
+        TK_prenocisce: 2
+    }
         ];
 
         await knex('Komentar').insert(Komentar);
