@@ -38,13 +38,18 @@
                     Novo
                 </span>
 
-                <a href="login.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                <a id="btnPrijava" href="login.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
                     Prijava
                 </a>
-                <a href="register.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                <a id="btnRegistracija" href="register.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
                     Registracija
                 </a>
-                
+                <div id="btnOdjava" class="hidden flex items-center gap-3">
+                    <span id="imeUporabnika" class="font-semibold text-slate-700"></span>
+                    <button onclick="odjava()" class="px-5 py-2.5 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition-all duration-200 hover:-translate-y-1">
+                        Odjava
+                    </button>
+                </div>
             </div>
         </nav>
     </header>
@@ -491,5 +496,6 @@
     </footer>
     <!--JavaScript-->
     <script src="iskanje.js"></script>
+    <script src="nav.js"></script>
 </body>
 </html>
