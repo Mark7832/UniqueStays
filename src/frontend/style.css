@@ -107,3 +107,39 @@ body {
     display: none;
 }
 
+        /* Stilizacija zemljevida */
+        #map {
+            height: 500px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        
+        /* Prilagoditev Leaflet popup-ov */
+        .leaflet-popup-content-wrapper {
+            border-radius: 16px;
+            padding: 4px;
+        }
+        
+        .leaflet-popup-content {
+            margin: 16px;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        
+        /* Gumb za pridobitev trenutne lokacije */
+        .locate-me-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            border: 2px solid rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 10px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .locate-me-btn:hover {
+            background: #f0f0f0;
+        }
