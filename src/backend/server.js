@@ -279,6 +279,7 @@ app.post('/dodaj-prenocisce', preveriToken, upload.fields([
     { name: 'dozivetje_slika[]', maxCount: 10 }
 ]), async (req, res) => {
     const body = req.body;
+    console.log('BODY PODATKI:', body);
     try {
         //  Vstavi prenočišče
         const tagEmoji = [].concat(body['tag_emoji'] || body['tag_emoji[]'] || []);
@@ -322,10 +323,15 @@ app.post('/dodaj-prenocisce', preveriToken, upload.fields([
             });
         }
  
+
+        
         // Vstavi nedosegljive termine
-        const terminiOd     = [].concat(body['termin_od[]']     || []);
-        const terminiDo     = [].concat(body['termin_do[]']     || []);
-        const terminiRazlog = [].concat(body['termin_razlog[]'] || []);
+        console.log('TERMINI:', body['termin_od'], body['termin_do']);
+
+        const terminiOd     = [].concat(body['termin_od']     || []);
+        const terminiDo     = [].concat(body['termin_do']     || []);
+        const terminiRazlog = [].concat(body['termin_razlog'] || []);
+
         for (let i = 0; i < terminiOd.length; i++) {
             if (terminiOd[i] && terminiDo[i]) {
                 await db('Nerazpolozljiv_termin').insert({
