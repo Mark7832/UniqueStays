@@ -314,7 +314,7 @@ app.post('/dodaj-prenocisce', preveriToken, upload.fields([
         for (let i = 0; i < slikePren.length; i++) {
             await db('Slika').insert({
                 slika:         fs.readFileSync(slikePren[i].path),
-                ime_slike:     slikePren[i].originalname,
+                ime_slike:     slikePren[i].filename,
                 cover:         (i === coverIndex),
                 TK_prenocisce: idPrenocisce,
                 TK_uporabnik:  null,
@@ -345,6 +345,40 @@ app.post('/dodaj-prenocisce', preveriToken, upload.fields([
     }
 });
 
+// Pridobi prenočišča prijavljenega uporabnika
+app.get('/moja-prenocisca', preveriToken, async (req, res) => {
+    try {
+        const prenocisca = await db('Prenocisce')
+            .where('TK_uporabnik', req.uporabnik.id)
+            .select();
+        res.json(prenocisca);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri pridobivanju prenočišč.' });
+    }
+});
+
+// Izbriši prenočišče
+app.delete('/prenocisce/:id', preveriToken, async (req, res) => {
+    try {
+        // Pridobi slike iz baze pred brisanjem
+        const slike = await db('Slika').where('TK_prenocisce', req.params.id).select('ime_slike');
+        
+        // Zbrisi fizicne datoteke
+        slike.forEach(slika => {
+            const pot = path.join(imagesDir, slika.ime_slike);
+            if (fs.existsSync(pot)) fs.unlinkSync(pot);
+        });
+
+        await db('Slika').where('TK_prenocisce', req.params.id).del();
+        await db('Nerazpolozljiv_termin').where('TK_prenocisce', req.params.id).del();
+        await db('Prenocisce').where('ID_prenocisce', req.params.id).del();
+        res.json({ uspeh: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri brisanju.' });
+    }
+});
 
 // Zagon strežnika
 app.listen(PORT, () => {

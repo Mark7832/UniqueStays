@@ -141,3 +141,55 @@ document.getElementById('gesloForm').addEventListener('submit', async function(e
 });
 
 nalagajProfil();
+naloziMojaPrenocisca();
+
+async function naloziMojaPrenocisca() {
+    const token = sessionStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const odgovor = await fetch('/moja-prenocisca', {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const prenocisca = await odgovor.json();
+
+        if (prenocisca.length === 0) return;
+
+        document.getElementById('mojaPrenocisca').classList.remove('hidden');
+        const seznam = document.getElementById('seznamPrenocisc');
+        seznam.innerHTML = '';
+
+        prenocisca.forEach(p => {
+            const div = document.createElement('div');
+            div.className = 'flex items-center justify-between p-4 rounded-2xl border border-slate-200 bg-slate-50';
+            div.innerHTML = `
+                <div>
+                    <p class="font-bold text-slate-900">${p.naziv}</p>
+                    <p class="text-sm text-slate-500">${p.naslov} · ${p.cena_na_noc} €/noč</p>
+                </div>
+                <div class="flex gap-2">
+                    <a href="dodaj_prenocisce.html?id=${p.ID_prenocisce}" class="px-4 py-2 rounded-full border-2 border-slate-300 text-slate-600 font-bold text-sm hover:border-teal-400 hover:text-teal-600 transition">Uredi</a>
+                    <button onclick="izbrisiPrenocisce(${p.ID_prenocisce})" class="px-4 py-2 rounded-full border-2 border-red-200 text-red-500 font-bold text-sm hover:bg-red-50 transition">Briši</button>
+                </div>
+            `;
+            seznam.appendChild(div);
+        });
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function izbrisiPrenocisce(id) {
+    if (!confirm('Ste prepričani, da želite izbrisati to prenočišče?')) return;
+    const token = sessionStorage.getItem('token');
+    try {
+        await fetch(`/prenocisce/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        naloziMojaPrenocisca();
+    } catch (err) {
+        console.error(err);
+    }
+}
