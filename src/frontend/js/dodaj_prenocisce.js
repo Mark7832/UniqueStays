@@ -154,3 +154,38 @@ function odstraniTag(id) {
     if (hidden) hidden.remove();
     if (emoji) emoji.remove();
 }
+
+async function poisciNaslov() {
+    const naslov = document.getElementById('naslov-input').value;
+    if (!naslov) return;
+
+    const odgovor = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${naslov}`,
+        { method: 'GET' }
+    );
+    const podatki = await odgovor.json();
+
+    if (podatki.length === 0) {
+        alert('Naslova ni bilo mogoče najti. Poskusite z bolj natančnim naslovom.');
+        return;
+    }
+
+    const lat = podatki[0].lat;
+    const lon = podatki[0].lon;
+
+    // Shrani koordinate v skriti inputi (zdruzi lat in lon)
+    document.getElementById('koordinate').value = lat + ',' + lon;
+
+    // Prikaži mapo
+    document.getElementById('map').style.display = 'block';
+
+    // Ustvari ali posodobi mapo
+    if (window.zemljevid) {
+        window.zemljevid.setView([lat, lon], 15);
+        window.marker.setLatLng([lat, lon]);
+    } else {
+        window.zemljevid = L.map('map').setView([lat, lon], 15);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(window.zemljevid);
+        window.marker = L.marker([lat, lon]).addTo(window.zemljevid);
+    }
+}
