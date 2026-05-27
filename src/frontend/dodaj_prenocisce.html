@@ -19,6 +19,8 @@
         }
     </script>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 
 <body onload="prikaziSlike();" class="bg-slate-50 text-slate-700 antialiased">
@@ -40,15 +42,18 @@
                     Novo
                 </span>
 
-                <a id="btnPrijava" href="login.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                <a id="btnPrijava" href="login.html"
+                    class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
                     Prijava
                 </a>
-                <a id="btnRegistracija" href="register.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                <a id="btnRegistracija" href="register.html"
+                    class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
                     Registracija
                 </a>
                 <div id="btnOdjava" class="hidden flex items-center gap-3">
                     <span id="imeUporabnika" class="font-semibold text-slate-700"></span>
-                    <button onclick="odjava()" class="px-5 py-2.5 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition-all duration-200 hover:-translate-y-1">
+                    <button onclick="odjava()"
+                        class="px-5 py-2.5 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition-all duration-200 hover:-translate-y-1">
                         Odjava
                     </button>
                 </div>
@@ -99,28 +104,30 @@
 
                 <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
 
-                    <h2 class="text-2xl font-extrabold text-slate-900 mb-6">Lokacija</h2>
+                    <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+                        <h2 class="text-2xl font-extrabold text-slate-900 mb-6">Lokacija</h2>
+                        <div class="space-y-5">
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
+                                    Naslov
+                                </label>
+                                <div class="flex gap-3">
+                                    <input type="text" id="naslov-input" name="naslov"
+                                        placeholder="Ulica 1, Mesto, Država" required
+                                        class="flex-1 px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
+                                    <button type="button" onclick="poisciNaslov()"
+                                        class="px-5 py-3 rounded-2xl border-2 border-slate-300 text-slate-600 font-bold hover:border-teal-400 hover:text-teal-600 transition">
+                                        Poišči
+                                    </button>
+                                </div>
+                            </div>
 
-                    <div class="space-y-5">
-                        <div>
-                            <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
-                                Naslov
-                            </label>
-                            <input type="text" name="naslov" placeholder="Ulica 1, Mesto, Država" required
-                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
-                        </div>
-                        <div>
-                            <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
-                                Koordinate (GPS)
-                            </label>
-                            <input type="text" name="koordinate" placeholder="45.8150, 14.1279"
-                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
-                            <p class="text-xs text-slate-400 mt-2">
-                                Koordinate najdete na Google Maps — z desnim klikom na lokacijo. Preverite, da sta
-                                vrednosti pravilni pred objavo.
-                            </p>
-                        </div>
+                            <!-- Skriti input (koordinate lat in lot zdruzena ) - pošljejo ko objavi z ostalimi podatki -->
+                            <input type="hidden" name="koordinate" id="koordinate" />
 
+                            <!-- Mapa ostane skrita dokler vpise naslova -->
+                            <div id="map" style="height: 400px; display: none; border-radius: 1rem;"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -209,12 +216,14 @@
 
                 <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
                     <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Tagi</h2>
-                    <p class="text-slate-500 text-sm mb-6">Dodajte informacije, ki jih želite poudariti pri vašem prenočišču.</p>
+                    <p class="text-slate-500 text-sm mb-6">Dodajte informacije, ki jih želite poudariti pri vašem
+                        prenočišču.</p>
 
                     <div id="tagi-container" class="flex flex-wrap gap-3 mb-4"></div>
 
                     <div class="flex gap-3">
-                        <input type="text" id="tag-input" placeholder="npr. Smučanje, Zasebna savna, Romantično, Ob jezeru..."
+                        <input type="text" id="tag-input"
+                            placeholder="npr. Smučanje, Zasebna savna, Romantično, Ob jezeru..."
                             class="flex-1 px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
                         <button type="button" onclick="dodajTag()"
                             class="px-5 py-3 rounded-2xl border-2 border-slate-300 text-slate-600 font-bold hover:border-teal-400 hover:text-teal-600 transition">
