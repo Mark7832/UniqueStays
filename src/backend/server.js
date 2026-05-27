@@ -5,6 +5,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const authRouter = require('./routes/auth');
+const { preveriToken } = require('./routes/auth');
 
 const app = express();
 const PORT = 3000;
@@ -273,7 +274,7 @@ app.get('/isci_prenocisca', async (req, res) => {
 
 
 // DODAJ PRENOČIŠČE 
-app.post('/dodaj-prenocisce', upload.fields([
+app.post('/dodaj-prenocisce', preveriToken, upload.fields([
     { name: 'slike',             maxCount: 20 },
     { name: 'dozivetje_slika[]', maxCount: 10 }
 ]), async (req, res) => {
@@ -304,7 +305,7 @@ app.post('/dodaj-prenocisce', upload.fields([
             max_gostov:      body.max_gostov,
             stevilo_sob:     body.stevilo_sob,
             tagi:            JSON.stringify(tagi),
-            TK_uporabnik:    req.session?.userId ?? 1
+            TK_uporabnik: req.uporabnik.id
     });
  
         // Vstavi slike prenočišča

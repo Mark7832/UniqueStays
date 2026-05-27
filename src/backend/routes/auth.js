@@ -167,3 +167,4 @@ router.put('/geslo', preveriToken, async (req, res) => {
 });
 
 module.exports = router;
+module.exports.preveriToken = preveriToken;
