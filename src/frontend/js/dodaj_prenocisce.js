@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             var res = await fetch('/dodaj-prenocisce', {
                 method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('token') },
                 body: formData
             });
             var data = await res.json();
