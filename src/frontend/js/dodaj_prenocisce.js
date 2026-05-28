@@ -8,25 +8,37 @@ if (urejanjeId) {
     fetch('/prenocisce/' + urejanjeId, {
         headers: { 'Authorization': 'Bearer ' + token }
     })
-    .then(r => r.json())
-    .then(p => {
-        document.querySelector('[name="naziv"]').value = p.naziv || '';
-        document.querySelector('[name="tip_prenocisca"]').value = p.tip_prenocisca || '';
-        document.querySelector('[name="opis_prenocisca"]').value = p.opis_prenocisca || '';
-        document.querySelector('[name="naslov"]').value = p.naslov || '';
-        document.querySelector('[name="koordinate"]').value = p.koordinate || '';
-        document.querySelector('[name="cena_na_noc"]').value = p.cena_na_noc || '';
-        document.querySelector('[name="max_gostov"]').value = p.max_gostov || '';
-        document.querySelector('[name="stevilo_sob"]').value = p.stevilo_sob || '';
-        document.querySelector('[name="sezona"]') && (document.querySelector('[name="sezona"]').value = p.sezona || '');
-        document.querySelector('[name="bazen"]') && (document.querySelector('[name="bazen"]').checked = p.bazen);
-        document.querySelector('[name="parking"]') && (document.querySelector('[name="parking"]').checked = p.parking);
-        document.querySelector('[name="wifi"]') && (document.querySelector('[name="wifi"]').checked = p.wifi);
-        document.querySelector('[name="zajtrk"]') && (document.querySelector('[name="zajtrk"]').checked = p.zajtrk);
-        document.querySelector('[name="ljubljencki"]') && (document.querySelector('[name="ljubljencki"]').checked = p.ljubljencki);
-        document.querySelector('[name="razgled"]') && (document.querySelector('[name="razgled"]').checked = p.razgled);
-        document.querySelector('[name="trajnostno"]') && (document.querySelector('[name="trajnostno"]').checked = p.trajnostno);
-    });
+        .then(r => r.json())
+        .then(p => {
+            document.querySelector('[name="naziv"]').value = p.naziv || '';
+            document.querySelector('[name="tip_prenocisca"]').value = p.tip_prenocisca || '';
+            document.querySelector('[name="opis_prenocisca"]').value = p.opis_prenocisca || '';
+            document.querySelector('[name="naslov"]').value = p.naslov || '';
+            document.querySelector('[name="koordinate"]').value = p.koordinate || '';
+            document.querySelector('[name="cena_na_noc"]').value = p.cena_na_noc || '';
+            document.querySelector('[name="max_gostov"]').value = p.max_gostov || '';
+            document.querySelector('[name="stevilo_sob"]').value = p.stevilo_sob || '';
+            document.querySelector('[name="sezona"]') && (document.querySelector('[name="sezona"]').value = p.sezona || '');
+            document.querySelector('[name="bazen"]') && (document.querySelector('[name="bazen"]').checked = p.bazen);
+            document.querySelector('[name="parking"]') && (document.querySelector('[name="parking"]').checked = p.parking);
+            document.querySelector('[name="wifi"]') && (document.querySelector('[name="wifi"]').checked = p.wifi);
+            document.querySelector('[name="zajtrk"]') && (document.querySelector('[name="zajtrk"]').checked = p.zajtrk);
+            document.querySelector('[name="ljubljencki"]') && (document.querySelector('[name="ljubljencki"]').checked = p.ljubljencki);
+            document.querySelector('[name="razgled"]') && (document.querySelector('[name="razgled"]').checked = p.razgled);
+            document.querySelector('[name="trajnostno"]') && (document.querySelector('[name="trajnostno"]').checked = p.trajnostno);
+
+            // Naloži termine
+            if (p.termini && p.termini.length > 0) {
+                p.termini.forEach(t => {
+                    dodajTermin();
+                    const vnosi = document.querySelectorAll('.termin-vnos');
+                    const zadnji = vnosi[vnosi.length - 1];
+                    zadnji.querySelector('[name="termin_od[]"]').value = t.datum_od.split('T')[0];
+                    zadnji.querySelector('[name="termin_do[]"]').value = t.datum_do.split('T')[0];
+                    zadnji.querySelector('[name="termin_razlog[]"]').value = t.razlog || '';
+                });
+            }
+        });
 }
 
 function prikaziSlike(input) {
