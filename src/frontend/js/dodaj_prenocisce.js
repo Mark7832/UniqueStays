@@ -1,4 +1,5 @@
 var slikaCounter = 0;
+var shranjenjeSlike = [];
 document.addEventListener('DOMContentLoaded', function () {
     slikaCounter = 0;
 });
@@ -30,6 +31,15 @@ if (urejanjeId) {
             document.querySelector('[name="ljubljencki"]') && (document.querySelector('[name="ljubljencki"]').checked = p.ljubljencki);
             document.querySelector('[name="razgled"]') && (document.querySelector('[name="razgled"]').checked = p.razgled);
             document.querySelector('[name="trajnostno"]') && (document.querySelector('[name="trajnostno"]').checked = p.trajnostno);
+
+            //tagi
+            if (p.tagi) {
+                const tagi = typeof p.tagi === 'string' ? JSON.parse(p.tagi) : p.tagi;
+                tagi.forEach(t => {
+                    document.getElementById('tag-input').value = t.naziv;
+                    dodajTag();
+                });
+            }
 
             // Naloži termine
             if (p.termini && p.termini.length > 0) {
@@ -76,6 +86,7 @@ function prikaziSlike(input) {
 
     for (var i = 0; i < input.files.length; i++, slikaCounter++) {
         var file = input.files[i];
+        shranjenjeSlike.push(file);
         var url = URL.createObjectURL(file);
         var obstojeciCover = document.querySelector('[id^="zvezda-obs-"].text-yellow-400, [id^="zvezda-"].text-yellow-400');
         var obstojeciCover2 = document.querySelector('.text-yellow-400');
@@ -84,6 +95,7 @@ function prikaziSlike(input) {
         var vrstica = document.createElement('div');
         vrstica.className = 'flex items-center gap-4 p-3 rounded-2xl border bg-slate-50 ' + (je_cover ? 'border-teal-400' : 'border-slate-200');
         vrstica.id = 'slika-vrstica-' + slikaCounter;
+        vrstica.dataset.lokalniIndex = shranjenjeSlike.length - 1;
 
         vrstica.innerHTML =
             '<img src="' + url + '" class="w-16 h-12 object-cover rounded-xl flex-shrink-0" />' +
@@ -96,7 +108,7 @@ function prikaziSlike(input) {
 
         seznam.appendChild(vrstica);
         if (je_cover) {
-            document.getElementById('cover-index').value = slikaCounter;
+            document.getElementById('cover-index').value = i;
         }
     }
 }
@@ -130,7 +142,8 @@ function oznaCiCover(index) {
     });
 
     // Označi izbrano
-    document.getElementById('cover-index').value = index;
+    var vrstica2 = document.getElementById('slika-vrstica-' + index);
+    document.getElementById('cover-index').value = vrstica2 ? vrstica2.dataset.lokalniIndex : index;
     var vrstica = document.getElementById('slika-vrstica-' + index);
     var zvezda = document.getElementById('zvezda-' + index);
     var znak = document.getElementById('cover-znak-' + index);
@@ -183,6 +196,8 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
         var formData = new FormData(form);
+        formData.delete('slike');
+        shranjenjeSlike.forEach(f => formData.append('slike', f));
         try {
             const url = urejanjeId ? '/prenocisce/' + urejanjeId : '/dodaj-prenocisce';
             const metoda = urejanjeId ? 'PUT' : 'POST';
@@ -342,7 +357,15 @@ function oznaciCoverObstojeco(id) {
 function odstraniNovoSliko(gumb) {
     var bilaCover = gumb.previousElementSibling?.previousElementSibling?.classList.contains('text-yellow-400') ||
         gumb.closest('div').querySelector('.text-yellow-400') !== null;
-    gumb.closest('div').remove();
+    var vrsticaEl = gumb.closest('div');
+    var lokalniIdx = parseInt(vrsticaEl.dataset.lokalniIndex);
+    shranjenjeSlike.splice(lokalniIdx, 1);
+    // Posodobi lokalne indekse na preostalih vrsticah
+    document.querySelectorAll('[id^="slika-vrstica-"]').forEach(v => {
+        var idx = parseInt(v.dataset.lokalniIndex);
+        if (idx > lokalniIdx) v.dataset.lokalniIndex = idx - 1;
+    });
+    vrsticaEl.remove();
 
     // Če ni več nobena cover, označi prvo preostalo
     setTimeout(() => {

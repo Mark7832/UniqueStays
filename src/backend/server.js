@@ -401,6 +401,11 @@ app.put('/prenocisce/:id', preveriToken, upload.fields([
                 ljubljencki: body.ljubljencki === 'on',
                 razgled: body.razgled === 'on',
                 trajnostno: body.trajnostno === 'on',
+                tagi: JSON.stringify(
+                    [].concat(body['tag_naziv'] || body['tag_naziv[]'] || [])
+                        .filter(n => n)
+                        .map((naziv, i) => ({ emoji: '', naziv }))
+                ),
             });
 
         // Posodobi termine - zbriši stare in dodaj nove
