@@ -47,8 +47,8 @@ if (urejanjeId) {
                     dodajTermin();
                     const vnosi = document.querySelectorAll('.termin-vnos');
                     const zadnji = vnosi[vnosi.length - 1];
-                    zadnji.querySelector('[name="termin_od[]"]').value = t.datum_od.split('T')[0];
-                    zadnji.querySelector('[name="termin_do[]"]').value = t.datum_do.split('T')[0];
+                    zadnji.querySelector('[name="termin_od[]"]').value = t.datum_od.substring(0, 10);
+                    zadnji.querySelector('[name="termin_do[]"]').value = t.datum_do.substring(0, 10);
                     zadnji.querySelector('[name="termin_razlog[]"]').value = t.razlog || '';
                 });
             }
