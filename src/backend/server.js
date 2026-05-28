@@ -335,8 +335,8 @@ app.post('/dodaj-prenocisce', preveriToken, upload.fields([
         for (let i = 0; i < terminiOd.length; i++) {
             if (terminiOd[i] && terminiDo[i]) {
                 await db('Nerazpolozljiv_termin').insert({
-                    datum_od: terminiOd[i],
-                    datum_do: terminiDo[i],
+                    datum_od: terminiOd[i] + 'T12:00:00',
+                    datum_do: terminiDo[i] + 'T12:00:00',
                     razlog: terminiRazlog[i] || '',
                     TK_prenocisce: idPrenocisce
                 });
@@ -360,9 +360,13 @@ app.get('/prenocisce/:id', preveriToken, async (req, res) => {
             .first();
         if (!prenocisce) return res.status(404).json({ napaka: 'Ni najdeno.' });
 
-        const termini = await db('Nerazpolozljiv_termin')
+        const termini = (await db('Nerazpolozljiv_termin')
             .where('TK_prenocisce', req.params.id)
-            .select();
+            .select()).map(t => ({
+                ...t,
+                datum_od: t.datum_od ? t.datum_od.toLocaleDateString('sv-SE') : null,
+                datum_do: t.datum_do ? t.datum_do.toLocaleDateString('sv-SE') : null,
+            }));
 
         const slike = await db('Slika')
             .where('TK_prenocisce', req.params.id)
@@ -418,8 +422,8 @@ app.put('/prenocisce/:id', preveriToken, upload.fields([
         for (let i = 0; i < terminiOd.length; i++) {
             if (terminiOd[i] && terminiDo[i]) {
                 await db('Nerazpolozljiv_termin').insert({
-                    datum_od: terminiOd[i],
-                    datum_do: terminiDo[i],
+                    datum_od: terminiOd[i] + 'T12:00:00',
+                    datum_do: terminiDo[i] + 'T12:00:00',
                     razlog: terminiRazlog[i] || '',
                     TK_prenocisce: req.params.id
                 });
