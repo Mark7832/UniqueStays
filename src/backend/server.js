@@ -12,7 +12,7 @@ const PORT = 3000;
 
 //ustvari mapo za slike, če ne obstaja
 const imagesDir = path.join(__dirname, '../frontend/images');
-if (!fs.existsSync(imagesDir)) fs.mkdirSync(imagesDir, {recursive: true});
+if (!fs.existsSync(imagesDir)) fs.mkdirSync(imagesDir, { recursive: true });
 
 // Middleware
 app.use(cors());
@@ -56,7 +56,7 @@ app.use('/api/auth', authRouter);
 app.get('/api/prenocisce/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        
+
         // Pridobi osnovne podatke o prenočišču
         const prenocisce = await db('Prenocisce')
             .where('ID_prenocisce', id)
@@ -115,7 +115,7 @@ app.get('/api/prenocisce/:id', async (req, res) => {
 app.get('/api/prenocisca', async (req, res) => {
     try {
         const prenocisca = await db('Prenocisce')
-            .leftJoin('Slika', function() {
+            .leftJoin('Slika', function () {
                 this.on('Prenocisce.ID_prenocisce', '=', 'Slika.TK_prenocisce')
                     .andOn('Slika.cover', '=', db.raw('true'));
             })
@@ -136,7 +136,7 @@ app.get('/isci_prenocisca', async (req, res) => {
     try {
         //osnovna poizvedba s cover sliko
         let query = db('Prenocisce')
-            .leftJoin('Slika', function() {
+            .leftJoin('Slika', function () {
                 this.on('Prenocisce.ID_prenocisce', '=', 'Slika.TK_prenocisce')
                     .andOn('Slika.cover', '=', db.raw('1'));
             })
@@ -152,11 +152,11 @@ app.get('/isci_prenocisca', async (req, res) => {
                 'Prenocisce.sezona',
                 'Prenocisce.max_gostov',
                 'Prenocisce.stevilo_sob',
-                'Prenocisce.wifi',        
-                'Prenocisce.bazen', 
-                'Prenocisce.parking', 
-                'Prenocisce.zajtrk',    
-                'Prenocisce.razgled',     
+                'Prenocisce.wifi',
+                'Prenocisce.bazen',
+                'Prenocisce.parking',
+                'Prenocisce.zajtrk',
+                'Prenocisce.razgled',
                 'Prenocisce.ljubljencki',
                 'Prenocisce.trajnostno',
                 'Prenocisce.tagi',
@@ -168,7 +168,7 @@ app.get('/isci_prenocisca', async (req, res) => {
         if (req.query.destinacija && req.query.destinacija !== '') {
             query.where(function () {
                 this.where('naslov', 'like', `%${req.query.destinacija}%`)
-                .orWhere('naziv', 'like', `%${req.query.destinacija}%`);
+                    .orWhere('naziv', 'like', `%${req.query.destinacija}%`);
             });
         }
 
@@ -192,12 +192,12 @@ app.get('/isci_prenocisca', async (req, res) => {
         }
 
         if (req.query.ljubljencki === 'on') query.where('ljubljencki', true);
-        if (req.query.bazen === 'on')       query.where('bazen', true);
-        if (req.query.trajnostno === 'on')  query.where('trajnostno', true);
-        if (req.query.parking === 'on')     query.where('parking', true);
-        if (req.query.razgled === 'on')     query.where('razgled', true);
-        if (req.query.zajtrk === 'on')      query.where('zajtrk', true);
-        if (req.query.wifi === 'on')        query.where('wifi', true);
+        if (req.query.bazen === 'on') query.where('bazen', true);
+        if (req.query.trajnostno === 'on') query.where('trajnostno', true);
+        if (req.query.parking === 'on') query.where('parking', true);
+        if (req.query.razgled === 'on') query.where('razgled', true);
+        if (req.query.zajtrk === 'on') query.where('zajtrk', true);
+        if (req.query.wifi === 'on') query.where('wifi', true);
 
         // Filter po številu gostov
         if (req.query.stevilo_gostov) {
@@ -206,10 +206,10 @@ app.get('/isci_prenocisca', async (req, res) => {
 
         let prenocisca = await query;
         prenocisca = prenocisca.map(p => ({
-        ...p,
-        cover_slika: p.cover_slika 
-            ? `data:image/jpeg;base64,${p.cover_slika.toString('base64')}` 
-            : null
+            ...p,
+            cover_slika: p.cover_slika
+                ? `data:image/jpeg;base64,${p.cover_slika.toString('base64')}`
+                : null
         }));
 
         // Filter po razpoložljivosti datumov
@@ -220,23 +220,23 @@ app.get('/isci_prenocisca', async (req, res) => {
             // Pridobi zasedena prenočišča iz rezervacij
             const zasedeneRez = await db('Rezervacija')
                 .where('rezervirano', true)
-                .where(function() {
+                .where(function () {
                     this.where('datum_od', '<', do_)
-                    .andWhere('datum_do', '>', od);
+                        .andWhere('datum_do', '>', od);
                 })
-            .select('TK_prenocisce');
+                .select('TK_prenocisce');
 
-                // Pridobi nedosegljive termine
+            // Pridobi nedosegljive termine
             const zasedeneNT = await db('Nerazpolozljiv_termin')
-            .where(function() {
-                this.where('datum_od', '<', do_)
-                    .andWhere('datum_do', '>', od);
+                .where(function () {
+                    this.where('datum_od', '<', do_)
+                        .andWhere('datum_do', '>', od);
                 })
-            .select('TK_prenocisce');
+                .select('TK_prenocisce');
 
             const zasedeniIdi = new Set([
-            ...zasedeneRez.map(r => r.TK_prenocisce),
-            ...zasedeneNT.map(r => r.TK_prenocisce)
+                ...zasedeneRez.map(r => r.TK_prenocisce),
+                ...zasedeneNT.map(r => r.TK_prenocisce)
             ]);
 
             prenocisca = prenocisca.filter(p => !zasedeniIdi.has(p.ID_prenocisce));
@@ -275,7 +275,7 @@ app.get('/isci_prenocisca', async (req, res) => {
 
 // DODAJ PRENOČIŠČE 
 app.post('/dodaj-prenocisce', preveriToken, upload.fields([
-    { name: 'slike',             maxCount: 20 },
+    { name: 'slike', maxCount: 20 },
     { name: 'dozivetje_slika[]', maxCount: 10 }
 ]), async (req, res) => {
     const body = req.body;
@@ -285,64 +285,64 @@ app.post('/dodaj-prenocisce', preveriToken, upload.fields([
         const tagEmoji = [].concat(body['tag_emoji'] || body['tag_emoji[]'] || []);
         const tagNaziv = [].concat(body['tag_naziv'] || body['tag_naziv[]'] || []);
         const tagi = tagNaziv
-        .filter(n => n)
-        .map((naziv, i) => ({ emoji: tagEmoji[i] || '', naziv }));
+            .filter(n => n)
+            .map((naziv, i) => ({ emoji: tagEmoji[i] || '', naziv }));
 
         const [idPrenocisce] = await db('Prenocisce').insert({
-            naziv:           body.naziv,
-            tip_prenocisca:  body.tip_prenocisca,
+            naziv: body.naziv,
+            tip_prenocisca: body.tip_prenocisca,
             opis_prenocisca: body.opis_prenocisca,
-            cena_na_noc:     body.cena_na_noc,
-            koordinate:      body.koordinate || null,
-            naslov:          body.naslov,
-            sezona:          body.sezona,
-            wifi:            body.wifi === 'on',
-            parking:         body.parking === 'on',
-            bazen:           body.bazen === 'on',
-            zajtrk:          body.zajtrk === 'on',
-            razgled:         body.razgled === 'on',
-            ljubljencki:     body.ljubljencki === 'on',
-            trajnostno:      body.trajnostno === 'on',
-            max_gostov:      body.max_gostov,
-            stevilo_sob:     body.stevilo_sob,
-            tagi:            JSON.stringify(tagi),
+            cena_na_noc: body.cena_na_noc,
+            koordinate: body.koordinate || null,
+            naslov: body.naslov,
+            sezona: body.sezona,
+            wifi: body.wifi === 'on',
+            parking: body.parking === 'on',
+            bazen: body.bazen === 'on',
+            zajtrk: body.zajtrk === 'on',
+            razgled: body.razgled === 'on',
+            ljubljencki: body.ljubljencki === 'on',
+            trajnostno: body.trajnostno === 'on',
+            max_gostov: body.max_gostov,
+            stevilo_sob: body.stevilo_sob,
+            tagi: JSON.stringify(tagi),
             TK_uporabnik: req.uporabnik.id
-    });
- 
+        });
+
         // Vstavi slike prenočišča
         const coverIndex = parseInt(body.cover_slika_index) || 0;
-        const slikePren  = req.files['slike'] || [];
+        const slikePren = req.files['slike'] || [];
         for (let i = 0; i < slikePren.length; i++) {
             await db('Slika').insert({
-                slika:         fs.readFileSync(slikePren[i].path),
-                ime_slike:     slikePren[i].filename,
-                cover:         (i === coverIndex),
+                slika: fs.readFileSync(slikePren[i].path),
+                ime_slike: slikePren[i].filename,
+                cover: (i === coverIndex),
                 TK_prenocisce: idPrenocisce,
-                TK_uporabnik:  null,
-                TK_dozivetje:  null
+                TK_uporabnik: null,
+                TK_dozivetje: null
             });
         }
- 
 
-        
+
+
         // Vstavi nedosegljive termine
         console.log('TERMINI:', body['termin_od'], body['termin_do']);
 
-        const terminiOd     = [].concat(body['termin_od']     || []);
-        const terminiDo     = [].concat(body['termin_do']     || []);
+        const terminiOd = [].concat(body['termin_od'] || []);
+        const terminiDo = [].concat(body['termin_do'] || []);
         const terminiRazlog = [].concat(body['termin_razlog'] || []);
 
         for (let i = 0; i < terminiOd.length; i++) {
             if (terminiOd[i] && terminiDo[i]) {
                 await db('Nerazpolozljiv_termin').insert({
-                    datum_od:      terminiOd[i],
-                    datum_do:      terminiDo[i],
-                    razlog:        terminiRazlog[i] || '',
+                    datum_od: terminiOd[i],
+                    datum_do: terminiDo[i],
+                    razlog: terminiRazlog[i] || '',
                     TK_prenocisce: idPrenocisce
                 });
             }
         }
- 
+
         // Preusmeri na domačo stran
         res.json({ uspeh: true });
     } catch (err) {
@@ -359,14 +359,19 @@ app.get('/prenocisce/:id', preveriToken, async (req, res) => {
             .where('TK_uporabnik', req.uporabnik.id)
             .first();
         if (!prenocisce) return res.status(404).json({ napaka: 'Ni najdeno.' });
-        res.json(prenocisce);
+
+        const termini = await db('Nerazpolozljiv_termin')
+            .where('TK_prenocisce', req.params.id)
+            .select();
+
+        res.json({ ...prenocisce, termini });
     } catch (err) {
         console.error(err);
         res.status(500).json({ napaka: 'Napaka.' });
     }
 });
 
-// Posodobi prenočišče (samo lastnik)
+// Posodobi prenocisce (samo lastnik)
 app.put('/prenocisce/:id', preveriToken, upload.fields([
     { name: 'slike', maxCount: 20 }
 ]), async (req, res) => {
@@ -376,23 +381,41 @@ app.put('/prenocisce/:id', preveriToken, upload.fields([
             .where('ID_prenocisce', req.params.id)
             .where('TK_uporabnik', req.uporabnik.id)
             .update({
-                naziv:           body.naziv,
-                tip_prenocisca:  body.tip_prenocisca,
+                naziv: body.naziv,
+                tip_prenocisca: body.tip_prenocisca,
                 opis_prenocisca: body.opis_prenocisca,
-                naslov:          body.naslov,
-                koordinate:      body.koordinate,
-                cena_na_noc:     body.cena_na_noc,
-                max_gostov:      body.max_gostov,
-                stevilo_sob:     body.stevilo_sob,
-                sezona:          body.sezona,
-                bazen:           body.bazen === 'on',
-                parking:         body.parking === 'on',
-                wifi:            body.wifi === 'on',
-                zajtrk:          body.zajtrk === 'on',
-                ljubljencki:     body.ljubljencki === 'on',
-                razgled:         body.razgled === 'on',
-                trajnostno:      body.trajnostno === 'on',
+                naslov: body.naslov,
+                koordinate: body.koordinate,
+                cena_na_noc: body.cena_na_noc,
+                max_gostov: body.max_gostov,
+                stevilo_sob: body.stevilo_sob,
+                sezona: body.sezona,
+                bazen: body.bazen === 'on',
+                parking: body.parking === 'on',
+                wifi: body.wifi === 'on',
+                zajtrk: body.zajtrk === 'on',
+                ljubljencki: body.ljubljencki === 'on',
+                razgled: body.razgled === 'on',
+                trajnostno: body.trajnostno === 'on',
             });
+            
+        // Posodobi termine - zbriši stare in dodaj nove
+        await db('Nerazpolozljiv_termin').where('TK_prenocisce', req.params.id).del();
+
+        const terminiOd = [].concat(body['termin_od'] || []);
+        const terminiDo = [].concat(body['termin_do'] || []);
+        const terminiRazlog = [].concat(body['termin_razlog'] || []);
+
+        for (let i = 0; i < terminiOd.length; i++) {
+            if (terminiOd[i] && terminiDo[i]) {
+                await db('Nerazpolozljiv_termin').insert({
+                    datum_od: terminiOd[i],
+                    datum_do: terminiDo[i],
+                    razlog: terminiRazlog[i] || '',
+                    TK_prenocisce: req.params.id
+                });
+            }
+        }
         res.json({ uspeh: true });
     } catch (err) {
         console.error(err);
@@ -418,7 +441,7 @@ app.delete('/prenocisce/:id', preveriToken, async (req, res) => {
     try {
         // Pridobi slike iz baze pred brisanjem
         const slike = await db('Slika').where('TK_prenocisce', req.params.id).select('ime_slike');
-        
+
         // Zbrisi fizicne datoteke
         slike.forEach(slika => {
             const pot = path.join(imagesDir, slika.ime_slike);
