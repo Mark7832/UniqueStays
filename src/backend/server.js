@@ -364,7 +364,11 @@ app.get('/prenocisce/:id', preveriToken, async (req, res) => {
             .where('TK_prenocisce', req.params.id)
             .select();
 
-        res.json({ ...prenocisce, termini });
+        const slike = await db('Slika')
+            .where('TK_prenocisce', req.params.id)
+            .select('ID_slika', 'ime_slike', 'cover');
+
+        res.json({ ...prenocisce, termini, slike });
     } catch (err) {
         console.error(err);
         res.status(500).json({ napaka: 'Napaka.' });
@@ -398,7 +402,7 @@ app.put('/prenocisce/:id', preveriToken, upload.fields([
                 razgled: body.razgled === 'on',
                 trajnostno: body.trajnostno === 'on',
             });
-            
+
         // Posodobi termine - zbriši stare in dodaj nove
         await db('Nerazpolozljiv_termin').where('TK_prenocisce', req.params.id).del();
 
@@ -416,6 +420,44 @@ app.put('/prenocisce/:id', preveriToken, upload.fields([
                 });
             }
         }
+
+        // Zbriši označene obstoječe slike
+        const odstranjene = [].concat(body['odstranjenaSlika[]'] || body['odstranjenaSlika'] || []);
+        for (const id of odstranjene) {
+            const slika = await db('Slika').where('ID_slika', id).first();
+            if (slika) {
+                const pot = path.join(imagesDir, slika.ime_slike);
+                if (fs.existsSync(pot)) fs.unlinkSync(pot);
+                await db('Slika').where('ID_slika', id).del();
+            }
+        }
+
+        // Pridobi cover index
+        const coverIndex = body['cover-index'] || body.cover_slika_index || '0';
+
+        // Najprej nastavi vse obstoječe slike na cover = false
+        await db('Slika').where('TK_prenocisce', req.params.id).update({ cover: false });
+
+        // Če je cover obstoječa slika (obs-ID)
+        if (coverIndex && coverIndex.toString().startsWith('obs-')) {
+            const obsId = coverIndex.toString().replace('obs-', '');
+            await db('Slika').where('ID_slika', obsId).update({ cover: true });
+        }
+
+        // Dodaj nove slike
+        const noveSlike = req.files['slike'] || [];
+        for (let i = 0; i < noveSlike.length; i++) {
+            const jeNovaCover = !coverIndex.toString().startsWith('obs-') && i === parseInt(coverIndex);
+            await db('Slika').insert({
+                slika: fs.readFileSync(noveSlike[i].path),
+                ime_slike: noveSlike[i].filename,
+                cover: jeNovaCover,
+                TK_prenocisce: req.params.id,
+                TK_uporabnik: null,
+                TK_dozivetje: null
+            });
+        }
+
         res.json({ uspeh: true });
     } catch (err) {
         console.error(err);

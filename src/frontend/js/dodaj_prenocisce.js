@@ -1,3 +1,7 @@
+var slikaCounter = 0;
+document.addEventListener('DOMContentLoaded', function () {
+    slikaCounter = 0;
+});
 // Preveri ali gre za urejanje (URL vsebuje ?id=)
 const urlParams = new URLSearchParams(window.location.search);
 const urejanjeId = urlParams.get('id');
@@ -38,61 +42,101 @@ if (urejanjeId) {
                     zadnji.querySelector('[name="termin_razlog[]"]').value = t.razlog || '';
                 });
             }
+
+            // Naloži obstoječe slike
+            if (p.slike && p.slike.length > 0) {
+                const seznam = document.getElementById('slike-seznam');
+                seznam.innerHTML = '';
+                p.slike.forEach((slika) => {
+                    var vrstica = document.createElement('div');
+                    vrstica.className = 'flex items-center gap-4 p-3 rounded-2xl border bg-slate-50 ' + (slika.cover ? 'border-teal-400' : 'border-slate-200');
+                    vrstica.id = 'obstojecaSlika-' + slika.ID_slika;
+                    vrstica.innerHTML =
+                        '<img src="/images/' + slika.ime_slike + '" class="w-16 h-12 object-cover rounded-xl flex-shrink-0" />' +
+                        '<span class="flex-1 text-sm font-semibold text-slate-600 truncate">' + slika.ime_slike + '</span>' +
+                        '<input type="hidden" name="obstojecaSlikaId[]" value="' + slika.ID_slika + '" />' +
+                        '<button type="button" onclick="oznaciCoverObstojeco(\'' + slika.ID_slika + '\')" id="zvezda-obs-' + slika.ID_slika + '" class="text-xl transition-transform hover:scale-125 ' + (slika.cover ? 'text-yellow-400' : 'text-slate-300') + '">' +
+                        (slika.cover ? '★' : '☆') +
+                        '</button>' +
+                        (slika.cover ? '<span class="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded-full" id="cover-znak-obs-' + slika.ID_slika + '">Naslovna slika</span>' : '<span class="text-xs text-slate-300 px-2 py-1 rounded-full" id="cover-znak-obs-' + slika.ID_slika + '"></span>') +
+                        '<button type="button" onclick="odstraniObstojecoSliko(' + slika.ID_slika + ')" class="text-red-400 hover:text-red-600 font-bold text-lg ml-2">✕</button>';
+                    seznam.appendChild(vrstica);
+                });
+            }
         });
 }
 
 function prikaziSlike(input) {
     if (!input) return;
     var seznam = document.getElementById('slike-seznam');
-    seznam.innerHTML = '';
 
     if (!input.files || input.files.length === 0) return;
 
-    document.getElementById('cover-index').value = '0';
+    // cover-index se nastavi v zanki
 
-    for (var i = 0; i < input.files.length; i++) {
+    for (var i = 0; i < input.files.length; i++, slikaCounter++) {
         var file = input.files[i];
         var url = URL.createObjectURL(file);
-        var je_cover = (i === 0);
+        var obstojeciCover = document.querySelector('[id^="zvezda-obs-"].text-yellow-400, [id^="zvezda-"].text-yellow-400');
+        var obstojeciCover2 = document.querySelector('.text-yellow-400');
+        var je_cover = !obstojeciCover2;
 
         var vrstica = document.createElement('div');
         vrstica.className = 'flex items-center gap-4 p-3 rounded-2xl border bg-slate-50 ' + (je_cover ? 'border-teal-400' : 'border-slate-200');
-        vrstica.id = 'slika-vrstica-' + i;
+        vrstica.id = 'slika-vrstica-' + slikaCounter;
 
         vrstica.innerHTML =
             '<img src="' + url + '" class="w-16 h-12 object-cover rounded-xl flex-shrink-0" />' +
             '<span class="flex-1 text-sm font-semibold text-slate-600 truncate">' + file.name + '</span>' +
-            '<button type="button" onclick="oznaCiCover(' + i + ')" id="zvezda-' + i + '" class="text-xl transition-transform hover:scale-125 ' + (je_cover ? 'text-yellow-400' : 'text-slate-300') + '" title="Nastavi kot naslovno sliko">' +
+            '<button type="button" onclick="oznaCiCover(' + slikaCounter + ')" id="zvezda-' + slikaCounter + '" class="text-xl transition-transform hover:scale-125 ' + (je_cover ? 'text-yellow-400' : 'text-slate-300') + '" title="Nastavi kot naslovno sliko">' +
             (je_cover ? '★' : '☆') +
             '</button>' +
-            (je_cover ? '<span class="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded-full" id="cover-znak-' + i + '">Naslovna slika</span>' : '<span class="text-xs text-slate-300 px-2 py-1 rounded-full" id="cover-znak-' + i + '"></span>');
+            (je_cover ? '<span class="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded-full" id="cover-znak-' + slikaCounter + '">Naslovna slika</span>' : '<span class="text-xs text-slate-300 px-2 py-1 rounded-full" id="cover-znak-' + slikaCounter + '"></span>')
+            + '<button type="button" onclick="odstraniNovoSliko(this)" class="text-red-400 hover:text-red-600 font-bold text-lg ml-2">✕</button>';
 
         seznam.appendChild(vrstica);
+        if (je_cover) {
+            document.getElementById('cover-index').value = slikaCounter;
+        }
     }
 }
 
 function oznaCiCover(index) {
-    var input = document.getElementById('slike-input');
-    var skupaj = input.files ? input.files.length : 0;
+    // Pobrisi vse cover oznake - obstojece
+    document.querySelectorAll('[id^="zvezda-obs-"]').forEach(z => {
+        z.textContent = '☆';
+        z.className = 'text-xl transition-transform hover:scale-125 text-slate-300';
+    });
+    document.querySelectorAll('[id^="cover-znak-obs-"]').forEach(z => {
+        z.textContent = '';
+        z.className = 'text-xs text-slate-300 px-2 py-1 rounded-full';
+    });
 
+    // Pobrisi VSE nove cover oznake
+    document.querySelectorAll('[id^="zvezda-"]').forEach(z => {
+        if (!z.id.includes('obs')) {
+            z.textContent = '☆';
+            z.className = 'text-xl transition-transform hover:scale-125 text-slate-300';
+        }
+    });
+    document.querySelectorAll('[id^="cover-znak-"]').forEach(z => {
+        if (!z.id.includes('obs')) {
+            z.textContent = '';
+            z.className = 'text-xs text-slate-300 px-2 py-1 rounded-full';
+        }
+    });
+    document.querySelectorAll('[id^="slika-vrstica-"]').forEach(v => {
+        v.className = 'flex items-center gap-4 p-3 rounded-2xl border bg-slate-50 border-slate-200';
+    });
+
+    // Označi izbrano
     document.getElementById('cover-index').value = index;
-
-    for (var i = 0; i < skupaj; i++) {
-        var je_ta = (i === index);
-        var vrstica = document.getElementById('slika-vrstica-' + i);
-        var zvezda = document.getElementById('zvezda-' + i);
-        var znak = document.getElementById('cover-znak-' + i);
-
-        if (vrstica) vrstica.className = 'flex items-center gap-4 p-3 rounded-2xl border bg-slate-50 ' + (je_ta ? 'border-teal-400' : 'border-slate-200');
-        if (zvezda) {
-            zvezda.textContent = je_ta ? '★' : '☆';
-            zvezda.className = 'text-xl transition-transform hover:scale-125 ' + (je_ta ? 'text-yellow-400' : 'text-slate-300');
-        }
-        if (znak) {
-            znak.textContent = je_ta ? 'Naslovna slika' : '';
-            znak.className = je_ta ? 'text-xs font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded-full' : 'text-xs text-slate-300 px-2 py-1 rounded-full';
-        }
-    }
+    var vrstica = document.getElementById('slika-vrstica-' + index);
+    var zvezda = document.getElementById('zvezda-' + index);
+    var znak = document.getElementById('cover-znak-' + index);
+    if (vrstica) vrstica.className = 'flex items-center gap-4 p-3 rounded-2xl border bg-slate-50 border-teal-400';
+    if (zvezda) { zvezda.textContent = '★'; zvezda.className = 'text-xl transition-transform hover:scale-125 text-yellow-400'; }
+    if (znak) { znak.textContent = 'Naslovna slika'; znak.className = 'text-xs font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded-full'; }
 }
 
 function dodajTermin() {
@@ -150,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var data = await res.json();
             if (data.uspeh) {
                 alert(urejanjeId ? 'Prenočišče je bilo uspešno posodobljeno!' : 'Prenočišče je bilo uspešno dodano!');
-                window.location.href = 'index.html';
+                window.location.href = 'profile.html';
             } else {
                 alert('Napaka pri shranjevanju.');
             }
@@ -234,4 +278,81 @@ async function poisciNaslov() {
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(window.zemljevid);
         window.marker = L.marker([lat, lon]).addTo(window.zemljevid);
     }
+}
+
+function odstraniObstojecoSliko(id) {
+    document.getElementById('obstojecaSlika-' + id).remove();
+    var hidden = document.createElement('input');
+    hidden.type = 'hidden';
+    hidden.name = 'odstranjenaSlika[]';
+    hidden.value = id;
+    document.querySelector('form').appendChild(hidden);
+    // Če ni več nobena cover, označi prvo
+    setTimeout(() => {
+        const prvaObs = document.querySelector('[id^="zvezda-obs-"]');
+        const prvaNova = document.querySelector('[id^="zvezda-"][id^="zvezda-"]:not([id^="zvezda-obs-"])');
+        if (!document.querySelector('.text-yellow-400')) {
+            if (prvaObs) prvaObs.click();
+            else if (prvaNova) prvaNova.click();
+        }
+    }, 100);
+}
+
+function oznaciCoverObstojeco(id) {
+    // Pobriši vse cover oznake
+    document.querySelectorAll('[id^="zvezda-obs-"]').forEach(z => {
+        z.textContent = '☆';
+        z.className = 'text-xl transition-transform hover:scale-125 text-slate-300';
+    });
+    document.querySelectorAll('[id^="cover-znak-obs-"]').forEach(z => {
+        z.textContent = '';
+        z.className = 'text-xs text-slate-300 px-2 py-1 rounded-full';
+    });
+    // Pobriši cover pri novih slikah
+    document.querySelectorAll('[id^="zvezda-"]').forEach(z => {
+        if (!z.id.includes('obs')) {
+
+
+            z.textContent = '☆';
+            z.className = 'text-xl transition-transform hover:scale-125 text-slate-300';
+        }
+    });
+
+    // Pobriši napise pri novih slikah
+    document.querySelectorAll('[id^="cover-znak-"]').forEach(z => {
+        if (!z.id.includes('obs')) {
+            z.textContent = '';
+            z.className = 'text-xs text-slate-300 px-2 py-1 rounded-full';
+        }
+    });
+
+    // Nastavi to sliko kot cover
+    const zvezda = document.getElementById('zvezda-obs-' + id);
+    const znak = document.getElementById('cover-znak-obs-' + id);
+    zvezda.textContent = '★';
+    zvezda.className = 'text-xl transition-transform hover:scale-125 text-yellow-400';
+    znak.textContent = 'Naslovna slika';
+    znak.className = 'text-xs font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded-full';
+
+    // Shrani ID obstoječe cover slike
+    document.getElementById('cover-index').value = 'obs-' + id;
+}
+
+
+function odstraniNovoSliko(gumb) {
+    var bilaCover = gumb.previousElementSibling?.previousElementSibling?.classList.contains('text-yellow-400') ||
+        gumb.closest('div').querySelector('.text-yellow-400') !== null;
+    gumb.closest('div').remove();
+
+    // Če ni več nobena cover, označi prvo preostalo
+    setTimeout(() => {
+        if (!document.querySelector('.text-yellow-400')) {
+            var prvaZvezda = document.querySelector('[id^="zvezda-"]:not([id^="zvezda-obs-"])');
+            if (prvaZvezda) prvaZvezda.click();
+            else {
+                var prvaObsZvezda = document.querySelector('[id^="zvezda-obs-"]');
+                if (prvaObsZvezda) prvaObsZvezda.click();
+            }
+        }
+    }, 50);
 }
