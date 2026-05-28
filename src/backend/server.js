@@ -295,7 +295,7 @@ app.post('/dodaj-prenocisce', preveriToken, upload.fields([
             cena_na_noc:     body.cena_na_noc,
             koordinate:      body.koordinate || null,
             naslov:          body.naslov,
-            sezona:          body.sezona || null,
+            sezona:          body.sezona,
             wifi:            body.wifi === 'on',
             parking:         body.parking === 'on',
             bazen:           body.bazen === 'on',
@@ -348,6 +348,55 @@ app.post('/dodaj-prenocisce', preveriToken, upload.fields([
     } catch (err) {
         console.error('Napaka pri shranjevanju:', err);
         res.status(500).json({ uspeh: false, napaka: 'Napaka pri shranjevanju.' });
+    }
+});
+
+// Pridobi podatke enega prenočišča za urejanje (samo lastnik)
+app.get('/prenocisce/:id', preveriToken, async (req, res) => {
+    try {
+        const prenocisce = await db('Prenocisce')
+            .where('ID_prenocisce', req.params.id)
+            .where('TK_uporabnik', req.uporabnik.id)
+            .first();
+        if (!prenocisce) return res.status(404).json({ napaka: 'Ni najdeno.' });
+        res.json(prenocisce);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka.' });
+    }
+});
+
+// Posodobi prenočišče (samo lastnik)
+app.put('/prenocisce/:id', preveriToken, upload.fields([
+    { name: 'slike', maxCount: 20 }
+]), async (req, res) => {
+    try {
+        const body = req.body;
+        await db('Prenocisce')
+            .where('ID_prenocisce', req.params.id)
+            .where('TK_uporabnik', req.uporabnik.id)
+            .update({
+                naziv:           body.naziv,
+                tip_prenocisca:  body.tip_prenocisca,
+                opis_prenocisca: body.opis_prenocisca,
+                naslov:          body.naslov,
+                koordinate:      body.koordinate,
+                cena_na_noc:     body.cena_na_noc,
+                max_gostov:      body.max_gostov,
+                stevilo_sob:     body.stevilo_sob,
+                sezona:          body.sezona,
+                bazen:           body.bazen === 'on',
+                parking:         body.parking === 'on',
+                wifi:            body.wifi === 'on',
+                zajtrk:          body.zajtrk === 'on',
+                ljubljencki:     body.ljubljencki === 'on',
+                razgled:         body.razgled === 'on',
+                trajnostno:      body.trajnostno === 'on',
+            });
+        res.json({ uspeh: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri posodabljanju.' });
     }
 });
 
