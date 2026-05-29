@@ -240,24 +240,14 @@ function dodajTag() {
     hiddenInput.value = naziv;
     hiddenInput.id = 'hidden-' + id;
     document.querySelector('form').appendChild(hiddenInput);
-
-    var hiddenEmoji = document.createElement('input');
-    hiddenEmoji.type = 'hidden';
-    hiddenEmoji.name = 'tag_emoji[]';
-    hiddenEmoji.value = '';
-    hiddenEmoji.id = 'emoji-' + id;
-    document.querySelector('form').appendChild(hiddenEmoji);
-
     input.value = '';
 }
 
 function odstraniTag(id) {
     var tag = document.getElementById(id);
     var hidden = document.getElementById('hidden-' + id);
-    var emoji = document.getElementById('emoji-' + id);
     if (tag) tag.remove();
     if (hidden) hidden.remove();
-    if (emoji) emoji.remove();
 }
 
 async function poisciNaslov() {

@@ -282,11 +282,10 @@ app.post('/dodaj-prenocisce', preveriToken, upload.fields([
     console.log('BODY PODATKI:', body);
     try {
         //  Vstavi prenočišče
-        const tagEmoji = [].concat(body['tag_emoji'] || body['tag_emoji[]'] || []);
         const tagNaziv = [].concat(body['tag_naziv'] || body['tag_naziv[]'] || []);
         const tagi = tagNaziv
             .filter(n => n)
-            .map((naziv, i) => ({ emoji: tagEmoji[i] || '', naziv }));
+            .map(naziv => ({ naziv }));
 
         const [idPrenocisce] = await db('Prenocisce').insert({
             naziv: body.naziv,
@@ -408,7 +407,7 @@ app.put('/prenocisce/:id', preveriToken, upload.fields([
                 tagi: JSON.stringify(
                     [].concat(body['tag_naziv'] || body['tag_naziv[]'] || [])
                         .filter(n => n)
-                        .map((naziv, i) => ({ emoji: '', naziv }))
+                        .map(naziv => ({ naziv }))
                 ),
             });
 
