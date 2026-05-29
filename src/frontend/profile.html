@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="sl">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,6 +20,7 @@
     </script>
     <link rel="stylesheet" href="style.css" />
 </head>
+
 <body class="bg-slate-50 text-slate-700 antialiased">
 
     <!--header-->
@@ -32,21 +34,27 @@
                 <a href="index.html#experiences" class="font-semibold hover:text-blue-600 transition">Izkušnje</a>
                 <a href="index.html#about" class="font-semibold hover:text-blue-600 transition">O nas</a>
                 <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Novo</span>
-                <a id="btnPrijava" href="login.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">Prijava</a>
-                <a id="btnRegistracija" href="register.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">Registracija</a>
+                <a id="btnPrijava" href="login.html"
+                    class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">Prijava</a>
+                <a id="btnRegistracija" href="register.html"
+                    class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">Registracija</a>
                 <div id="btnOdjava" class="hidden flex items-center gap-3">
                     <span id="imeUporabnika" class="font-semibold text-slate-700"></span>
-                    <button onclick="odjava()" class="px-5 py-2.5 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition-all duration-200 hover:-translate-y-1">Odjava</button>
+                    <button onclick="odjava()"
+                        class="px-5 py-2.5 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition-all duration-200 hover:-translate-y-1">Odjava</button>
                 </div>
             </div>
         </nav>
     </header>
 
     <!--hero-->
-    <section class="px-6 py-16 bg-gradient-to-br from-slate-900 via-blue-900 to-teal-800 relative overflow-hidden text-white">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.3),transparent_30%)]"></div>
+    <section
+        class="px-6 py-16 bg-gradient-to-br from-slate-900 via-blue-900 to-teal-800 relative overflow-hidden text-white">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.3),transparent_30%)]">
+        </div>
         <div class="max-w-4xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-8">
-            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-teal-400 to-blue-600 flex items-center justify-center text-4xl font-extrabold shadow-2xl flex-shrink-0" id="avatarKrog">
+            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-teal-400 to-blue-600 flex items-center justify-center text-4xl font-extrabold shadow-2xl flex-shrink-0"
+                id="avatarKrog">
                 ?
             </div>
             <div>
@@ -78,21 +86,30 @@
                     <form id="profilForm">
                         <div class="grid md:grid-cols-2 gap-5 mb-5">
                             <div>
-                                <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Ime</label>
-                                <input type="text" id="ime" name="ime_uporabnika" class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
+                                <label
+                                    class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Ime</label>
+                                <input type="text" id="ime" name="ime_uporabnika"
+                                    class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
                             </div>
                             <div>
-                                <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Priimek</label>
-                                <input type="text" id="priimek" name="priimek_uporabnika" class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
+                                <label
+                                    class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Priimek</label>
+                                <input type="text" id="priimek" name="priimek_uporabnika"
+                                    class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
                             </div>
                         </div>
                         <div class="mb-5">
-                            <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">E-poštni naslov</label>
-                            <input type="email" id="email" name="email" class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
+                            <label
+                                class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">E-poštni
+                                naslov</label>
+                            <input type="email" id="email" name="email"
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
                         </div>
                         <div class="mb-5">
-                            <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Država</label>
-                            <select id="drzava" name="drzava" class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition appearance-none cursor-pointer">
+                            <label
+                                class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Država</label>
+                            <select id="drzava" name="drzava"
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition appearance-none cursor-pointer">
                                 <option value="">Izberite državo</option>
                                 <option value="Slovenija">Slovenija</option>
                                 <option value="Hrvaška">Hrvaška</option>
@@ -103,10 +120,13 @@
                             </select>
                         </div>
                         <div class="mb-8">
-                            <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Opis</label>
-                            <textarea id="opis" name="opis" rows="3" placeholder="Povejte kaj o sebi..." class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition resize-none"></textarea>
+                            <label
+                                class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Opis</label>
+                            <textarea id="opis" name="opis" rows="3" placeholder="Povejte kaj o sebi..."
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition resize-none"></textarea>
                         </div>
-                        <button type="submit" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.02] transition-all duration-200 shadow-lg">
+                        <button type="submit"
+                            class="px-8 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.02] transition-all duration-200 shadow-lg">
                             Shrani spremembe
                         </button>
                     </form>
@@ -122,19 +142,26 @@
                 <div class="px-8 py-8">
                     <form id="gesloForm">
                         <div class="mb-5">
-                            <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Staro geslo</label>
-                            <input type="password" id="staroGeslo" placeholder="Vnesite staro geslo" class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
+                            <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Staro
+                                geslo</label>
+                            <input type="password" id="staroGeslo" placeholder="Vnesite staro geslo"
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
                         </div>
                         <div class="mb-5">
-                            <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Novo geslo</label>
-                            <input type="password" id="novoGeslo" placeholder="Vnesite novo geslo" class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
+                            <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Novo
+                                geslo</label>
+                            <input type="password" id="novoGeslo" placeholder="Vnesite novo geslo"
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
                         </div>
                         <div class="mb-8">
-                            <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Potrdi novo geslo</label>
-                            <input type="password" id="potrdiGeslo" placeholder="Ponovi novo geslo" class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
+                            <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Potrdi
+                                novo geslo</label>
+                            <input type="password" id="potrdiGeslo" placeholder="Ponovi novo geslo"
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition" />
                         </div>
                         <p id="gesloNapaka" class="hidden text-red-500 text-sm font-semibold mb-4"></p>
-                        <button type="submit" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold hover:scale-[1.02] transition-all duration-200 shadow-lg">
+                        <button type="submit"
+                            class="px-8 py-3.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold hover:scale-[1.02] transition-all duration-200 shadow-lg">
                             Spremeni geslo
                         </button>
                     </form>
@@ -147,38 +174,45 @@
                     <div class="w-10 h-10 rounded-2xl bg-teal-100 flex items-center justify-center text-xl">📅</div>
                     <h2 class="text-xl font-extrabold text-slate-900">Informacije o računu</h2>
                 </div>
-                <p class="text-slate-600">Član od: <span id="datumRegistracije" class="font-bold text-slate-900"></span></p>
+                <p class="text-slate-600">Član od: <span id="datumRegistracije" class="font-bold text-slate-900"></span>
+                </p>
             </div>
 
         </div>
+
+
+        <!-- Moja prenočišča -->
+        <div id="mojaPrenocisca" class="hidden mt-8 px-6">
+            <div class="max-w-4xl mx-auto pb-16">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-2xl bg-teal-100 flex items-center justify-center text-2xl">🏠
+                            </div>
+                            <h2 class="text-xl font-extrabold text-slate-900">Moja prenočišča</h2>
+                        </div>
+                        <a href="dodaj_prenocisce.html"
+                            class="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.02] transition-all duration-200 shadow-lg text-sm">
+                            + Dodaj prenočišče
+                        </a>
+                    </div>
+                    <div id="seznamPrenocisc" class="px-8 py-8 space-y-4">
+                        <!--  JS doda prenočišča -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </section>
 
-    <!-- Moja prenočišča -->
-    <div id="mojaPrenocisca" class="hidden">
-        <div class="max-w-4xl mx-auto px-6 pb-16">
-            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between gap-4">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-2xl bg-teal-100 flex items-center justify-center text-xl">🏠</div>
-                        <h2 class="text-xl font-extrabold text-slate-900">Moja prenočišča</h2>
-                    </div>
-                    <a href="dodaj_prenocisce.html" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.02] transition-all duration-200 shadow-lg text-sm">
-                        + Dodaj prenočišče
-                    </a>
-                </div>
-                <div id="seznamPrenocisc" class="px-8 py-8 space-y-4">
-                    <!--  JS doda prenočišča -->
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!--footer-->
     <footer class="bg-slate-950 text-white px-6 pt-20 pb-10">
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-4 gap-10 border-b border-white/10 pb-10">
             <div>
                 <h3 class="text-2xl font-bold mb-4">UniqueStays</h3>
-                <p class="text-white/60 leading-relaxed mb-5">Najdite svoj popoln pobeg na najbolj posebnih krajih sveta.</p>
+                <p class="text-white/60 leading-relaxed mb-5">Najdite svoj popoln pobeg na najbolj posebnih krajih
+                    sveta.</p>
             </div>
             <div>
                 <h3 class="font-bold text-lg mb-4">Podpora</h3>
@@ -214,4 +248,5 @@
     <script src="js/profile.js"></script>
 
 </body>
+
 </html>
