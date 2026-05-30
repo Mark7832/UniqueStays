@@ -165,6 +165,7 @@ async function napolniBazo() {
             table.string('naziv').notNullable();
             table.string('opis').notNullable();
             table.decimal('doplacilo', 6, 2).notNullable();
+            table.integer('TK_uporabnik').unsigned().references('ID_uporabnik').inTable('Uporabnik').notNullable();
             table.integer('TK_prenocisce').unsigned().references('ID_prenocisce').inTable('Prenocisce');
             table.integer('TK_rezervacija').unsigned().references('ID_rezervacija').inTable('Rezervacija');
         });
@@ -172,22 +173,22 @@ async function napolniBazo() {
         console.log('Tabela Dozivetje uspesno ustvarjena.');
         
         const Dozivetje = [
-            { naziv:'Zasebna wellness noč', opis:'Večerni dostop do zasebne savne in jacuzzija s pogledom na zasnežene Alpe.', doplacilo:59.99, TK_prenocisce: 1, TK_rezervacija: 1 },
-            { naziv:'Nočno sankanje', opis:'Sankanje pod zvezdami.', doplacilo:14.99, TK_prenocisce: 1, TK_rezervacija: 2 },
-            { naziv:'Raziskovanje skrivnih rovov', opis:'Ekskluziven ogled podzemnih rovov in skrivnih prehodov pod Predjamskim gradom.', doplacilo:34.99, TK_prenocisce: 2, TK_rezervacija: 3 },
-            { naziv:'Viteška večerja', opis:'Večerja ob svečah v grajski dvorani z viteškim menijem in srednjeveško glasbo.', doplacilo: 52.99, TK_prenocisce: 2, TK_rezervacija: 4 },
-            { naziv:'Lov na severni sij', opis:'Nočni izlet z vodičem za opazovanje severnega sija daleč od mestnih luči.', doplacilo: 99.99, TK_prenocisce: 3, TK_rezervacija: 5 },
-            { naziv:'Zajtrk pod zvezdami', opis:'Romantičen islandski zajtrk postrežen neposredno ob stekleni kupoli.', doplacilo: 24.99, TK_prenocisce: 3, TK_rezervacija: 6 },
-            { naziv:'Večer ob lanternah', opis:'Posebna večerja v jami ob lanternah in tradicionalni turški glasbi.', doplacilo: 36.99, TK_prenocisce: 4, TK_rezervacija: 7 },
-            { naziv:'Polet balonov nad Kapadokijo', opis:'Jutranji polet z balonom nad znamenitimi skalnimi formacijami Kapadokije.', doplacilo: 139.99, TK_prenocisce: 4, TK_rezervacija: 8 },
-            { naziv:'Nočni sprehod po džungli', opis:'Voden sprehod po tropski džungli z opazovanjem nočnih živali.', doplacilo: 55.99, TK_prenocisce: 5, TK_rezervacija: 9 },
-            { naziv:'Joga med krošnjami', opis:'Jutranja joga na panoramski terasi visoko med drevesnimi krošnjami.', doplacilo: 29.99, TK_prenocisce: 5, TK_rezervacija: 10 },
-            { naziv:'Plavanje z morskimi psi', opis:'Organizirano snorklanje med koralnimi grebeni in morskimi psi.', doplacilo: 74.99, TK_prenocisce: 6, TK_rezervacija: 11 },
-            { naziv:'Podvodno fotografiranje', opis:'Profesionalno fotografiranje med raziskovanjem podvodnega sveta.', doplacilo: 110, TK_prenocisce: 6, TK_rezervacija: 12 },
-            { naziv:'Nočno snorklanje z modro svetlečim planktonom', opis:'Snorklanje z bioluminiscentnim planktonom.', doplacilo: 89.99, TK_prenocisce: 6, TK_rezervacija: 13 },
-            { naziv:'Plavajoči zajtrk', opis:'Svež zajtrk postrežen na leseni plavajoči mizi ob sončnem vzhodu.', doplacilo: 15.99, TK_prenocisce: 7, TK_rezervacija: 14 },
-            { naziv:'Escape room Orient Express', opis: 'Interaktivna skrivnostna igra pobega v stilu stare železnice.', doplacilo: 34.99, TK_prenocisce: 8, TK_rezervacija: 15 },
-            { naziv:'Večer čarobnih lantern', opis: 'Nočni sprehod skozi osvetljen gozd z lebdečimi lanternami.', doplacilo: 22.99, TK_prenocisce: 9, TK_rezervacija: 16 }
+            { naziv:'Zasebna wellness noč', opis:'Večerni dostop do zasebne savne in jacuzzija s pogledom na zasnežene Alpe.', doplacilo:59.99, TK_uporabnik: 1, TK_prenocisce: 1, TK_rezervacija: 1},
+            { naziv:'Nočno sankanje', opis:'Sankanje pod zvezdami.', doplacilo:14.99, TK_uporabnik: 1, TK_prenocisce: 1, TK_rezervacija: 2},
+            { naziv:'Raziskovanje skrivnih rovov', opis:'Ekskluziven ogled podzemnih rovov in skrivnih prehodov pod Predjamskim gradom.', doplacilo:34.99, TK_uporabnik: 2, TK_prenocisce: 2, TK_rezervacija: 3},
+            { naziv:'Viteška večerja', opis:'Večerja ob svečah v grajski dvorani z viteškim menijem in srednjeveško glasbo.', doplacilo: 52.99, TK_uporabnik: 2, TK_prenocisce: 2, TK_rezervacija: 4},
+            { naziv:'Lov na severni sij', opis:'Nočni izlet z vodičem za opazovanje severnega sija daleč od mestnih luči.', doplacilo: 99.99, TK_uporabnik: 3, TK_prenocisce: 3, TK_rezervacija: 5},
+            { naziv:'Zajtrk pod zvezdami', opis:'Romantičen islandski zajtrk postrežen neposredno ob stekleni kupoli.', doplacilo: 24.99, TK_uporabnik: 3, TK_prenocisce: 3, TK_rezervacija: 6},
+            { naziv:'Večer ob lanternah', opis:'Posebna večerja v jami ob lanternah in tradicionalni turški glasbi.', doplacilo: 36.99, TK_uporabnik: 4, TK_prenocisce: 4, TK_rezervacija: 7},
+            { naziv:'Polet balonov nad Kapadokijo', opis:'Jutranji polet z balonom nad znamenitimi skalnimi formacijami Kapadokije.', doplacilo: 139.99, TK_uporabnik: 4, TK_prenocisce: 4, TK_rezervacija: 8},
+            { naziv:'Nočni sprehod po džungli', opis:'Voden sprehod po tropski džungli z opazovanjem nočnih živali.', doplacilo: 55.99, TK_uporabnik: 5, TK_prenocisce: 5, TK_rezervacija: 9},
+            { naziv:'Joga med krošnjami', opis:'Jutranja joga na panoramski terasi visoko med drevesnimi krošnjami.', doplacilo: 29.99, TK_uporabnik: 5, TK_prenocisce: 5, TK_rezervacija: 10},
+            { naziv:'Plavanje z morskimi psi', opis:'Organizirano snorklanje med koralnimi grebeni in morskimi psi.', doplacilo: 74.99, TK_uporabnik: 6, TK_prenocisce: 6, TK_rezervacija: 11},
+            { naziv:'Podvodno fotografiranje', opis:'Profesionalno fotografiranje med raziskovanjem podvodnega sveta.', doplacilo: 110, TK_uporabnik: 6, TK_prenocisce: 6, TK_rezervacija: 12},
+            { naziv:'Nočno snorklanje z modro svetlečim planktonom', opis:'Snorklanje z bioluminiscentnim planktonom.', doplacilo: 89.99, TK_uporabnik: 6, TK_prenocisce: 6, TK_rezervacija: 13},
+            { naziv:'Plavajoči zajtrk', opis:'Svež zajtrk postrežen na leseni plavajoči mizi ob sončnem vzhodu.', doplacilo: 15.99, TK_uporabnik: 7, TK_prenocisce: 7, TK_rezervacija: 14},
+            { naziv:'Escape room Orient Express', opis: 'Interaktivna skrivnostna igra pobega v stilu stare železnice.', doplacilo: 34.99, TK_uporabnik: 8, TK_prenocisce: 8, TK_rezervacija: 15},
+            { naziv:'Večer čarobnih lantern', opis: 'Nočni sprehod skozi osvetljen gozd z lebdečimi lanternami.', doplacilo: 22.99, TK_uporabnik: 9, TK_prenocisce: 9, TK_rezervacija: 16}
         ];
 
         await knex('Dozivetje').insert(Dozivetje);
