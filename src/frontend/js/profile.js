@@ -144,23 +144,24 @@ nalagajProfil();
 naloziMojaPrenocisca();
 
 async function naloziMojaPrenocisca() {
-    const token = sessionStorage.getItem('token');
-    if (!token) return;
+    const token = sessionStorage.getItem('token'); // pobere JWT token
+    if (!token) return; //ustavi ce ni prijavljen
 
     try {
         const odgovor = await fetch('/moja-prenocisca', {
             method: 'GET',
-            headers: { 'Authorization': 'Bearer ' + token }
+            headers: { 'Authorization': 'Bearer ' + token } //poslje token strezniku
         });
         const prenocisca = await odgovor.json();
 
-        if (prenocisca.length === 0) return;
+        if (prenocisca.length === 0) return; // ce nima uporabnik prenocisc nic ne pokaze
 
-        document.getElementById('mojaPrenocisca').classList.remove('hidden');
-        const seznam = document.getElementById('seznamPrenocisc');
-        seznam.innerHTML = '';
+        document.getElementById('mojaPrenocisca').classList.remove('hidden'); //prikaze seznam prenocisc
+        const seznam = document.getElementById('seznamPrenocisc'); 
+        seznam.innerHTML = '';// pocisti stare kartice da se seznam pravilno osvezi
 
         prenocisca.forEach(p => {
+            // ustavri kartico in vpise podatke
             const div = document.createElement('div');
             div.className = 'flex items-center justify-between p-4 rounded-2xl border border-slate-200 bg-slate-50';
             div.innerHTML = `
@@ -173,7 +174,7 @@ async function naloziMojaPrenocisca() {
                     <button onclick="izbrisiPrenocisce(${p.ID_prenocisce})" class="px-4 py-2 rounded-full border-2 border-red-200 text-red-500 font-bold text-sm hover:bg-red-50 transition">Briši</button>
                 </div>
             `;
-            seznam.appendChild(div);
+            seznam.appendChild(div);//doda na seznam
         });
     } catch (err) {
         console.error(err);

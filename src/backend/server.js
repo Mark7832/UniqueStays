@@ -355,15 +355,15 @@ app.get('/prenocisce/:id', preveriToken, async (req, res) => {
         const prenocisce = await db('Prenocisce')
             .where('ID_prenocisce', req.params.id)
             .where('TK_uporabnik', req.uporabnik.id)
-            .first();
+            .first(); // vrne objekt namesto arraya
         if (!prenocisce) return res.status(404).json({ napaka: 'Ni najdeno.' });
 
         const termini = (await db('Nerazpolozljiv_termin')
             .where('TK_prenocisce', req.params.id)
             .select()).map(t => ({
                 ...t,
-                datum_od: t.datum_od ? t.datum_od.toLocaleDateString('sv-SE') : null,
-                datum_do: t.datum_do ? t.datum_do.toLocaleDateString('sv-SE') : null,
+                datum_od: t.datum_od ? t.datum_od.toLocaleDateString('sv-SE') : null, //ga pretvori v string
+                datum_do: t.datum_do ? t.datum_do.toLocaleDateString('sv-SE') : null, //sv-SE švedska lokalizacija-> format (YYYY-MM-DD)
             }));
 
         const slike = await db('Slika')
@@ -411,7 +411,7 @@ app.put('/prenocisce/:id', preveriToken, upload.fields([
             });
 
         // Posodobi termine - zbriši stare in dodaj nove
-        await db('Nerazpolozljiv_termin').where('TK_prenocisce', req.params.id).del();
+        await db('Nerazpolozljiv_termin').where('TK_prenocisce', req.params.id).del();//zbrise stare termine
 
         const terminiOd = [].concat(body['termin_od'] || []);
         const terminiDo = [].concat(body['termin_do'] || []);
@@ -434,13 +434,13 @@ app.put('/prenocisce/:id', preveriToken, upload.fields([
             const slika = await db('Slika').where('ID_slika', id).first();
             if (slika) {
                 const pot = path.join(imagesDir, slika.ime_slike);
-                if (fs.existsSync(pot)) fs.unlinkSync(pot);
-                await db('Slika').where('ID_slika', id).del();
+                if (fs.existsSync(pot)) fs.unlinkSync(pot); //ce obstaja fizicna slika jo izbrisi
+                await db('Slika').where('ID_slika', id).del();//zbrisi se v bazi
             }
         }
 
         // Pridobi cover index
-        const coverIndex = body['cover-index'] || body.cover_slika_index || '0';
+        const coverIndex = body['cover-index'] || body.cover_slika_index || '0'; // ce uporabnik izbral katere druge slike je potem prva slika cover
 
         // Najprej nastavi vse obstoječe slike na cover = false
         await db('Slika').where('TK_prenocisce', req.params.id).update({ cover: false });
@@ -454,7 +454,7 @@ app.put('/prenocisce/:id', preveriToken, upload.fields([
         // Dodaj nove slike
         const noveSlike = req.files['slike'] || [];
         for (let i = 0; i < noveSlike.length; i++) {
-            const jeNovaCover = !coverIndex.toString().startsWith('obs-') && i === parseInt(coverIndex);
+            const jeNovaCover = !coverIndex.toString().startsWith('obs-') && i === parseInt(coverIndex); //  nova slika je cover   če se coverIndex ne začne z 'obs-' in se indeks ujema
             await db('Slika').insert({
                 slika: fs.readFileSync(noveSlike[i].path),
                 ime_slike: noveSlike[i].filename,
