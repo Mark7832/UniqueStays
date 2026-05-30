@@ -518,6 +518,118 @@ app.delete('/prenocisce/:id', preveriToken, async (req, res) => {
     }
 });
 
+//vsa doživetja prijavljenega uporabnika
+app.get('/api/dozivetja', preveriToken, async (req, res) => {
+    try {
+        const dozivetja = await db('Dozivetje')
+            .leftJoin('Prenocisce', 'Dozivetje.TK_prenocisce', 'Prenocisce.ID_prenocisce')
+            .where('Dozivetje.TK_uporabnik', req.uporabnik.id)
+            .select('Dozivetje.*', 'Prenocisce.naziv as naziv_prenocisca')
+            .orderBy('Dozivetje.ID_dozivetje', 'desc');
+        res.json(dozivetja);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri pridobivanju doživetij.' });
+    }
+});
+
+//dodaj novo doživetje (brez prenočišča)
+app.post('/api/dozivetje', preveriToken, async (req, res) => {
+    try {
+        const { naziv, opis, doplacilo } = req.body;
+        if (!naziv || !opis || doplacilo === undefined) {
+            return res.status(400).json({ napaka: 'Naziv, opis in doplačilo so obvezna polja.' });
+        }
+        const [id] = await db('Dozivetje').insert({
+            naziv,
+            opis,
+            doplacilo: parseFloat(doplacilo),
+            TK_prenocisce: null,
+            TK_rezervacija: null,
+            TK_uporabnik: req.uporabnik.id
+        });
+        res.json({ uspeh: true, id });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri dodajanju doživetja.' });
+    }
+});
+
+//posodobi naziv/opis/doplačilo (samo lastnik)
+app.put('/api/dozivetje/:id', preveriToken, async (req, res) => {
+    try {
+        const { naziv, opis, doplacilo } = req.body;
+        const posodobljeno = await db('Dozivetje')
+            .where('ID_dozivetje', req.params.id)
+            .where('TK_uporabnik', req.uporabnik.id)
+            .update({ naziv, opis, doplacilo: parseFloat(doplacilo) });
+        if (!posodobljeno) return res.status(404).json({ napaka: 'Doživetje ni najdeno.' });
+        res.json({ uspeh: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri posodabljanju doživetja.' });
+    }
+});
+
+//izbriši doživetje (samo lastnik)
+app.delete('/api/dozivetje/:id', preveriToken, async (req, res) => {
+    try {
+        const izbrisano = await db('Dozivetje')
+            .where('ID_dozivetje', req.params.id)
+            .where('TK_uporabnik', req.uporabnik.id)
+            .del();
+        if (!izbrisano) return res.status(404).json({ napaka: 'Doživetje ni najdeno.' });
+        res.json({ uspeh: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri brisanju doživetja.' });
+    }
+});
+
+//veži/odveži doživetje na prenočišče (profil)
+// Body: { TK_prenocisce: <id ali null> }
+app.put('/api/dozivetje/:id/vezava', preveriToken, async (req, res) => {
+    try {
+        const { TK_prenocisce } = req.body;
+        //preveri da doživetje pripada temu uporabniku
+        const dozivetje = await db('Dozivetje')
+            .where('ID_dozivetje', req.params.id)
+            .where('TK_uporabnik', req.uporabnik.id)
+            .first();
+        if (!dozivetje) return res.status(404).json({ napaka: 'Doživetje ni najdeno.' });
+        //če je prenočišče podano, preveri ali je vezano na tega uporabnika
+        if (TK_prenocisce) {
+            const prenoc = await db('Prenocisce')
+                .where('ID_prenocisce', TK_prenocisce)
+                .where('TK_uporabnik', req.uporabnik.id)
+                .first();
+            if (!prenoc) return res.status(403).json({ napaka: 'Prenočišče ne pripada vam.' });
+        }
+
+        await db('Dozivetje')
+            .where('ID_dozivetje', req.params.id)
+            .update({ TK_prenocisce: TK_prenocisce || null });
+
+        res.json({ uspeh: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri vezavi.' });
+    }
+});
+
+//javna doživetja za konkretno prenočišče (za podrobnosti)
+app.get('/api/prenocisce/:id/dozivetja', async (req, res) => {
+    try {
+        const dozivetja = await db('Dozivetje')
+            .where('TK_prenocisce', req.params.id)
+            .select('ID_dozivetje', 'naziv', 'opis', 'doplacilo');
+        res.json(dozivetja);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka.' });
+    }
+});
+
 // Zagon strežnika
 app.listen(PORT, () => {
     console.log(`Server teče na http://localhost:${PORT}`);

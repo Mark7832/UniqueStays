@@ -142,6 +142,7 @@ document.getElementById('gesloForm').addEventListener('submit', async function(e
 
 nalagajProfil();
 naloziMojaPrenocisca();
+naloziVezavoPovezava();
 
 async function naloziMojaPrenocisca() {
     const token = sessionStorage.getItem('token'); // pobere JWT token
@@ -193,4 +194,160 @@ async function izbrisiPrenocisce(id) {
     } catch (err) {
         console.error(err);
     }
+}
+
+//vezava doživetij na prenočišča
+async function naloziVezavoPovezava() {
+    const token = sessionStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        //vzporedno naloži prenočišča in doživetja
+        const [resP, resD] = await Promise.all([
+            fetch('/moja-prenocisca',  { headers: { 'Authorization': 'Bearer ' + token } }),
+            fetch('/api/dozivetja',    { headers: { 'Authorization': 'Bearer ' + token } })
+        ]);
+        const prenocisca = await resP.json();
+        const dozivetja  = await resD.json();
+
+        const sekcija = document.getElementById('sekcijaPovezava');
+        const seznam  = document.getElementById('vezavaSeznam');
+        const prazno  = document.getElementById('vezavaPrazno');
+
+        //prikaže sekcijo samo če ima prenočišča
+        if (!prenocisca.length) return;
+        sekcija.classList.remove('hidden');
+
+        if (!dozivetja.length) {
+            prazno.classList.remove('hidden');
+            return;
+        }
+
+        seznam.innerHTML = '';
+
+        //en razdelek na prenočišče
+        prenocisca.forEach(p => {
+            //doživetja vezana na to prenočišče
+            const vezana = dozivetja.filter(d => d.TK_prenocisce === p.ID_prenocisce);
+            //doživetja, ki niso vezana nikamor, so prosta
+            const prosta = dozivetja.filter(d => !d.TK_prenocisce);
+
+            const razdelek = document.createElement('div');
+            razdelek.innerHTML = `
+
+                <!--prenočišče in število vezanih doživetij-->
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                        🏠 ${p.naziv}
+                    </h3>
+                    <span class="text-xs font-bold text-blue-400 bg-blue-100 px-3 py-1 rounded-full">
+                        število doživetij: ${vezana.length}
+                    </span>
+                </div>
+
+                <!--vezana doživetja - klic funkcije karticeVezano-->
+                <div id="vezana-${p.ID_prenocisce}" class="space-y-2 mb-3">
+                    ${vezana.length === 0
+                        ? `<p class="text-sm text-slate-400 italic px-1">Ni vezanih doživetij.</p>`
+                        : vezana.map(d => karticeVezano(d, p.ID_prenocisce)).join('')
+                    }
+                </div>
+
+                <!--dodaj doživetje na to prenočišče-->
+                ${prosta.length > 0 ? `
+                <div class="flex gap-2 mt-3">
+                    <select id="dodajSelect-${p.ID_prenocisce}"
+                        class="flex-1 px-4 py-2.5 rounded-2xl border border-slate-200 bg-slate-50 font-semibold text-sm outline-none focus:border-teal-400 focus:bg-white transition appearance-none cursor-pointer">
+                        <option value="">Izberi prosto doživetje…</option>
+                        ${prosta.map(d =>
+                            `<option value="${d.ID_dozivetje}">${d.naziv} (€ ${parseFloat(d.doplacilo).toFixed(2)})</option>`
+                        ).join('')}
+                    </select>
+                    <button onclick="veziDozivetje(${p.ID_prenocisce})"
+                        class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold text-sm hover:scale-[1.02] transition-all duration-200 shadow">
+                        Veži
+                    </button>
+                </div>` : `<p class="text-xs text-slate-400 italic mt-2">Vsa doživetja so že vezana.</p>`}
+
+                <div class="border-b border-slate-100 mt-6"></div>
+            `;
+            seznam.appendChild(razdelek);
+        });
+
+    } catch (err) {
+        console.error('Napaka pri nalaganju vezave:', err);
+    }
+}
+
+//vezana doživetja
+function karticeVezano(d, idPrenocisca) {
+    return `
+        <div class="flex items-center justify-between px-4 py-3 rounded-2xl border border-teal-100 bg-teal-50">
+            <div class="min-w-0">
+                <p class="font-bold text-slate-900 text-sm truncate">${d.naziv}</p>
+                <p class="text-xs text-teal-600 font-semibold">€ ${parseFloat(d.doplacilo).toFixed(2)} doplačilo</p>
+            </div>
+            <button onclick="odveziDozivetje(${d.ID_dozivetje}, ${idPrenocisca})"
+                class="ml-3 shrink-0 px-3 py-1.5 rounded-full border-2 border-red-200 text-red-500 font-bold text-xs hover:bg-red-50 transition">
+                Odveži
+            </button>
+        </div>
+    `;
+}
+
+//veži doživetje na prenočišče
+async function veziDozivetje(idPrenocisca) {
+    const token = sessionStorage.getItem('token');
+    const sel   = document.getElementById(`dodajSelect-${idPrenocisca}`);
+    const idDoz = sel.value;
+    if (!idDoz) return;
+
+    try {
+        const res = await fetch(`/api/dozivetje/${idDoz}/vezava`, {
+            method:  'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body:    JSON.stringify({ TK_prenocisce: parseInt(idPrenocisca) })
+        });
+        const r = await res.json();
+        if (res.ok) {
+            prikaziSporociloPovezava('✓ Doživetje je bilo vezano na prenočišče.', true);
+            await naloziVezavoPovezava(); // osveži
+        } else {
+            prikaziSporociloPovezava('✗ ' + (r.napaka || 'Napaka.'), false);
+        }
+    } catch {
+        prikaziSporociloPovezava('✗ Napaka pri vezavi.', false);
+    }
+}
+
+//odveži doživetje s prenočišča
+async function odveziDozivetje(idDoz, idPrenocisca) {
+    const token = sessionStorage.getItem('token');
+    try {
+        const res = await fetch(`/api/dozivetje/${idDoz}/vezava`, {
+            method:  'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body:    JSON.stringify({ TK_prenocisce: null })
+        });
+        const r = await res.json();
+        if (res.ok) {
+            prikaziSporociloPovezava('✓ Doživetje odstranjeno s prenočišča.', true);
+            await naloziVezavoPovezava();
+        } else {
+            prikaziSporociloPovezava('✗ ' + (r.napaka || 'Napaka.'), false);
+        }
+    } catch {
+        prikaziSporociloPovezava('✗ Napaka pri odvezavi.', false);
+    }
+}
+
+//prikaz sporočila
+function prikaziSporociloPovezava(besedilo, uspeh) {
+    const el = document.getElementById('sporociloPovezava');
+    el.textContent = besedilo;
+    el.className = uspeh
+        ? 'mx-8 mt-6 px-5 py-3.5 rounded-2xl font-semibold text-sm bg-teal-50 border border-teal-200 text-teal-700'
+        : 'mx-8 mt-6 px-5 py-3.5 rounded-2xl font-semibold text-sm bg-red-50 border border-red-200 text-red-700';
+    el.classList.remove('hidden');
+    setTimeout(() => el.classList.add('hidden'), 4000);
 }
