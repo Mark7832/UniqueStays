@@ -5,6 +5,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const authRouter = require('./routes/auth');
+// Uvoz preveriToken middleware (auth.js) za preverjanje JWT tokena pri zaščitenih endpointih
 const { preveriToken } = require('./routes/auth');
 
 const app = express();
@@ -276,12 +277,13 @@ app.get('/isci_prenocisca', async (req, res) => {
 // DODAJ PRENOČIŠČE 
 app.post('/dodaj-prenocisce', preveriToken, upload.fields([
     { name: 'slike', maxCount: 20 },
-    { name: 'dozivetje_slika[]', maxCount: 10 }
 ]), async (req, res) => {
+    // shrani podatke iz forme (body)
     const body = req.body;
     console.log('BODY PODATKI:', body);
     try {
         //  Vstavi prenočišče
+        //  pobere tag  in pretvoi v array objekt
         const tagNaziv = [].concat(body['tag_naziv'] || body['tag_naziv[]'] || []);
         const tagi = tagNaziv
             .filter(n => n)
@@ -309,8 +311,8 @@ app.post('/dodaj-prenocisce', preveriToken, upload.fields([
         });
 
         // Vstavi slike prenočišča
-        const coverIndex = parseInt(body.cover_slika_index) || 0;
-        const slikePren = req.files['slike'] || [];
+        const coverIndex = parseInt(body.cover_slika_index) || 0; //ce ni nobena druga izbrana slika cover bo prva
+        const slikePren = req.files['slike'] || []; // poberi slike ( Multer shranil na disk) prazen array če ni slik
         for (let i = 0; i < slikePren.length; i++) {
             await db('Slika').insert({
                 slika: fs.readFileSync(slikePren[i].path),
@@ -321,8 +323,6 @@ app.post('/dodaj-prenocisce', preveriToken, upload.fields([
                 TK_dozivetje: null
             });
         }
-
-
 
         // Vstavi nedosegljive termine
         console.log('TERMINI:', body['termin_od'], body['termin_do']);
@@ -342,7 +342,6 @@ app.post('/dodaj-prenocisce', preveriToken, upload.fields([
             }
         }
 
-        // Preusmeri na domačo stran
         res.json({ uspeh: true });
     } catch (err) {
         console.error('Napaka pri shranjevanju:', err);
@@ -490,17 +489,28 @@ app.get('/moja-prenocisca', preveriToken, async (req, res) => {
 app.delete('/prenocisce/:id', preveriToken, async (req, res) => {
     try {
         // Pridobi slike iz baze pred brisanjem
-        const slike = await db('Slika').where('TK_prenocisce', req.params.id).select('ime_slike');
+        const slike = await db('Slika')
+            .where('TK_prenocisce', req.params.id)
+            .select('ime_slike');
 
         // Zbrisi fizicne datoteke
         slike.forEach(slika => {
             const pot = path.join(imagesDir, slika.ime_slike);
             if (fs.existsSync(pot)) fs.unlinkSync(pot);
         });
+        // brisanje iz baze
+        await db('Slika')
+            .where('TK_prenocisce', req.params.id)
+            .del();
 
-        await db('Slika').where('TK_prenocisce', req.params.id).del();
-        await db('Nerazpolozljiv_termin').where('TK_prenocisce', req.params.id).del();
-        await db('Prenocisce').where('ID_prenocisce', req.params.id).del();
+        await db('Nerazpolozljiv_termin')
+            .where('TK_prenocisce', req.params.id)
+            .del();
+
+        await db('Prenocisce')
+            .where('ID_prenocisce', req.params.id)
+            .del();
+
         res.json({ uspeh: true });
     } catch (err) {
         console.error(err);
