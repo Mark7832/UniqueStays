@@ -168,7 +168,7 @@ function prikaziPodatke(data) {
     }
     
     // Osnovni podatki
-    setElementText('tipPrenocisca', `🏰 ${prenocisce.tip_prenocisca || 'Neznano'} • Slovenija`);
+    setElementText('tipPrenocisca', `🏠 ${prenocisce.tip_prenocisca || 'Neznano'} • Slovenija`);
     setElementText('nazivPrenocisca', prenocisce.naziv || 'Neznano prenočišče');
     setElementText('opisPrenocisca', prenocisce.opis_prenocisca || 'Opis ni na voljo');
     setElementText('opisPodrobno', prenocisce.opis_prenocisca || 'Opis ni na voljo');
@@ -289,7 +289,6 @@ function prikaziTage(tagiString) {
             tagElement.className = 'inline-flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-blue-50 to-teal-50 border-2 border-blue-200 hover:border-blue-400 transition-all hover:scale-105';
             
             tagElement.innerHTML = `
-                <span class="text-2xl">${tag.emoji || '✨'}</span>
                 <span class="font-semibold text-slate-800">${tag.naziv || 'Posebnost'}</span>
             `;
             
@@ -452,7 +451,7 @@ function jeZaseden(datumStr) {
 }
 
 function prvProstDatum(odStr) {
-    let d = new Date(odStr);
+    let d = new Date(odStr);🎭
     for (let i = 0; i < 365; i++) {
         const str = d.toISOString().split('T')[0];
         if (!jeZaseden(str)) return str;
