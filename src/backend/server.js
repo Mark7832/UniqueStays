@@ -5,8 +5,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const authRouter = require('./routes/auth');
-// Uvoz preveriToken middleware (auth.js) za preverjanje JWT tokena pri zaščitenih endpointih
-const { preveriToken } = require('./routes/auth');
+const { preveriToken, preveriAdmin } = require('./routes/auth');
 
 const app = express();
 const PORT = 3000;
@@ -28,7 +27,7 @@ const db = knex({
     client: 'mysql2',
     connection: {
         host: '127.0.0.1',
-        user: 'uniquestays',
+        user: 'root',
         password: 'geslo',
         database: 'uniquestays'
     }
@@ -707,6 +706,84 @@ app.post('/api/rezervacija', preveriToken, async (req, res) => {
     } catch (err) {
         console.error('Napaka pri rezervaciji:', err);
         res.status(500).json({ napaka: 'Napaka pri shranjevanju rezervacije.' });
+    }
+});
+
+// SPOROCILA - pridobi vsa sporocila za prenočišče
+app.get('/api/sporocila/:id', async (req, res) => {
+    try {
+        const sporocila = await db('Sporocila')
+            .leftJoin('Uporabnik', 'Sporocila.TK_uporabnik', 'Uporabnik.ID_uporabnik')
+            .where('Sporocila.TK_prenocisce', req.params.id)
+            .select(
+                'Sporocila.*',
+                'Uporabnik.ime_uporabnika',
+                'Uporabnik.priimek_uporabnika'
+            )
+            .orderBy('Sporocila.datum_sporocila', 'desc');
+        res.json(sporocila);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri pridobivanju sporočil.' });
+    }
+});
+
+// SPOROCILA - dodaj novo vprašanje (prijavljeni user)
+app.post('/api/sporocila', preveriToken, async (req, res) => {
+    try {
+        const { vprasanje, TK_prenocisce } = req.body;
+        if (!vprasanje || !TK_prenocisce) {
+            return res.status(400).json({ napaka: 'Vprašanje in ID prenočišča sta obvezna.' });
+        }
+        await db('Sporocila').insert({
+            vprasanje,
+            datum_sporocila: new Date().toISOString().split('T')[0],
+            TK_uporabnik: req.uporabnik.id,
+            TK_prenocisce
+        });
+        res.status(201).json({ sporocilo: 'Vprašanje uspešno dodano.' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri dodajanju vprašanja.' });
+    }
+});
+
+// SPOROCILA - admin in lastnik lahko odgovori na vprašanje
+app.put('/api/sporocila/:id', preveriToken, async (req, res) => {
+    try {
+        const { odgovor } = req.body;
+        if (!odgovor) {
+            return res.status(400).json({ napaka: 'Odgovor je obvezen.' });
+        }
+
+        // Poišči sporočilo
+        const sporocilo = await db('Sporocila')
+            .where('ID_sporocila', req.params.id)
+            .first();
+
+        if (!sporocilo) {
+            return res.status(404).json({ napaka: 'Sporočilo ne obstaja.' });
+        }
+
+        // Preveri ali je admin ALI lastnik prenočišča
+        const jeAdmin = req.uporabnik.je_admin === 1 || req.uporabnik.je_admin === true;
+        const jeLastnik = await db('Prenocisce')
+            .where('ID_prenocisce', sporocilo.TK_prenocisce)
+            .where('TK_uporabnik', req.uporabnik.id)
+            .first();
+
+        if (!jeAdmin && !jeLastnik) {
+            return res.status(403).json({ napaka: 'Nimate pravice odgovoriti na to sporočilo.' });
+        }
+
+        await db('Sporocila')
+            .where('ID_sporocila', req.params.id)
+            .update({ odgovor });
+
+        res.json({ sporocilo: 'Odgovor uspešno shranjen.' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri shranjevanju odgovora.' });
     }
 });
 

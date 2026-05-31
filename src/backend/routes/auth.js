@@ -23,6 +23,14 @@ function preveriToken(req, res, next) {
     }
 }
 
+// Middleware za preverjanje admin pravic
+function preveriAdmin(req, res, next) {
+    if (!req.uporabnik || !req.uporabnik.je_admin) {
+        return res.status(403).json({ napaka: 'Dostop dovoljen samo administratorjem.' });
+    }
+    next();
+}
+
 // REGISTRACIJA
 router.post('/registracija', async (req, res) => {
     try {
@@ -41,6 +49,7 @@ router.post('/registracija', async (req, res) => {
             email,
             drzava,
             geslo: hash,
+            je_admin: false,
             ustvarjen_od: new Date().toISOString().split('T')[0]
         });
 
@@ -67,8 +76,13 @@ router.post('/prijava', async (req, res) => {
             return res.status(401).json({ napaka: 'Napačen email ali geslo.' });
         }
 
+        // Token zdaj vsebuje tudi je_admin
         const token = jwt.sign(
-            { id: uporabnik.ID_uporabnik, email: uporabnik.email },
+            { 
+                id: uporabnik.ID_uporabnik, 
+                email: uporabnik.email,
+                je_admin: uporabnik.je_admin === 1 || uporabnik.je_admin === true
+            },
             JWT_SECRET,
             { expiresIn: '24h' }
         );
@@ -80,7 +94,8 @@ router.post('/prijava', async (req, res) => {
                 id: uporabnik.ID_uporabnik,
                 ime: uporabnik.ime_uporabnika,
                 priimek: uporabnik.priimek_uporabnika,
-                email: uporabnik.email
+                email: uporabnik.email,
+                je_admin: uporabnik.je_admin === 1 || uporabnik.je_admin === true
             }
         });
 
@@ -95,7 +110,7 @@ router.get('/profil', preveriToken, async (req, res) => {
     try {
         const uporabnik = await req.db('Uporabnik')
             .where('ID_uporabnik', req.uporabnik.id)
-            .select('ID_uporabnik', 'ime_uporabnika', 'priimek_uporabnika', 'email', 'drzava', 'opis', 'ustvarjen_od')
+            .select('ID_uporabnik', 'ime_uporabnika', 'priimek_uporabnika', 'email', 'drzava', 'opis', 'je_admin', 'ustvarjen_od')
             .first();
 
         if (!uporabnik) {
@@ -115,7 +130,6 @@ router.put('/profil', preveriToken, async (req, res) => {
     try {
         const { ime_uporabnika, priimek_uporabnika, email, drzava, opis } = req.body;
 
-        // Preveri če email že obstaja pri drugem uporabniku
         if (email) {
             const obstaja = await req.db('Uporabnik')
                 .where('email', email)
@@ -167,5 +181,5 @@ router.put('/geslo', preveriToken, async (req, res) => {
 });
 
 module.exports = router;
-// Izvoz preveriToken funkcije (server.js )
-module.exports.preveriToken = preveriToken; 
+module.exports.preveriToken = preveriToken;
+module.exports.preveriAdmin = preveriAdmin;
