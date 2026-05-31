@@ -142,7 +142,7 @@ async function shraniDozivetje() {
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
             body:JSON.stringify(telo)
         });
-        const r = await resGET.json();
+        const r = await res.json();
 
         if (res.ok) {
             zapriObrazec();
