@@ -1,20 +1,21 @@
-var slikaCounter = 0;
-var shranjenjeSlike = [];
+var slikaCounter = 0; //stevec novih slik
+var shranjenjeSlike = []; // seznam File objektov novih slik
 document.addEventListener('DOMContentLoaded', function () {
-    slikaCounter = 0;
+    slikaCounter = 0; // ko se stran do konca nalozi se stevec nastavi nazaj na nic
 });
 // Preveri ali gre za urejanje (URL vsebuje ?id=)
 const urlParams = new URLSearchParams(window.location.search);
 const urejanjeId = urlParams.get('id');
 
-if (urejanjeId) {
-    document.querySelector('[type="submit"]').textContent = 'Posodobi prenočišče';
+
+if (urejanjeId) { //urejanje 
+    document.querySelector('[type="submit"]').textContent = 'Posodobi prenočišče'; //spremeni gumb
     const token = sessionStorage.getItem('token');
     fetch('/prenocisce/' + urejanjeId, {
         headers: { 'Authorization': 'Bearer ' + token }
     })
         .then(r => r.json())
-        .then(p => {
+        .then(p => {//napolni formo z starimi podatki
             document.querySelector('[name="naziv"]').value = p.naziv || '';
             document.querySelector('[name="tip_prenocisca"]').value = p.tip_prenocisca || '';
             document.querySelector('[name="opis_prenocisca"]').value = p.opis_prenocisca || '';
@@ -23,18 +24,33 @@ if (urejanjeId) {
             document.querySelector('[name="cena_na_noc"]').value = p.cena_na_noc || '';
             document.querySelector('[name="max_gostov"]').value = p.max_gostov || '';
             document.querySelector('[name="stevilo_sob"]').value = p.stevilo_sob || '';
-            document.querySelector('[name="sezona"]') && (document.querySelector('[name="sezona"]').value = p.sezona || '');
-            document.querySelector('[name="bazen"]') && (document.querySelector('[name="bazen"]').checked = p.bazen);
-            document.querySelector('[name="parking"]') && (document.querySelector('[name="parking"]').checked = p.parking);
-            document.querySelector('[name="wifi"]') && (document.querySelector('[name="wifi"]').checked = p.wifi);
-            document.querySelector('[name="zajtrk"]') && (document.querySelector('[name="zajtrk"]').checked = p.zajtrk);
-            document.querySelector('[name="ljubljencki"]') && (document.querySelector('[name="ljubljencki"]').checked = p.ljubljencki);
-            document.querySelector('[name="razgled"]') && (document.querySelector('[name="razgled"]').checked = p.razgled);
-            document.querySelector('[name="trajnostno"]') && (document.querySelector('[name="trajnostno"]').checked = p.trajnostno);
+            const sezona = document.querySelector('[name="sezona"]');
+            if (sezona) sezona.value = p.sezona || '';
+
+            const bazen = document.querySelector('[name="bazen"]');
+            if (bazen) bazen.checked = p.bazen;
+
+            const parking = document.querySelector('[name="parking"]');
+            if (parking) parking.checked = p.parking;
+
+            const wifi = document.querySelector('[name="wifi"]');
+            if (wifi) wifi.checked = p.wifi;
+
+            const zajtrk = document.querySelector('[name="zajtrk"]');
+            if (zajtrk) zajtrk.checked = p.zajtrk;
+
+            const ljubljencki = document.querySelector('[name="ljubljencki"]');
+            if (ljubljencki) ljubljencki.checked = p.ljubljencki;
+
+            const razgled = document.querySelector('[name="razgled"]');
+            if (razgled) razgled.checked = p.razgled;
+
+            const trajnostno = document.querySelector('[name="trajnostno"]');
+            if (trajnostno) trajnostno.checked = p.trajnostno;
 
             //tagi
             if (p.tagi) {
-                const tagi = typeof p.tagi === 'string' ? JSON.parse(p.tagi) : p.tagi;
+                const tagi = typeof p.tagi === 'string' ? JSON.parse(p.tagi) : p.tagi; // preveri ce so niz in jih potem pretvori  v js objekt
                 tagi.forEach(t => {
                     document.getElementById('tag-input').value = t.naziv;
                     dodajTag();
@@ -44,10 +60,10 @@ if (urejanjeId) {
             // Naloži termine
             if (p.termini && p.termini.length > 0) {
                 p.termini.forEach(t => {
-                    dodajTermin();
+                    dodajTermin(); //doda nov prazen termin
                     const vnosi = document.querySelectorAll('.termin-vnos');
                     const zadnji = vnosi[vnosi.length - 1];
-                    zadnji.querySelector('[name="termin_od[]"]').value = t.datum_od.substring(0, 10);
+                    zadnji.querySelector('[name="termin_od[]"]').value = t.datum_od.substring(0, 10);//(2024-06-01T12:00:00)
                     zadnji.querySelector('[name="termin_do[]"]').value = t.datum_do.substring(0, 10);
                     zadnji.querySelector('[name="termin_razlog[]"]').value = t.razlog || '';
                 });
@@ -58,7 +74,8 @@ if (urejanjeId) {
                 const seznam = document.getElementById('slike-seznam');
                 seznam.innerHTML = '';
                 p.slike.forEach((slika) => {
-                    var vrstica = document.createElement('div');
+                    var vrstica = document.createElement('div');//prazen div
+                    //obroba (glede na cover)
                     vrstica.className = 'flex items-center gap-4 p-3 rounded-2xl border bg-slate-50 ' + (slika.cover ? 'border-teal-400' : 'border-slate-200');
                     vrstica.id = 'obstojecaSlika-' + slika.ID_slika;
                     vrstica.innerHTML =
@@ -76,22 +93,23 @@ if (urejanjeId) {
         });
 }
 
+//prikaz novo dodanih slik
 function prikaziSlike(input) {
     if (!input) return;
     var seznam = document.getElementById('slike-seznam');
 
-    if (!input.files || input.files.length === 0) return;
+    if (!input.files || input.files.length === 0) return; // preveri ce sploh izbere kaksno sliko
 
-    // cover-index se nastavi v zanki
 
     for (var i = 0; i < input.files.length; i++, slikaCounter++) {
         var file = input.files[i];
-        shranjenjeSlike.push(file);
-        var url = URL.createObjectURL(file);
+        shranjenjeSlike.push(file); //doda sliko v globalni seznam slik
+        var url = URL.createObjectURL(file);//zacasen URL
+        //preveri ce je katera koli cover
         var obstojeciCover = document.querySelector('[id^="zvezda-obs-"].text-yellow-400, [id^="zvezda-"].text-yellow-400');
         var obstojeciCover2 = document.querySelector('.text-yellow-400');
-        var je_cover = !obstojeciCover2;
-
+        var je_cover = !obstojeciCover2; //ce se ni nobena jo nastavi cover
+        //obroba (glede na cover)
         var vrstica = document.createElement('div');
         vrstica.className = 'flex items-center gap-4 p-3 rounded-2xl border bg-slate-50 ' + (je_cover ? 'border-teal-400' : 'border-slate-200');
         vrstica.id = 'slika-vrstica-' + slikaCounter;
@@ -108,13 +126,13 @@ function prikaziSlike(input) {
 
         seznam.appendChild(vrstica);
         if (je_cover) {
-            document.getElementById('cover-index').value = i;
+            document.getElementById('cover-index').value = i;// shrani index cover slike
         }
     }
 }
 
 function oznaCiCover(index) {
-    // Pobrisi vse cover oznake - obstojece
+    // Pobrisi vse cover oznake in napis - obstojece
     document.querySelectorAll('[id^="zvezda-obs-"]').forEach(z => {
         z.textContent = '☆';
         z.className = 'text-xl transition-transform hover:scale-125 text-slate-300';
@@ -142,22 +160,24 @@ function oznaCiCover(index) {
     });
 
     // Označi izbrano
-    var vrstica2 = document.getElementById('slika-vrstica-' + index);
-    document.getElementById('cover-index').value = vrstica2 ? vrstica2.dataset.lokalniIndex : index;
+    var vrstica2 = document.getElementById('slika-vrstica-' + index);//poisce izbrano
+    document.getElementById('cover-index').value = vrstica2 ? vrstica2.dataset.lokalniIndex : index;//shrani index cover slike v skrit input
     var vrstica = document.getElementById('slika-vrstica-' + index);
     var zvezda = document.getElementById('zvezda-' + index);
     var znak = document.getElementById('cover-znak-' + index);
-    if (vrstica) vrstica.className = 'flex items-center gap-4 p-3 rounded-2xl border bg-slate-50 border-teal-400';
-    if (zvezda) { zvezda.textContent = '★'; zvezda.className = 'text-xl transition-transform hover:scale-125 text-yellow-400'; }
-    if (znak) { znak.textContent = 'Naslovna slika'; znak.className = 'text-xs font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded-full'; }
+    if (vrstica) vrstica.className = 'flex items-center gap-4 p-3 rounded-2xl border bg-slate-50 border-teal-400';//obroba
+    if (zvezda) { zvezda.textContent = '★'; zvezda.className = 'text-xl transition-transform hover:scale-125 text-yellow-400'; }//obarva zvezda
+    if (znak) { znak.textContent = 'Naslovna slika'; znak.className = 'text-xs font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded-full'; }//napis
 }
 
+//doda novo polje za nov termin
 function dodajTermin() {
     var container = document.getElementById('termini-container');
 
-    var novDiv = document.createElement('div');
+    var novDiv = document.createElement('div');//ustavri prazen div
     novDiv.className = 'termin-vnos grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200 relative';
 
+    //zgradi tri polja za termin
     novDiv.innerHTML =
         '<div>' +
         '<label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Datum od</label>' +
@@ -180,33 +200,36 @@ function odstraniTermin(gumb) {
     gumb.closest('.termin-vnos').remove();
 }
 
+//dozivetja
 function prikaziPredogled(input) {
     var wrapper = input.nextElementSibling;
     if (!input.files || input.files.length === 0) {
-        wrapper.classList.add('hidden');
+        wrapper.classList.add('hidden');//skrije predogled
         return;
     }
-    var url = URL.createObjectURL(input.files[0]);
+    var url = URL.createObjectURL(input.files[0]);//zacasen URL
     wrapper.querySelector('img').src = url;
-    wrapper.classList.remove('hidden');
+    wrapper.classList.remove('hidden');//pokaze predogeled
 }
 
+//oddaja(pošlje podatke na strežnik in prikaze sporocilo o uspehu)
 document.addEventListener('DOMContentLoaded', function () {
     var form = document.querySelector('form');
     form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        var formData = new FormData(form);
-        formData.delete('slike');
-        shranjenjeSlike.forEach(f => formData.append('slike', f));
+        e.preventDefault();// prepreci da bi se stran osvezila ob kliku gumba
+        var formData = new FormData(form);//zbere vse podatke iz forme v en objekt
+        formData.delete('slike');// izbrisemo ker ima samo zadnje dodane
+        shranjenjeSlike.forEach(f => formData.append('slike', f));//doda pravilno shranjene slike
         try {
-            const url = urejanjeId ? '/prenocisce/' + urejanjeId : '/dodaj-prenocisce';
-            const metoda = urejanjeId ? 'PUT' : 'POST';
+            const url = urejanjeId ? '/prenocisce/' + urejanjeId : '/dodaj-prenocisce'; //doloci naslov glede na to ali urejamo ali dodajamo
+            const metoda = urejanjeId ? 'PUT' : 'POST';//PUT-urejanje, POST -dodajanje
             var res = await fetch(url, {
                 method: metoda,
                 headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('token') },
                 body: formData
             });
             var data = await res.json();
+            //sporocilo
             if (data.uspeh) {
                 alert(urejanjeId ? 'Prenočišče je bilo uspešno posodobljeno!' : 'Prenočišče je bilo uspešno dodano!');
                 window.location.href = 'profile.html';
@@ -219,41 +242,45 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
 function dodajTag() {
     var input = document.getElementById('tag-input');
-    var naziv = input.value.trim();
+    var naziv = input.value.trim(); 
     if (!naziv) return;
 
     var container = document.getElementById('tagi-container');
     var hidden = document.getElementById('tagi-hidden');
     var id = 'tag-' + Date.now();
 
-    var tag = document.createElement('div');
+    // vidni tag
+    var tag = document.createElement('div');// pripravi prazen div
     tag.className = 'flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-700 font-bold text-sm';
-    tag.id = id;
-    tag.innerHTML = naziv + ' <button type="button" onclick="odstraniTag(\'' + id + '\')" class="text-slate-400 hover:text-red-500 font-bold ml-1">✕</button>';
+    tag.id = id; // mu nastavi ID
+    tag.innerHTML = naziv + ' <button type="button" onclick="odstraniTag(\'' + id + '\')" class="text-slate-400 hover:text-red-500 font-bold ml-1">✕</button>';// mu vstavi vsebino
     container.appendChild(tag);
 
+    // skriti input (za server)
     var hiddenInput = document.createElement('input');
     hiddenInput.type = 'hidden';
     hiddenInput.name = 'tag_naziv[]';
     hiddenInput.value = naziv;
     hiddenInput.id = 'hidden-' + id;
     document.querySelector('form').appendChild(hiddenInput);
-    input.value = '';
+    input.value = '';// pocisti input polje kjer uporabnik tipka
 }
 
 function odstraniTag(id) {
-    var tag = document.getElementById(id);
-    var hidden = document.getElementById('hidden-' + id);
-    if (tag) tag.remove();
-    if (hidden) hidden.remove();
+    var tag = document.getElementById(id);// poisce vidni tag
+    var hidden = document.getElementById('hidden-' + id);// poisce skriti input
+    if (tag) tag.remove();//zbrise iz strani
+    if (hidden) hidden.remove();// zbrise da negre v bazo
 }
 
 async function poisciNaslov() {
     const naslov = document.getElementById('naslov-input').value;
     if (!naslov) return;
 
+    // poklice Nominatim API (OpenStreetMap) in poisce koordinate za  naslov
     const odgovor = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${naslov}`,
         { method: 'GET' }
@@ -278,7 +305,9 @@ async function poisciNaslov() {
     if (window.zemljevid) {
         window.zemljevid.setView([lat, lon], 15);
         window.marker.setLatLng([lat, lon]);
+
     } else {
+        // mapa se ne obstaja (ustvari jo prvic)
         window.zemljevid = L.map('map').setView([lat, lon], 15);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(window.zemljevid);
         window.marker = L.marker([lat, lon]).addTo(window.zemljevid);
@@ -287,6 +316,7 @@ async function poisciNaslov() {
 
 function odstraniObstojecoSliko(id) {
     document.getElementById('obstojecaSlika-' + id).remove();
+    // doda skriti input da server ve katero sliko zbrisati iz baze
     var hidden = document.createElement('input');
     hidden.type = 'hidden';
     hidden.name = 'odstranjenaSlika[]';
@@ -296,13 +326,14 @@ function odstraniObstojecoSliko(id) {
     setTimeout(() => {
         const prvaObs = document.querySelector('[id^="zvezda-obs-"]');
         const prvaNova = document.querySelector('[id^="zvezda-"][id^="zvezda-"]:not([id^="zvezda-obs-"])');
-        if (!document.querySelector('.text-yellow-400')) {
-            if (prvaObs) prvaObs.click();
-            else if (prvaNova) prvaNova.click();
+        if (!document.querySelector('.text-yellow-400')) {// ce ni nobena cover
+            if (prvaObs) prvaObs.click();// oznaci prvo obstojecо
+            else if (prvaNova) prvaNova.click();// ali prvo novo
         }
     }, 100);
 }
 
+//oznaci cover ce izbere za cover ze od prej obstojeco
 function oznaciCoverObstojeco(id) {
     // Pobriši vse cover oznake
     document.querySelectorAll('[id^="zvezda-obs-"]').forEach(z => {
@@ -359,12 +390,12 @@ function odstraniNovoSliko(gumb) {
 
     // Če ni več nobena cover, označi prvo preostalo
     setTimeout(() => {
-        if (!document.querySelector('.text-yellow-400')) {
-            var prvaZvezda = document.querySelector('[id^="zvezda-"]:not([id^="zvezda-obs-"])');
-            if (prvaZvezda) prvaZvezda.click();
+        if (!document.querySelector('.text-yellow-400')) {// ce ni nobena cover
+            var prvaZvezda = document.querySelector('[id^="zvezda-"]:not([id^="zvezda-obs-"])');// poisce prvo novo
+            if (prvaZvezda) prvaZvezda.click();// ce obstaja nova(jo oznaci)
             else {
-                var prvaObsZvezda = document.querySelector('[id^="zvezda-obs-"]');
-                if (prvaObsZvezda) prvaObsZvezda.click();
+                var prvaObsZvezda = document.querySelector('[id^="zvezda-obs-"]');// ce ni nove(poisce prvo obstojecо)
+                if (prvaObsZvezda) prvaObsZvezda.click();// jo oznaci
             }
         }
     }, 50);
