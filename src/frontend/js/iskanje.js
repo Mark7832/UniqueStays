@@ -135,7 +135,7 @@ async function isci() {
 
                         ${tagi.map(t => `
                             <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
-                                ${t.emoji} ${t.naziv}
+                                ${t.naziv}
                             </span>
                         `).join('')}
                     </div>
