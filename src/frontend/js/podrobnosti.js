@@ -211,6 +211,11 @@ function prikaziPodatke(data) {
     
     // Komentarji
     prikaziKomentarje(komentarji || []);
+
+    // Shrani podatke za rezervacijski modal
+    _rezervacijaData.naziv     = prenocisce.naziv || '';
+    _rezervacijaData.cenaNaNoc = parseFloat(prenocisce.cena_na_noc) || 0;
+    _rezervacijaData.maxGostov = parseInt(prenocisce.max_gostov) || 10;
 }
 
 // Prikaz hero background slike
@@ -428,3 +433,272 @@ function prikaziNapako(error) {
 
 // Zaženi nalaganje ob nalaganju strani
 window.addEventListener('DOMContentLoaded', naloziPodatke);
+
+// ===================== REZERVACIJSKI MODAL =====================
+
+// Shranjeni podatki prenočišča (za ceno in max gostov)
+let _rezervacijaData = {
+    naziv: '',
+    cenaNaNoc: 0,
+    maxGostov: 10
+};
+
+// Zasedena obdobja (naložena ob odprtju modala)
+let _zasedenObdobja = [];
+
+function jeZaseden(datumStr) {
+    const d = new Date(datumStr);
+    return _zasedenObdobja.some(({ od, do_ }) => d >= od && d < do_);
+}
+
+function prvProstDatum(odStr) {
+    let d = new Date(odStr);
+    for (let i = 0; i < 365; i++) {
+        const str = d.toISOString().split('T')[0];
+        if (!jeZaseden(str)) return str;
+        d.setDate(d.getDate() + 1);
+    }
+    return odStr;
+}
+
+async function naloziZasedenost(prenocisceId) {
+    try {
+        const res = await fetch(`${API_URL}/rezervacija/${prenocisceId}/zasedeni`);
+        const data = await res.json();
+        _zasedenObdobja = [
+            ...(data.rezervacije || []),
+            ...(data.termini || [])
+        ].map(r => ({
+            od:  new Date(r.datum_od),
+            do_: new Date(r.datum_do)
+        }));
+    } catch (e) {
+        _zasedenObdobja = [];
+    }
+}
+
+async function odpriRezervacijo() {
+    const modal = document.getElementById('rezervacijaModal');
+    const panel = document.getElementById('rezervacijaPanel');
+    if (!modal || !panel) return;
+
+    // Nastavi naziv
+    const nazEl = document.getElementById('modalNaziv');
+    if (nazEl) nazEl.textContent = _rezervacijaData.naziv || document.getElementById('nazivPrenocisca')?.textContent || '';
+
+    // Nastavi max gostov info
+    const mgEl = document.getElementById('maxGostovInfo');
+    if (mgEl) mgEl.textContent = `(max ${_rezervacijaData.maxGostov})`;
+
+    // Skrij napake/uspeh
+    document.getElementById('modalNapaka')?.classList.add('hidden');
+    document.getElementById('modalUspeh')?.classList.add('hidden');
+
+    // Prikaži modal takoj (med nalaganjem)
+    modal.style.display = 'flex';
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            panel.classList.remove('scale-95');
+            panel.classList.add('scale-100');
+        });
+    });
+    document.body.style.overflow = 'hidden';
+
+    // Naloži zasedene datume
+    const urlParams = new URLSearchParams(window.location.search);
+    const prenocisceId = urlParams.get('id') || 2;
+    await naloziZasedenost(prenocisceId);
+
+    // Nastavi datume (preskoči zasedene)
+    const danes = new Date().toISOString().split('T')[0];
+    const prihodStr = prvProstDatum(danes);
+
+    const naslednji = new Date(prihodStr);
+    naslednji.setDate(naslednji.getDate() + 1);
+    const odhodStr = prvProstDatum(naslednji.toISOString().split('T')[0]);
+
+    const prihod = document.getElementById('datumPrihod');
+    const odhod  = document.getElementById('datumOdhod');
+    if (prihod) { prihod.min = danes; prihod.value = prihodStr; }
+    if (odhod)  { odhod.min  = danes; odhod.value  = odhodStr; }
+
+    // Opozori ob izbiri zasedenega datuma
+    prihod?.addEventListener('change', onPrihodChange);
+    odhod?.addEventListener('change', onOdhodChange);
+
+    posodobiCeno();
+}
+
+function onPrihodChange() {
+    const el = document.getElementById('datumPrihod');
+    const napaka = document.getElementById('modalNapaka');
+    if (jeZaseden(el.value)) {
+        napaka.textContent = '⚠️ Izbrani datum prihoda je zaseden. Izberite drug datum.';
+        napaka.classList.remove('hidden');
+        el.value = prvProstDatum(el.value);
+    } else {
+        napaka.classList.add('hidden');
+    }
+    posodobiCeno();
+}
+
+function onOdhodChange() {
+    const el = document.getElementById('datumOdhod');
+    const napaka = document.getElementById('modalNapaka');
+    const prihodVal = document.getElementById('datumPrihod')?.value;
+
+    // Preveri ali katerikoli datum v obdobju pade v zasedeno
+    if (prihodVal && el.value) {
+        const od = new Date(prihodVal);
+        const do_ = new Date(el.value);
+        let zaseden = false;
+        let d = new Date(od);
+        while (d < do_) {
+            if (jeZaseden(d.toISOString().split('T')[0])) { zaseden = true; break; }
+            d.setDate(d.getDate() + 1);
+        }
+        if (zaseden) {
+            napaka.textContent = '⚠️ Izbrano obdobje vsebuje zasedene datume. Izberite drug datum odhoda.';
+            napaka.classList.remove('hidden');
+            el.value = '';
+            return;
+        }
+    }
+    napaka.classList.add('hidden');
+    posodobiCeno();
+}
+
+function zapriRezervacijo() {
+    const modal = document.getElementById('rezervacijaModal');
+    const panel = document.getElementById('rezervacijaPanel');
+    if (!modal || !panel) return;
+
+    panel.classList.remove('scale-100');
+    panel.classList.add('scale-95');
+
+    setTimeout(() => { modal.style.display = 'none'; }, 200);
+    document.body.style.overflow = '';
+
+    // Odstrani event listenerje
+    document.getElementById('datumPrihod')?.removeEventListener('change', onPrihodChange);
+    document.getElementById('datumOdhod')?.removeEventListener('change', onOdhodChange);
+}
+
+function spremembaGostov(delta) {
+    const el = document.getElementById('steviloGostov');
+    if (!el) return;
+    let val = parseInt(el.textContent) + delta;
+    val = Math.max(1, Math.min(val, _rezervacijaData.maxGostov || 10));
+    el.textContent = val;
+
+    // Animacija
+    el.classList.add('scale-125', 'text-blue-600');
+    setTimeout(() => el.classList.remove('scale-125', 'text-blue-600'), 200);
+}
+
+function posodobiCeno() {
+    const prihodVal = document.getElementById('datumPrihod')?.value;
+    const odhodVal  = document.getElementById('datumOdhod')?.value;
+    const summary   = document.getElementById('cenaSummary');
+
+    if (!prihodVal || !odhodVal) { if (summary) summary.style.display = 'none'; return; }
+
+    const p = new Date(prihodVal);
+    const o = new Date(odhodVal);
+    const noci = Math.round((o - p) / 86400000);
+
+    if (noci <= 0) {
+        // Popravi odhod
+        const novOdhod = new Date(p); novOdhod.setDate(novOdhod.getDate() + 1);
+        const odEl = document.getElementById('datumOdhod');
+        if (odEl) odEl.value = novOdhod.toISOString().split('T')[0];
+        posodobiCeno();
+        return;
+    }
+
+    const skupaj = noci * _rezervacijaData.cenaNaNoc;
+
+    document.getElementById('cenaPodrobnosti').textContent = `${_rezervacijaData.cenaNaNoc} €/noč × ${noci} ${noci === 1 ? 'noč' : noci < 5 ? 'noči' : 'noči'}`;
+    document.getElementById('cenaVmesna').textContent = `${skupaj.toFixed(2)} €`;
+    document.getElementById('cenaSkupaj').textContent = `${skupaj.toFixed(2)} €`;
+
+    if (summary) summary.style.display = 'block';
+}
+
+async function potrdiRezervacijo() {
+    const napaka  = document.getElementById('modalNapaka');
+    const uspeh   = document.getElementById('modalUspeh');
+    const btn     = document.getElementById('btnPotrdiRezervacijo');
+    const btnTxt  = document.getElementById('btnPotrdiText');
+
+    napaka?.classList.add('hidden');
+    uspeh?.classList.add('hidden');
+
+    const prihodVal = document.getElementById('datumPrihod')?.value;
+    const odhodVal  = document.getElementById('datumOdhod')?.value;
+    const gostov    = parseInt(document.getElementById('steviloGostov')?.textContent) || 1;
+
+    // Validacija
+    if (!prihodVal || !odhodVal) {
+        if (napaka) { napaka.textContent = '❌ Prosimo izberite datume prihoda in odhoda.'; napaka.classList.remove('hidden'); }
+        return;
+    }
+    if (new Date(odhodVal) <= new Date(prihodVal)) {
+        if (napaka) { napaka.textContent = '❌ Datum odhoda mora biti po datumu prihoda.'; napaka.classList.remove('hidden'); }
+        return;
+    }
+
+    // Preveri prijavo (JWT iz sessionStorage)
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        if (napaka) { napaka.textContent = '❌ Za rezervacijo se morate prijaviti.'; napaka.classList.remove('hidden'); }
+        setTimeout(() => { window.location.href = 'login.html'; }, 1500);
+        return;
+    }
+
+    // Prikaži nalaganje
+    if (btn) btn.disabled = true;
+    if (btnTxt) btnTxt.textContent = 'Pošiljam rezervacijo...';
+
+    // Pridobi ID prenočišča iz URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const prenocisceId = urlParams.get('id') || 2;
+
+    try {
+        const response = await fetch(`${API_URL}/rezervacija`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                ID_prenocisce: prenocisceId,
+                datum_prihoda: prihodVal,
+                datum_odhoda:  odhodVal,
+                stevilo_gostov: gostov
+            })
+        });
+
+        if (response.ok) {
+            uspeh?.classList.remove('hidden');
+            if (btn) btn.disabled = true;
+            if (btnTxt) btnTxt.textContent = '✅ Rezervirano!';
+            setTimeout(() => zapriRezervacijo(), 3000);
+        } else {
+            const err = await response.json().catch(() => ({}));
+            const msg = err.message || err.error || `Napaka strežnika (${response.status})`;
+            if (napaka) { napaka.textContent = `❌ ${msg}`; napaka.classList.remove('hidden'); }
+            if (btn) btn.disabled = false;
+            if (btnTxt) btnTxt.textContent = 'Potrdi rezervacijo';
+        }
+    } catch (err) {
+        if (napaka) { napaka.textContent = '❌ Napaka pri pošiljanju. Preveri, da server teče.'; napaka.classList.remove('hidden'); }
+        if (btn) btn.disabled = false;
+        if (btnTxt) btnTxt.textContent = 'Potrdi rezervacijo';
+    }
+}
+
+// Zapri modal ob pritisku tipke Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') zapriRezervacijo();
+});

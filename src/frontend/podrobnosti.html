@@ -32,19 +32,34 @@
 
 <body class="bg-slate-100 text-slate-800 antialiased">
 
-    <!-- HEADER -->
     <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-xl">
         <nav class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="text-2xl font-extrabold text-slate-900">
-                <a href="index.html">✨ UniqueStays</a>
-            </div>
+
+            <a href="index.html" class="text-2xl font-extrabold text-slate-900">
+                ✨ UniqueStays
+            </a>
+
             <div class="flex flex-wrap items-center justify-center gap-5">
-                <a href="index.html" class="font-semibold hover:text-blue-600 transition">Destinacije</a>
-                <a href="#" class="font-semibold hover:text-blue-600 transition">O nas</a>
-                <a href="#" class="font-semibold hover:text-blue-600 transition">Kontakt</a>
-                <button class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
-                    Rezerviraj
-                </button>
+                <a href="#destinations" class="font-semibold hover:text-blue-600 transition">Destinacije</a>
+                <a href="#experiences" class="font-semibold hover:text-blue-600 transition">Izkušnje</a>
+                <a href="#about" class="font-semibold hover:text-blue-600 transition">O nas</a>
+
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">
+                    Novo
+                </span>
+
+                <a id="btnPrijava" href="login.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                    Prijava
+                </a>
+                <a id="btnRegistracija" href="register.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                    Registracija
+                </a>
+                <div id="btnOdjava" class="hidden flex items-center gap-3">
+                    <a href="profile.html" id="imeUporabnika" class="font-semibold text-slate-700 hover:text-blue-600 transition"></a>
+                    <button onclick="odjava()" class="px-5 py-2.5 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition-all duration-200 hover:-translate-y-1">
+                        Odjava
+                    </button>
+                </div>
             </div>
         </nav>
     </header>
@@ -107,8 +122,11 @@
 
             <!-- buttons -->
             <div class="flex flex-wrap gap-4">
-                <button class="px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-105 transition-all duration-200 shadow-lg">
-                    Rezerviraj zdaj
+                <button id="btnRezervacija" onclick="odpriRezervacijo()" class="group px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-105 transition-all duration-200 shadow-lg flex items-center gap-3">
+                    <span>Rezerviraj zdaj</span>
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
                 </button>
                 <button onclick="scrollToMap()" class="px-8 py-4 rounded-full bg-white/10 backdrop-blur-md text-white font-bold hover:bg-white/20 transition-all duration-200">
                     Poglej lokacijo 📍
@@ -296,22 +314,113 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="py-16 px-6 bg-slate-900 text-white">
-        <div class="max-w-7xl mx-auto text-center">
-            <div class="text-3xl font-extrabold mb-4">✨ UniqueStays</div>
-            <p class="text-slate-400 mb-8">Odkrijte edinstvene destinacije po vsej Sloveniji</p>
-            
-            <div class="flex flex-wrap justify-center gap-6 mb-8">
-                <a href="#" class="hover:text-blue-400 transition">O nas</a>
-                <a href="#" class="hover:text-blue-400 transition">Kontakt</a>
-                <a href="#" class="hover:text-blue-400 transition">Pogoji</a>
-                <a href="#" class="hover:text-blue-400 transition">Zasebnost</a>
+    <!-- REZERVACIJSKI MODAL START -->
+    <div id="rezervacijaModal" aria-modal="true" role="dialog" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-opacity duration-300" style="display:none;">
+        <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm" onclick="zapriRezervacijo()"></div>
+        <div id="rezervacijaPanel" class="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95">
+            <div class="bg-gradient-to-r from-blue-600 to-teal-500 px-8 py-6 text-white relative">
+                <button onclick="zapriRezervacijo()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition" title="Zapri">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+                <div class="flex items-center gap-3 mb-1">
+                    <span class="text-2xl">🏰</span>
+                    <span class="text-sm font-semibold uppercase tracking-wider opacity-80">Rezervacija</span>
+                </div>
+                <h2 class="text-2xl font-extrabold pr-10" id="modalNaziv">Nalaganje...</h2>
+                <p class="text-white/80 text-sm mt-1">Izberite datume in potrdite rezervacijo</p>
+            </div>
+            <div class="px-8 py-6 space-y-5">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Prihod</label>
+                        <input id="datumPrihod" type="date" class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:outline-none font-semibold text-slate-800 transition" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Odhod</label>
+                        <input id="datumOdhod" type="date" class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:outline-none font-semibold text-slate-800 transition" />
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Število gostov</label>
+                    <div class="flex items-center gap-3">
+                        <button onclick="spremembaGostov(-1)" class="w-10 h-10 rounded-full border-2 border-slate-200 hover:border-blue-500 font-bold text-slate-700 transition flex items-center justify-center">−</button>
+                        <span id="steviloGostov" class="text-2xl font-extrabold text-slate-900 w-8 text-center">2</span>
+                        <button onclick="spremembaGostov(1)" class="w-10 h-10 rounded-full border-2 border-slate-200 hover:border-blue-500 font-bold text-slate-700 transition flex items-center justify-center">+</button>
+                        <span class="text-slate-500 text-sm ml-2" id="maxGostovInfo"></span>
+                    </div>
+                </div>
+                <div id="cenaSummary" class="rounded-2xl bg-gradient-to-br from-blue-50 to-teal-50 border border-blue-100 px-5 py-4" style="display:none;">
+                    <div class="flex items-center justify-between text-sm text-slate-600 mb-1">
+                        <span id="cenaPodrobnosti"></span>
+                        <span id="cenaVmesna"></span>
+                    </div>
+                    <div class="flex items-center justify-between font-extrabold text-slate-900 text-lg border-t border-blue-200 pt-2 mt-2">
+                        <span>Skupaj</span>
+                        <span id="cenaSkupaj" class="text-blue-600 text-2xl"></span>
+                    </div>
+                </div>
+                <div id="modalNapaka" class="hidden rounded-xl bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm font-semibold"></div>
+                <div id="modalUspeh" class="hidden rounded-xl bg-green-50 border border-green-200 text-green-700 px-4 py-3 text-sm font-semibold flex items-center gap-2">
+                    <span class="text-xl">✅</span>
+                    <span>Rezervacija je bila uspešno poslana! Kmalu vas bomo kontaktirali.</span>
+                </div>
+            </div>
+            <div class="px-8 pb-8">
+                <button id="btnPotrdiRezervacijo" onclick="potrdiRezervacijo()" class="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-teal-500 text-white font-extrabold text-lg hover:opacity-90 hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-lg flex items-center justify-center gap-3">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span id="btnPotrdiText">Potrdi rezervacijo</span>
+                </button>
+                <p class="text-center text-xs text-slate-400 mt-3">Rezervacija ni zavezujoča &middot; Brezplačna odpoved do 48h pred prihodom</p>
+            </div>
+        </div>
+    </div>
+    <!-- REZERVACIJSKI MODAL END -->
+
+    <!--footer-->
+    <footer class="bg-slate-950 text-white px-6 pt-20 pb-10">
+
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-4 gap-10 border-b border-white/10 pb-10">
+
+            <div>
+                <h3 class="text-2xl font-bold mb-4">UniqueStays</h3>
+
+                <p class="text-white/60 leading-relaxed mb-5">
+                    Najdite svoj popoln pobeg na najbolj posebnih krajih sveta.
+                </p>
             </div>
 
-            <p class="text-slate-500 text-sm">
-                © 2024 UniqueStays. Vse pravice pridržane.
-            </p>
+            <div>
+                <h3 class="font-bold text-lg mb-4">Podpora</h3>
+
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="#" class="hover:text-white transition">Pomoč center</a></li>
+                    <li><a href="#" class="hover:text-white transition">Kontakt</a></li>
+                    <li><a href="#" class="hover:text-white transition">Pogosta vprašanja</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-lg mb-4">Podjetje</h3>
+
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="#" class="hover:text-white transition">O nas</a></li>
+                    <li><a href="#" class="hover:text-white transition">Blog</a></li>
+                    <li><a href="#" class="hover:text-white transition">Partnerji</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-lg mb-4">Pravno</h3>
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="pogoji.html" class="hover:text-white transition">Pogoji uporabe</a></li>
+                    <li><a href="zasebnost.html" class="hover:text-white transition">Politika zasebnosti</a></li>
+                    <li><a href="#" class="hover:text-white transition">Piškotki</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto pt-8 text-center text-white/40 text-sm">
+            © 2026 UniqueStays. Vse pravice pridržane.
         </div>
     </footer>
 
@@ -321,7 +430,8 @@
     <!-- Leaflet Routing Machine -->
     <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 
-    <script src="podrobnosti.js"></script>
+    <script src="js/podrobnosti.js"></script>
+        <script src="js/nav.js"></script>
 
 
 </body>

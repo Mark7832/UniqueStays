@@ -630,6 +630,86 @@ app.get('/api/prenocisce/:id/dozivetja', async (req, res) => {
     }
 });
 
+// REZERVACIJA - vrni zasedene datume za prenočišče
+app.get('/api/rezervacija/:id/zasedeni', async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const rezervacije = await db('Rezervacija')
+            .where('TK_prenocisce', id)
+            .where('rezervirano', true)
+            .select('datum_od', 'datum_do');
+
+        const termini = await db('Nerazpolozljiv_termin')
+            .where('TK_prenocisce', id)
+            .select('datum_od', 'datum_do');
+
+        res.json({ rezervacije, termini });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri pridobivanju zasedenosti.' });
+    }
+});
+
+// REZERVACIJA - ustvari novo rezervacijo
+app.post('/api/rezervacija', preveriToken, async (req, res) => {
+    try {
+        const { ID_prenocisce, datum_prihoda, datum_odhoda } = req.body;
+
+        if (!ID_prenocisce || !datum_prihoda || !datum_odhoda) {
+            return res.status(400).json({ napaka: 'Manjkajo obvezni podatki.' });
+        }
+
+        const prenocisce = await db('Prenocisce').where('ID_prenocisce', ID_prenocisce).first();
+        if (!prenocisce) {
+            return res.status(404).json({ napaka: 'Prenočišče ne obstaja.' });
+        }
+
+        // Preveri prekrivanje z obstoječimi rezervacijami
+        const prekrivanje = await db('Rezervacija')
+            .where('TK_prenocisce', ID_prenocisce)
+            .where('rezervirano', true)
+            .where(function () {
+                this.where('datum_od', '<', datum_odhoda)
+                    .andWhere('datum_do', '>', datum_prihoda);
+            })
+            .first();
+
+        if (prekrivanje) {
+            return res.status(409).json({ napaka: 'Prenočišče je v izbranem obdobju že zasedeno. Izberite druge datume.' });
+        }
+
+        // Preveri prekrivanje z nedosegljivimi termini
+        const nedosegljivo = await db('Nerazpolozljiv_termin')
+            .where('TK_prenocisce', ID_prenocisce)
+            .where(function () {
+                this.where('datum_od', '<', datum_odhoda)
+                    .andWhere('datum_do', '>', datum_prihoda);
+            })
+            .first();
+
+        if (nedosegljivo) {
+            return res.status(409).json({ napaka: 'Prenočišče ni dosegljivo v izbranem obdobju. Izberite druge datume.' });
+        }
+
+        const danes = new Date().toISOString().split('T')[0];
+
+        const [id] = await db('Rezervacija').insert({
+            datum_od: datum_prihoda,
+            datum_do: datum_odhoda,
+            datum_rezervacije: danes,
+            rezervirano: true,
+            TK_prenocisce: ID_prenocisce,
+            TK_uporabnik: req.uporabnik.id
+        });
+
+        res.status(201).json({ uspeh: true, ID_rezervacija: id });
+    } catch (err) {
+        console.error('Napaka pri rezervaciji:', err);
+        res.status(500).json({ napaka: 'Napaka pri shranjevanju rezervacije.' });
+    }
+});
+
 // Zagon strežnika
 app.listen(PORT, () => {
     console.log(`Server teče na http://localhost:${PORT}`);
