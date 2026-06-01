@@ -142,6 +142,7 @@ async function naloziPodatke() {
         
         const data = await response.json();
         prikaziPodatke(data);  // ← lastnikId se nastavi tukaj
+        preveriPriljubljeno(prenocisceId);
         
         naloziSporocila(prenocisceId);  // ← šele potem naloži sporočila
         
@@ -827,4 +828,38 @@ async function posljiOdgovor(sporosiloId) {
     } catch (err) {
         console.error('Napaka pri pošiljanju odgovora:', err);
     }
+}
+
+// PRILJUBLJENO 
+
+let jePriljubljeno = false;
+
+async function preveriPriljubljeno(prenocisceId) {
+    const token = sessionStorage.getItem('token');
+    if (!token) return;
+    try {
+        const res = await fetch(`${API_URL}/priljubljeno/${prenocisceId}`, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        jePriljubljeno = data.priljubljeno;
+        document.getElementById('btnPriljubljeno').textContent = jePriljubljeno ? '♥' : '♡';
+        document.getElementById('btnPriljubljeno').classList.toggle('active', jePriljubljeno);
+    } catch (err) {}
+}
+
+async function togglePriljubljeno() {
+    const token = sessionStorage.getItem('token');
+    if (!token) { window.location.href = 'login.html'; return; }
+    const prenocisceId = new URLSearchParams(window.location.search).get('id') || 2;
+    try {
+        const res = await fetch(`${API_URL}/priljubljeno/${prenocisceId}`, {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        jePriljubljeno = data.priljubljeno;
+        document.getElementById('btnPriljubljeno').textContent = jePriljubljeno ? '♥' : '♡';
+        document.getElementById('btnPriljubljeno').classList.toggle('active', jePriljubljeno);
+    } catch (err) {}
 }
