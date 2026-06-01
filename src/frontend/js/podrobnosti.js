@@ -4,6 +4,7 @@ let destinationMarker;
 let userMarker;
 let routingControl;
 let destinationCoords = null;
+let lastnikId = null;
 
 const API_URL = 'http://localhost:3000/api';
 
@@ -140,7 +141,9 @@ async function naloziPodatke() {
         }
         
         const data = await response.json();
-        prikaziPodatke(data);
+        prikaziPodatke(data);  // ← lastnikId se nastavi tukaj
+        
+        naloziSporocila(prenocisceId);  // ← šele potem naloži sporočila
         
         if (data.prenocisce && data.prenocisce.koordinate) {
             setTimeout(() => {
@@ -167,6 +170,9 @@ function prikaziPodatke(data) {
         prikaziHeroSliko(slike);
     }
     
+    // Shrani ID lastnika prenočišča
+    lastnikId = prenocisce.TK_uporabnik;
+
     // Osnovni podatki
     setElementText('tipPrenocisca', `🏠 ${prenocisce.tip_prenocisca || 'Neznano'} • Slovenija`);
     setElementText('nazivPrenocisca', prenocisce.naziv || 'Neznano prenočišče');
@@ -435,14 +441,12 @@ window.addEventListener('DOMContentLoaded', naloziPodatke);
 
 // ===================== REZERVACIJSKI MODAL =====================
 
-// Shranjeni podatki prenočišča (za ceno in max gostov)
 let _rezervacijaData = {
     naziv: '',
     cenaNaNoc: 0,
     maxGostov: 10
 };
 
-// Zasedena obdobja (naložena ob odprtju modala)
 let _zasedenObdobja = [];
 
 function jeZaseden(datumStr) {
@@ -451,7 +455,7 @@ function jeZaseden(datumStr) {
 }
 
 function prvProstDatum(odStr) {
-    let d = new Date(odStr);🎭
+    let d = new Date(odStr);
     for (let i = 0; i < 365; i++) {
         const str = d.toISOString().split('T')[0];
         if (!jeZaseden(str)) return str;
@@ -481,19 +485,15 @@ async function odpriRezervacijo() {
     const panel = document.getElementById('rezervacijaPanel');
     if (!modal || !panel) return;
 
-    // Nastavi naziv
     const nazEl = document.getElementById('modalNaziv');
     if (nazEl) nazEl.textContent = _rezervacijaData.naziv || document.getElementById('nazivPrenocisca')?.textContent || '';
 
-    // Nastavi max gostov info
     const mgEl = document.getElementById('maxGostovInfo');
     if (mgEl) mgEl.textContent = `(max ${_rezervacijaData.maxGostov})`;
 
-    // Skrij napake/uspeh
     document.getElementById('modalNapaka')?.classList.add('hidden');
     document.getElementById('modalUspeh')?.classList.add('hidden');
 
-    // Prikaži modal takoj (med nalaganjem)
     modal.style.display = 'flex';
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -503,12 +503,10 @@ async function odpriRezervacijo() {
     });
     document.body.style.overflow = 'hidden';
 
-    // Naloži zasedene datume
     const urlParams = new URLSearchParams(window.location.search);
     const prenocisceId = urlParams.get('id') || 2;
     await naloziZasedenost(prenocisceId);
 
-    // Nastavi datume (preskoči zasedene)
     const danes = new Date().toISOString().split('T')[0];
     const prihodStr = prvProstDatum(danes);
 
@@ -521,7 +519,6 @@ async function odpriRezervacijo() {
     if (prihod) { prihod.min = danes; prihod.value = prihodStr; }
     if (odhod)  { odhod.min  = danes; odhod.value  = odhodStr; }
 
-    // Opozori ob izbiri zasedenega datuma
     prihod?.addEventListener('change', onPrihodChange);
     odhod?.addEventListener('change', onOdhodChange);
 
@@ -546,7 +543,6 @@ function onOdhodChange() {
     const napaka = document.getElementById('modalNapaka');
     const prihodVal = document.getElementById('datumPrihod')?.value;
 
-    // Preveri ali katerikoli datum v obdobju pade v zasedeno
     if (prihodVal && el.value) {
         const od = new Date(prihodVal);
         const do_ = new Date(el.value);
@@ -578,7 +574,6 @@ function zapriRezervacijo() {
     setTimeout(() => { modal.style.display = 'none'; }, 200);
     document.body.style.overflow = '';
 
-    // Odstrani event listenerje
     document.getElementById('datumPrihod')?.removeEventListener('change', onPrihodChange);
     document.getElementById('datumOdhod')?.removeEventListener('change', onOdhodChange);
 }
@@ -590,7 +585,6 @@ function spremembaGostov(delta) {
     val = Math.max(1, Math.min(val, _rezervacijaData.maxGostov || 10));
     el.textContent = val;
 
-    // Animacija
     el.classList.add('scale-125', 'text-blue-600');
     setTimeout(() => el.classList.remove('scale-125', 'text-blue-600'), 200);
 }
@@ -607,7 +601,6 @@ function posodobiCeno() {
     const noci = Math.round((o - p) / 86400000);
 
     if (noci <= 0) {
-        // Popravi odhod
         const novOdhod = new Date(p); novOdhod.setDate(novOdhod.getDate() + 1);
         const odEl = document.getElementById('datumOdhod');
         if (odEl) odEl.value = novOdhod.toISOString().split('T')[0];
@@ -637,7 +630,6 @@ async function potrdiRezervacijo() {
     const odhodVal  = document.getElementById('datumOdhod')?.value;
     const gostov    = parseInt(document.getElementById('steviloGostov')?.textContent) || 1;
 
-    // Validacija
     if (!prihodVal || !odhodVal) {
         if (napaka) { napaka.textContent = '❌ Prosimo izberite datume prihoda in odhoda.'; napaka.classList.remove('hidden'); }
         return;
@@ -647,7 +639,6 @@ async function potrdiRezervacijo() {
         return;
     }
 
-    // Preveri prijavo (JWT iz sessionStorage)
     const token = sessionStorage.getItem('token');
     if (!token) {
         if (napaka) { napaka.textContent = '❌ Za rezervacijo se morate prijaviti.'; napaka.classList.remove('hidden'); }
@@ -655,11 +646,9 @@ async function potrdiRezervacijo() {
         return;
     }
 
-    // Prikaži nalaganje
     if (btn) btn.disabled = true;
     if (btnTxt) btnTxt.textContent = 'Pošiljam rezervacijo...';
 
-    // Pridobi ID prenočišča iz URL
     const urlParams = new URLSearchParams(window.location.search);
     const prenocisceId = urlParams.get('id') || 2;
 
@@ -697,7 +686,145 @@ async function potrdiRezervacijo() {
     }
 }
 
-// Zapri modal ob pritisku tipke Escape
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') zapriRezervacijo();
 });
+
+// ===================== VPRAŠANJA IN ODGOVORI =====================
+
+async function naloziSporocila(prenocisceId) {
+    try {
+        const res = await fetch(`${API_URL}/sporocila/${prenocisceId}`);
+        const sporocila = await res.json();
+        prikaziSporocila(sporocila);
+    } catch (err) {
+        console.error('Napaka pri nalaganju sporočil:', err);
+    }
+}
+
+function prikaziSporocila(sporocila) {
+    const container = document.getElementById('sporosilaContainer');
+    if (!container) return;
+
+    const token = sessionStorage.getItem('token');
+    const payload = token ? JSON.parse(atob(token.split('.')[1])) : null;
+    const jeAdmin = payload?.je_admin || false;
+    const trenutniUserId = payload?.id || null;
+
+    document.getElementById('vprasanjeObrazec').classList.toggle('hidden', !token);
+    document.getElementById('prijavaZaVprasanje').classList.toggle('hidden', !!token);
+
+    if (!sporocila || sporocila.length === 0) {
+        container.innerHTML = '<p class="text-center text-slate-400">Še ni vprašanj. Bodite prvi!</p>';
+        return;
+    }
+
+    container.innerHTML = '';
+
+    sporocila.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-3xl border border-slate-200 shadow-sm p-8';
+
+        const datum = new Date(s.datum_sporocila).toLocaleDateString('sl-SI');
+        const inicialiIme = (s.ime_uporabnika || 'U').charAt(0);
+        const inicialiPriimek = (s.priimek_uporabnika || '').charAt(0);
+
+        // Pokaži textarea če je admin ALI če je lastnik tega prenočišča
+        const lahkoOdgovori = jeAdmin || (trenutniUserId !== null && trenutniUserId === lastnikId);
+
+        card.innerHTML = `
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center text-white font-bold">
+                    ${inicialiIme}${inicialiPriimek}
+                </div>
+                <div>
+                    <div class="font-bold text-slate-900">${s.ime_uporabnika || 'Neznano'} ${s.priimek_uporabnika || ''}</div>
+                    <div class="text-xs text-slate-400">${datum}</div>
+                </div>
+            </div>
+            <p class="text-slate-800 font-semibold mb-4">❓ ${s.vprasanje}</p>
+            ${s.odgovor ? `
+                <div class="bg-teal-50 border border-teal-200 rounded-2xl p-4">
+                    <p class="text-xs font-bold text-teal-600 uppercase tracking-widest mb-1">✅ Odgovor admina</p>
+                    <p class="text-slate-700">${s.odgovor}</p>
+                </div>
+            ` : `
+                <p class="text-slate-400 text-sm italic">Še ni odgovora.</p>
+                ${lahkoOdgovori ? `
+                    <div class="mt-4">
+                        <textarea id="odgovor_${s.ID_sporocila}" rows="2" placeholder="Vnesite odgovor..." class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition resize-none mb-2"></textarea>
+                        <button onclick="posljiOdgovor(${s.ID_sporocila})" class="px-6 py-2.5 rounded-full bg-teal-500 text-white font-bold hover:bg-teal-600 transition text-sm">
+                            Pošlji odgovor
+                        </button>
+                    </div>
+                ` : ''}
+            `}
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+async function posljiVprasanje() {
+    const vprasanje = document.getElementById('novoVprasanje').value.trim();
+    const napaka = document.getElementById('vprasanjeNapaka');
+    napaka.classList.add('hidden');
+
+    if (!vprasanje) {
+        napaka.textContent = 'Prosimo vnesite vprašanje.';
+        napaka.classList.remove('hidden');
+        return;
+    }
+
+    const token = sessionStorage.getItem('token');
+    const urlParams = new URLSearchParams(window.location.search);
+    const prenocisceId = urlParams.get('id') || 2;
+
+    try {
+        const res = await fetch(`${API_URL}/sporocila`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ vprasanje, TK_prenocisce: prenocisceId })
+        });
+
+        if (res.ok) {
+            document.getElementById('novoVprasanje').value = '';
+            naloziSporocila(prenocisceId);
+        } else {
+            const err = await res.json();
+            napaka.textContent = err.napaka || 'Napaka pri pošiljanju.';
+            napaka.classList.remove('hidden');
+        }
+    } catch (err) {
+        napaka.textContent = 'Napaka pri povezavi s strežnikom.';
+        napaka.classList.remove('hidden');
+    }
+}
+
+async function posljiOdgovor(sporosiloId) {
+    const odgovor = document.getElementById(`odgovor_${sporosiloId}`).value.trim();
+    if (!odgovor) return;
+
+    const token = sessionStorage.getItem('token');
+
+    try {
+        const res = await fetch(`${API_URL}/sporocila/${sporosiloId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ odgovor })
+        });
+
+        if (res.ok) {
+            const urlParams = new URLSearchParams(window.location.search);
+            naloziSporocila(urlParams.get('id') || 2);
+        }
+    } catch (err) {
+        console.error('Napaka pri pošiljanju odgovora:', err);
+    }
+}
