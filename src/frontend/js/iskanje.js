@@ -267,3 +267,38 @@ function prikaziZemljevid() {
         map.fitBounds(group.getBounds().pad(0.2));
     }
 }
+
+// Nalaganje destinacij za index.html
+async function naloziDestinacije() {
+    const container = document.getElementById('destinacijeContainer');
+    if (!container) return;
+
+    try {
+        const res = await fetch('http://localhost:3000/isci_prenocisca');
+        const prenocisca = await res.json();
+
+        if (!Array.isArray(prenocisca) || prenocisca.length === 0) {
+            container.innerHTML = '<p class="text-slate-400 col-span-full text-center">Ni destinacij.</p>';
+            return;
+        }
+
+        container.innerHTML = prenocisca.map(p => `
+            <a href="podrobnosti.html?id=${p.ID_prenocisce}" 
+               class="destination-card"
+               style="background-image: url('${p.cover_slika || 'images/default.jpg'}')">
+                <div>
+                    <span class="destination-badge">🌼 ${p.sezona}</span>
+                    <h3 class="destination-title">${p.naziv}</h3>
+                    <p class="destination-text">${p.naslov}</p>
+                </div>
+            </a>
+        `).join('');
+
+    } catch (err) {
+        console.error('Napaka pri nalaganju destinacij:', err);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    naloziDestinacije();
+});
