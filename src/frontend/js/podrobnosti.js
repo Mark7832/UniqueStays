@@ -451,7 +451,7 @@ function jeZaseden(datumStr) {
 }
 
 function prvProstDatum(odStr) {
-    let d = new Date(odStr);🎭
+    let d = new Date(odStr);
     for (let i = 0; i < 365; i++) {
         const str = d.toISOString().split('T')[0];
         if (!jeZaseden(str)) return str;
