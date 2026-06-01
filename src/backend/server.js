@@ -772,6 +772,10 @@ app.put('/api/sporocila/:id', preveriToken, async (req, res) => {
             .where('TK_uporabnik', req.uporabnik.id)
             .first();
 
+        console.log('uporabnik id:', req.uporabnik.id);
+        console.log('lastnik prenocisca:', jeLastnik);
+        console.log('je admin:', req.uporabnik.je_admin);
+
         if (!jeAdmin && !jeLastnik) {
             return res.status(403).json({ napaka: 'Nimate pravice odgovoriti na to sporočilo.' });
         }
