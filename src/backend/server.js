@@ -791,6 +791,64 @@ app.put('/api/sporocila/:id', preveriToken, async (req, res) => {
     }
 });
 
+//PRILJUBLJENO
+app.get('/api/priljubljeno/:id', preveriToken, async (req, res) => {
+    try {
+        const vnos = await db('Priljubljeno')
+            .where('TK_uporabnik', req.uporabnik.id)
+            .where('TK_prenocisce', req.params.id)
+            .first();
+        res.json({ priljubljeno: !!vnos });
+    } catch (err) {
+        res.status(500).json({ napaka: 'Napaka.' });
+    }
+});
+
+app.post('/api/priljubljeno/:id', preveriToken, async (req, res) => {
+    try {
+        const obstoječe = await db('Priljubljeno')
+            .where('TK_uporabnik', req.uporabnik.id)
+            .where('TK_prenocisce', req.params.id)
+            .first();
+        if (obstoječe) {
+            await db('Priljubljeno')
+                .where('TK_uporabnik', req.uporabnik.id)
+                .where('TK_prenocisce', req.params.id)
+                .del();
+            res.json({ priljubljeno: false });
+        } else {
+            await db('Priljubljeno').insert({
+                datum: new Date().toISOString().split('T')[0],
+                TK_uporabnik: req.uporabnik.id,
+                TK_prenocisce: req.params.id
+            });
+            res.json({ priljubljeno: true });
+        }
+    } catch (err) {
+        res.status(500).json({ napaka: 'Napaka.' });
+    }
+});
+
+
+// Pridobi seznam priljubljenih prenočišč prijavljenega uporabnika
+app.get('/api/priljubljeno', preveriToken, async (req, res) => {
+    try {
+        const priljubljena = await db('Priljubljeno')
+            .join('Prenocisce', 'Priljubljeno.TK_prenocisce', 'Prenocisce.ID_prenocisce')
+            .where('Priljubljeno.TK_uporabnik', req.uporabnik.id)
+            .select(
+                'Prenocisce.ID_prenocisce as id',
+                'Prenocisce.naziv',
+                'Prenocisce.cena_na_noc as cena'
+            );
+
+        res.json(priljubljena);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri pridobivanju priljubljenih.' });
+    }
+});
+
 // Zagon strežnika
 app.listen(PORT, () => {
     console.log(`Server teče na http://localhost:${PORT}`);
