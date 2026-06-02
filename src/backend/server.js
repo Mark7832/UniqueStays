@@ -792,6 +792,8 @@ app.put('/api/sporocila/:id', preveriToken, async (req, res) => {
 });
 
 //PRILJUBLJENO
+
+//ali je prenocisce dodano v priljubleno (srcek)
 app.get('/api/priljubljeno/:id', preveriToken, async (req, res) => {
     try {
         const vnos = await db('Priljubljeno')
@@ -804,6 +806,7 @@ app.get('/api/priljubljeno/:id', preveriToken, async (req, res) => {
     }
 });
 
+//dodaj oz odstrani iz priljubljeno (prodrobnosti.html)
 app.post('/api/priljubljeno/:id', preveriToken, async (req, res) => {
     try {
         const obstoječe = await db('Priljubljeno')
@@ -830,7 +833,7 @@ app.post('/api/priljubljeno/:id', preveriToken, async (req, res) => {
 });
 
 
-// Pridobi seznam priljubljenih prenočišč prijavljenega uporabnika
+// pridobi podatke in vrne seznam priljubljenih prenočišč prijavljenega uporabnika
 app.get('/api/priljubljeno', preveriToken, async (req, res) => {
     try {
         const priljubljena = await db('Priljubljeno')
@@ -846,6 +849,19 @@ app.get('/api/priljubljeno', preveriToken, async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ napaka: 'Napaka pri pridobivanju priljubljenih.' });
+    }
+});
+
+// izbrise prenočišče iz seznama priljubljenih (profil.html)
+app.delete('/api/priljubljeno/:id', preveriToken, async (req, res) => {
+    try {
+        await db('Priljubljeno')
+            .where('TK_uporabnik', req.uporabnik.id)
+            .where('TK_prenocisce', req.params.id)
+            .del();
+        res.json({ uspeh: true });
+    } catch (err) {
+        res.status(500).json({ napaka: 'Napaka.' });
     }
 });
 

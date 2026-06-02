@@ -403,26 +403,24 @@ async function naloziPriljubljene() {
     }
 }
 
-// Odstrani priljubljeno prenočišče
+// Odstrani priljubljeno prenočišče iz seznama
 async function odstraniPriljubljeno(id) {
+    if (!confirm('Ste prepričani, da želite odstraniti iz priljubljenih?')) return;
     const token = sessionStorage.getItem('token');
     if (!token) return;
 
     try {
         await fetch(`http://localhost:3000/api/priljubljeno/${id}`, {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
+            method: 'DELETE',
+            headers: { 'Authorization': 'Bearer ' + token }
         });
-
-        naloziPriljubljene(); // refresh
+        naloziPriljubljene();
     } catch (err) {
         console.error('Napaka pri odstranjevanju:', err);
     }
 }
 
-// auto-load ob odprtju strani
+// samodejno nalozi seznam priljubljenih ob odprtju strani
 document.addEventListener("DOMContentLoaded", () => {
     naloziPriljubljene();
 });

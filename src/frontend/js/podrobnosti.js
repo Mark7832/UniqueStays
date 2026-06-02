@@ -832,8 +832,10 @@ async function posljiOdgovor(sporosiloId) {
 
 // PRILJUBLJENO 
 
+// hrani trenutno stanje priljubljenega prenočišča
 let jePriljubljeno = false;
 
+// preveri ali je trenutno prenočišče dodano med priljubljene in nastavi prikaz srčka
 async function preveriPriljubljeno(prenocisceId) {
     const token = sessionStorage.getItem('token');
     if (!token) return;
@@ -848,8 +850,10 @@ async function preveriPriljubljeno(prenocisceId) {
     } catch (err) {}
 }
 
+// doda ali odstrani prenočišče iz priljubljenih ob kliku na srček
 async function togglePriljubljeno() {
     const token = sessionStorage.getItem('token');
+     // preusmeri na prijavo če uporabnik ni prijavljen
     if (!token) { window.location.href = 'login.html'; return; }
     const prenocisceId = new URLSearchParams(window.location.search).get('id') || 2;
     try {
@@ -858,7 +862,9 @@ async function togglePriljubljeno() {
             headers: { 'Authorization': 'Bearer ' + token }
         });
         const data = await res.json();
+        // posodobi stanje priljubljenega prenočišča
         jePriljubljeno = data.priljubljeno;
+          // spremeni prikaz srčka glede na stanje
         document.getElementById('btnPriljubljeno').textContent = jePriljubljeno ? '♥' : '♡';
         document.getElementById('btnPriljubljeno').classList.toggle('active', jePriljubljeno);
     } catch (err) {}
