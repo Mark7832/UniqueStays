@@ -41,22 +41,18 @@
             </a>
 
             <div class="flex flex-wrap items-center justify-center gap-5">
-                <a href="index.html#destinations" class="font-semibold hover:text-blue-600 transition">Destinacije</a>
+                <a href="#destinations" class="font-semibold hover:text-blue-600 transition">Destinacije</a>
                 <a href="#about" class="font-semibold hover:text-blue-600 transition">O nas</a>
 
-                <a id="btnPrijava" href="login.html"
-                    class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                <a id="btnPrijava" href="login.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
                     Prijava
                 </a>
-                <a id="btnRegistracija" href="register.html"
-                    class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                <a id="btnRegistracija" href="register.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
                     Registracija
                 </a>
                 <div id="btnOdjava" class="hidden flex items-center gap-3">
-                    <a href="profile.html" id="imeUporabnika"
-                        class="font-semibold text-slate-700 hover:text-blue-600 transition"></a>
-                    <button onclick="odjava()"
-                        class="px-5 py-2.5 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition-all duration-200 hover:-translate-y-1">
+                    <a href="profile.html" id="imeUporabnika" class="font-semibold text-slate-700 hover:text-blue-600 transition"></a>
+                    <button onclick="odjava()" class="px-5 py-2.5 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition-all duration-200 hover:-translate-y-1">
                         Odjava
                     </button>
                 </div>
@@ -64,13 +60,7 @@
         </nav>
     </header>
 
-    <!-- DEBUG INFO -->
-    <div id="debugInfo"
-        class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 max-w-7xl mx-auto mt-4 rounded"
-        style="display: none;">
-        <p class="font-bold">🔍 Debug informacije:</p>
-        <p id="debugText">Nalaganje...</p>
-    </div>
+
 
     <!-- HERO -->
     <section id="heroSection"
@@ -395,6 +385,30 @@
                         <span class="text-slate-500 text-sm ml-2" id="maxGostovInfo"></span>
                     </div>
                 </div>
+                <!-- PREGLEDNICA ZASEDENIH DATUMOV -->
+                <div id="zasedenostKalendar" class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <button onclick="kalendarPrejsniMesec()" class="w-8 h-8 rounded-full hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold transition">‹</button>
+                        <h4 id="kalendarNaslov" class="text-sm font-bold text-slate-700 uppercase tracking-wider"></h4>
+                        <button onclick="kalendarNaslednjMesec()" class="w-8 h-8 rounded-full hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold transition">›</button>
+                    </div>
+                    <div class="grid grid-cols-7 gap-0.5 mb-1">
+                        <div class="text-center text-xs font-bold text-slate-400 py-1">Po</div>
+                        <div class="text-center text-xs font-bold text-slate-400 py-1">To</div>
+                        <div class="text-center text-xs font-bold text-slate-400 py-1">Sr</div>
+                        <div class="text-center text-xs font-bold text-slate-400 py-1">Če</div>
+                        <div class="text-center text-xs font-bold text-slate-400 py-1">Pe</div>
+                        <div class="text-center text-xs font-bold text-slate-400 py-1">So</div>
+                        <div class="text-center text-xs font-bold text-slate-400 py-1">Ne</div>
+                    </div>
+                    <div id="kalendarDni" class="grid grid-cols-7 gap-0.5"></div>
+                    <div class="flex items-center gap-4 mt-3 text-xs text-slate-500">
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-red-400 inline-block"></span> Zasedeno</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-blue-500 inline-block"></span> Izbrano</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-white border border-slate-300 inline-block"></span> Prosto</span>
+                    </div>
+                </div>
+
                 <div id="cenaSummary"
                     class="rounded-2xl bg-gradient-to-br from-blue-50 to-teal-50 border border-blue-100 px-5 py-4"
                     style="display:none;">
