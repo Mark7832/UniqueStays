@@ -49,7 +49,7 @@ async function napolniBazo() {
             { ime_uporabnika: 'Nina', priimek_uporabnika: 'Potočnik', email: 'nina@gmail.com', drzava: 'Rusija', geslo: await bcrypt.hash('nina987', 10), je_admin: false, ustvarjen_od: '2024-05-01' },
             { ime_uporabnika: 'Rok', priimek_uporabnika: 'Mlinar', email: 'rok@gmail.com', drzava: 'Madzarska', geslo: await bcrypt.hash('rok111', 10), je_admin: false, ustvarjen_od: '2024-05-15' },
             { ime_uporabnika: 'Petra', priimek_uporabnika: 'Mlakar', email: 'petra@gmail.com', drzava: 'Estonija', geslo: await bcrypt.hash('petra222', 10), je_admin: false, ustvarjen_od: '2024-06-01' },
-            { ime_uporabnika: 'Urh', priimek_uporabnika: 'Vidmar', email: 'urh28@gmail.com', drzava: 'Slovenija', geslo: await bcrypt.hash('urh333', 10), je_admin: false, ustvarjen_od: '2024-06-10' }
+            { ime_uporabnika: 'Urh', priimek_uporabnika: 'Vidmar', email: 'uniquestaystest@gmail.com', drzava: 'Slovenija', geslo: await bcrypt.hash('geslo123', 10), je_admin: false, ustvarjen_od: '2024-06-10' }
         ];
 
         await knex('Uporabnik').insert(Uporabnik);
