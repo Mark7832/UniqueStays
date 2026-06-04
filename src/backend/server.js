@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const authRouter = require('./routes/auth');
 const { preveriToken, preveriAdmin } = require('./routes/auth');
+const { get } = require('http');
 
 const app = express();
 const PORT = 3000;
@@ -772,10 +773,6 @@ app.put('/api/sporocila/:id', preveriToken, async (req, res) => {
             .where('TK_uporabnik', req.uporabnik.id)
             .first();
 
-        console.log('uporabnik id:', req.uporabnik.id);
-        console.log('lastnik prenocisca:', jeLastnik);
-        console.log('je admin:', req.uporabnik.je_admin);
-
         if (!jeAdmin && !jeLastnik) {
             return res.status(403).json({ napaka: 'Nimate pravice odgovoriti na to sporočilo.' });
         }
@@ -789,7 +786,7 @@ app.put('/api/sporocila/:id', preveriToken, async (req, res) => {
         console.error(err);
         res.status(500).json({ napaka: 'Napaka pri shranjevanju odgovora.' });
     }
-});
+}); 
 
 // Zagon strežnika
 app.listen(PORT, () => {
