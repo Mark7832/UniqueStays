@@ -871,6 +871,13 @@ function prikaziSporocila(sporocila) {
 
         // Pokaži textarea če je admin ALI če je lastnik tega prenočišča
         const lahkoOdgovori = jeAdmin || (trenutniUserId !== null && trenutniUserId === lastnikId);
+        
+        let odgovoril = '';
+        if (jeAdmin) {
+            odgovoril = 'Admin';
+        } else if (trenutniUserId !== null && trenutniUserId === lastnikId) {
+            odgovoril = 'Lastnik';
+        }
 
         card.innerHTML = `
             <div class="flex items-center gap-3 mb-4">
@@ -885,7 +892,7 @@ function prikaziSporocila(sporocila) {
             <p class="text-slate-800 font-semibold mb-4">❓ ${s.vprasanje}</p>
             ${s.odgovor ? `
                 <div class="bg-teal-50 border border-teal-200 rounded-2xl p-4">
-                    <p class="text-xs font-bold text-teal-600 uppercase tracking-widest mb-1">✅ Odgovor admina</p>
+                    <p class="text-xs font-bold text-teal-600 uppercase tracking-widest mb-1">✅ Odgovor ${odgovoril}</p>
                     <p class="text-slate-700">${s.odgovor}</p>
                 </div>
             ` : `
