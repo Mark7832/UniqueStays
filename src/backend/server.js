@@ -4,8 +4,135 @@ const knex = require('knex');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
 const authRouter = require('./routes/auth');
 const { preveriToken, preveriAdmin } = require('./routes/auth');
+const nodemailer = require('nodemailer');
+
+// ===== EMAIL KONFIGURACIJA =====
+// Nastavite svoje SMTP podatke v spremenljivkah okolja (.env)
+// EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS, EMAIL_FROM
+const emailTransporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.EMAIL_PORT) || 587,
+    secure: false,
+    auth: {
+        user: process.env.EMAIL_USER || '',
+        pass: process.env.EMAIL_PASS || ''
+    }
+});
+
+async function posljiPotrditevRezervacije({ email, ime, naziv, prihod, odhod, gostov, noci, cena, rezervacijaId }) {
+    const formatirajDatum = (str) => {
+        const d = new Date(str);
+        return d.toLocaleDateString('sl-SI', { day: 'numeric', month: 'long', year: 'numeric' });
+    };
+
+    const html = `
+    <!DOCTYPE html>
+    <html lang="sl">
+    <head><meta charset="UTF-8"/></head>
+    <body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,Helvetica,sans-serif;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:40px 0;">
+        <tr><td align="center">
+          <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+            <!-- HEADER -->
+            <tr>
+              <td style="background:linear-gradient(135deg,#2563eb,#14b8a6);padding:40px 40px 32px;text-align:center;">
+                <div style="font-size:48px;margin-bottom:8px;">✅</div>
+                <h1 style="color:#ffffff;font-size:28px;font-weight:800;margin:0 0 8px;">Rezervacija potrjena!</h1>
+                <p style="color:rgba(255,255,255,0.85);font-size:16px;margin:0;">Hvala, ${ime}. Vaša rezervacija je bila uspešno oddana.</p>
+              </td>
+            </tr>
+
+            <!-- TELO -->
+            <tr>
+              <td style="padding:36px 40px;">
+
+                <!-- Prenočišče -->
+                <div style="background:#f8fafc;border-radius:16px;padding:20px 24px;margin-bottom:24px;border-left:4px solid #2563eb;">
+                  <p style="font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin:0 0 6px;">🏠 Prenočišče</p>
+                  <p style="font-size:22px;font-weight:800;color:#0f172a;margin:0;">${naziv}</p>
+                </div>
+
+                <!-- Datumi -->
+                <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                  <tr>
+                    <td width="48%" style="background:#eff6ff;border-radius:16px;padding:20px;text-align:center;">
+                      <p style="font-size:11px;font-weight:700;color:#3b82f6;text-transform:uppercase;margin:0 0 6px;">📅 Prihod</p>
+                      <p style="font-size:18px;font-weight:800;color:#0f172a;margin:0;">${formatirajDatum(prihod)}</p>
+                    </td>
+                    <td width="4%"></td>
+                    <td width="48%" style="background:#f0fdfa;border-radius:16px;padding:20px;text-align:center;">
+                      <p style="font-size:11px;font-weight:700;color:#14b8a6;text-transform:uppercase;margin:0 0 6px;">📅 Odhod</p>
+                      <p style="font-size:18px;font-weight:800;color:#0f172a;margin:0;">${formatirajDatum(odhod)}</p>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Statistike -->
+                <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                  <tr>
+                    <td width="31%" style="background:#f8fafc;border-radius:16px;padding:16px;text-align:center;">
+                      <div style="font-size:28px;">🌙</div>
+                      <p style="font-size:24px;font-weight:800;color:#0f172a;margin:4px 0 2px;">${noci}</p>
+                      <p style="font-size:12px;color:#64748b;font-weight:600;margin:0;">Noči</p>
+                    </td>
+                    <td width="3%"></td>
+                    <td width="31%" style="background:#f8fafc;border-radius:16px;padding:16px;text-align:center;">
+                      <div style="font-size:28px;">👥</div>
+                      <p style="font-size:24px;font-weight:800;color:#0f172a;margin:4px 0 2px;">${gostov}</p>
+                      <p style="font-size:12px;color:#64748b;font-weight:600;margin:0;">Gostov</p>
+                    </td>
+                    <td width="3%"></td>
+                    <td width="31%" style="background:#eff6ff;border-radius:16px;padding:16px;text-align:center;border:2px solid #bfdbfe;">
+                      <div style="font-size:28px;">💰</div>
+                      <p style="font-size:24px;font-weight:800;color:#2563eb;margin:4px 0 2px;">${parseFloat(cena).toFixed(2)} €</p>
+                      <p style="font-size:12px;color:#64748b;font-weight:600;margin:0;">Skupaj</p>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Opomba -->
+                <div style="background:#fffbeb;border-radius:16px;padding:16px 20px;border:1px solid #fcd34d;margin-bottom:28px;">
+                  <p style="font-size:14px;color:#92400e;margin:0;">
+                    ℹ️ <strong>Opomba:</strong> Rezervacija ni zavezujoča. Brezplačna odpoved do 48 ur pred prihodom.
+                    Lastnik prenočišča vas bo kmalu kontaktiral za potrditev.
+                  </p>
+                </div>
+
+                <!-- ID rezervacije -->
+                <p style="font-size:13px;color:#94a3b8;text-align:center;margin:0;">
+                  Identifikacijska številka rezervacije: <strong>#${rezervacijaId}</strong>
+                </p>
+
+              </td>
+            </tr>
+
+            <!-- FOOTER -->
+            <tr>
+              <td style="background:#0f172a;padding:24px 40px;text-align:center;">
+                <p style="color:rgba(255,255,255,0.5);font-size:13px;margin:0;">
+                  © 2026 ✨ UniqueStays — Vse pravice pridržane
+                </p>
+              </td>
+            </tr>
+
+          </table>
+        </td></tr>
+      </table>
+    </body>
+    </html>
+    `;
+
+    await emailTransporter.sendMail({
+        from: `"UniqueStays ✨" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
+        to: email,
+        subject: `✅ Rezervacija potrjena – ${naziv}`,
+        html
+    });
+}
 
 const app = express();
 const PORT = 3000;
@@ -887,6 +1014,36 @@ app.post('/api/rezervacija', preveriToken, async (req, res) => {
             TK_prenocisce: ID_prenocisce,
             TK_uporabnik: req.uporabnik.id
         });
+
+        // Pošlji potrditveni email (asinhrono – ne blokira odgovora)
+        try {
+            const uporabnik = await db('Uporabnik')
+                .where('ID_uporabnik', req.uporabnik.id)
+                .select('ime_uporabnika', 'email')
+                .first();
+
+            if (uporabnik && uporabnik.email) {
+                const noci = Math.round(
+                    (new Date(datum_odhoda) - new Date(datum_prihoda)) / 86400000
+                );
+                const cena = noci * (prenocisce.cena_na_noc || 0);
+                const gostov = req.body.stevilo_gostov || 1;
+
+                posljiPotrditevRezervacije({
+                    email:        uporabnik.email,
+                    ime:          uporabnik.ime_uporabnika,
+                    naziv:        prenocisce.naziv,
+                    prihod:       datum_prihoda,
+                    odhod:        datum_odhoda,
+                    gostov,
+                    noci,
+                    cena,
+                    rezervacijaId: id
+                }).catch(err => console.error('⚠️  Email ni bil poslan:', err.message));
+            }
+        } catch (emailErr) {
+            console.error('⚠️  Napaka pri pripravi emaila:', emailErr.message);
+        }
 
         res.status(201).json({ uspeh: true, ID_rezervacija: id });
     } catch (err) {

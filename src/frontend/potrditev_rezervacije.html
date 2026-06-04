@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="sl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rezervacija potrjena - UniqueStays</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#14b8a6'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gradient-to-br from-slate-100 to-blue-50 min-h-screen text-slate-800 antialiased">
+
+    <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-xl">
+        <nav class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+
+            <a href="index.html" class="text-2xl font-extrabold text-slate-900">
+                ✨ UniqueStays
+            </a>
+
+            <div class="flex flex-wrap items-center justify-center gap-5">
+                <a href="#destinations" class="font-semibold hover:text-blue-600 transition">Destinacije</a>
+                <a href="#about" class="font-semibold hover:text-blue-600 transition">O nas</a>
+
+                <a id="btnPrijava" href="login.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                    Prijava
+                </a>
+                <a id="btnRegistracija" href="register.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
+                    Registracija
+                </a>
+                <div id="btnOdjava" class="hidden flex items-center gap-3">
+                    <a href="profile.html" id="imeUporabnika" class="font-semibold text-slate-700 hover:text-blue-600 transition"></a>
+                    <button onclick="odjava()" class="px-5 py-2.5 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition-all duration-200 hover:-translate-y-1">
+                        Odjava
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-6 py-16">
+
+        <!-- Checkmark animacija -->
+        <div class="flex justify-center mb-8 anim-check">
+            <div class="w-28 h-28 rounded-full bg-gradient-to-br from-green-400 to-teal-500 flex items-center justify-center shadow-2xl shadow-green-200">
+                <svg class="w-14 h-14 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Naslov -->
+        <div class="text-center mb-10 anim-fade-1">
+            <span class="inline-block px-4 py-2 rounded-full bg-green-100 text-green-700 font-bold text-sm uppercase tracking-widest mb-4">
+                ✅ Rezervacija potrjena
+            </span>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-3">
+                Hvala za rezervacijo!
+            </h1>
+            <p class="text-xl text-slate-600">
+                Vaša rezervacija je bila uspešno oddana. Kmalu boste prejeli potrditveno sporočilo.
+            </p>
+        </div>
+
+        <!-- Kartica s podrobnostmi -->
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden mb-8 anim-fade-2">
+            <div class="bg-gradient-to-r from-blue-600 to-teal-500 px-8 py-5 text-white">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl">🏠</span>
+                    <div>
+                        <p class="text-sm font-semibold opacity-80 uppercase tracking-wider">Vaša rezervacija</p>
+                        <h2 class="text-xl font-extrabold" id="potNaziv">–</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-8 py-6 space-y-4">
+                <!-- Datumi -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="rounded-2xl bg-blue-50 border border-blue-100 p-4">
+                        <p class="text-xs font-bold text-blue-500 uppercase tracking-wider mb-1">📅 Prihod</p>
+                        <p class="text-xl font-extrabold text-slate-900" id="potPrihod">–</p>
+                    </div>
+                    <div class="rounded-2xl bg-teal-50 border border-teal-100 p-4">
+                        <p class="text-xs font-bold text-teal-500 uppercase tracking-wider mb-1">📅 Odhod</p>
+                        <p class="text-xl font-extrabold text-slate-900" id="potOdhod">–</p>
+                    </div>
+                </div>
+
+                <!-- Podrobnosti -->
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="rounded-xl bg-slate-50 border border-slate-100 p-4 text-center">
+                        <p class="text-2xl mb-1">🌙</p>
+                        <p class="text-2xl font-extrabold text-slate-900" id="potNoci">–</p>
+                        <p class="text-xs text-slate-500 font-semibold mt-1">Noči</p>
+                    </div>
+                    <div class="rounded-xl bg-slate-50 border border-slate-100 p-4 text-center">
+                        <p class="text-2xl mb-1">👥</p>
+                        <p class="text-2xl font-extrabold text-slate-900" id="potGostov">–</p>
+                        <p class="text-xs text-slate-500 font-semibold mt-1">Gostov</p>
+                    </div>
+                    <div class="rounded-xl bg-gradient-to-br from-blue-50 to-teal-50 border border-blue-200 p-4 text-center">
+                        <p class="text-2xl mb-1">💰</p>
+                        <p class="text-2xl font-extrabold text-blue-600" id="potCena">–</p>
+                        <p class="text-xs text-slate-500 font-semibold mt-1">Skupaj</p>
+                    </div>
+                </div>
+
+                <!-- Opomba -->
+                <div class="flex items-start gap-3 rounded-xl bg-amber-50 border border-amber-200 p-4">
+                    <span class="text-xl mt-0.5">ℹ️</span>
+                    <p class="text-sm text-amber-800 font-medium">
+                        Rezervacija ni zavezujoča. Brezplačna odpoved do 48 ur pred prihodom.
+                        Lastnik prenočišča vas bo kontaktiral za potrditev.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Akcijski gumbi -->
+        <div class="flex flex-col sm:flex-row gap-4 anim-fade-3">
+            <a id="btnNazajNaPrenoc" href="podrobnosti.html"
+                class="flex-1 text-center py-4 rounded-2xl border-2 border-slate-300 text-slate-700 font-bold hover:border-blue-500 hover:text-blue-600 transition-all duration-200">
+                ← Nazaj na prenočišče
+            </a>
+            <a href="index.html"
+                class="flex-1 text-center py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-teal-500 text-white font-extrabold hover:opacity-90 hover:scale-[1.02] transition-all duration-200 shadow-lg">
+                🏠 Domov
+            </a>
+            <a href="profile.html"
+                class="flex-1 text-center py-4 rounded-2xl bg-slate-900 text-white font-extrabold hover:bg-slate-700 hover:scale-[1.02] transition-all duration-200 shadow-lg">
+                👤 Moj profil
+            </a>
+        </div>
+
+        <!-- Predlogi -->
+        <div class="mt-10 text-center anim-fade-4">
+            <p class="text-slate-500 text-sm mb-4">Iščete še kaj posebnega?</p>
+            <a href="iskanje.html"
+                class="inline-block px-8 py-3 rounded-full border-2 border-blue-200 text-blue-600 font-bold hover:bg-blue-50 transition-all duration-200">
+                🔍 Poiščite drugo prenočišče
+            </a>
+        </div>
+
+    </main>
+
+    <!--footer-->
+    <footer class="bg-slate-950 text-white px-6 pt-20 pb-10">
+
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-4 gap-10 border-b border-white/10 pb-10">
+
+            <div>
+                <h3 class="text-2xl font-bold mb-4">UniqueStays</h3>
+
+                <p class="text-white/60 leading-relaxed mb-5">
+                    Najdite svoj popoln pobeg na najbolj posebnih krajih sveta.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-lg mb-4">Podpora</h3>
+
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="#" class="hover:text-white transition">Pomoč center</a></li>
+                    <li><a href="#" class="hover:text-white transition">Kontakt</a></li>
+                    <li><a href="#" class="hover:text-white transition">Pogosta vprašanja</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-lg mb-4">Podjetje</h3>
+
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="#" class="hover:text-white transition">O nas</a></li>
+                    <li><a href="#" class="hover:text-white transition">Blog</a></li>
+                    <li><a href="#" class="hover:text-white transition">Partnerji</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-lg mb-4">Pravno</h3>
+                <ul class="space-y-3 text-white/60">
+                    <li><a href="pogoji.html" class="hover:text-white transition">Pogoji uporabe</a></li>
+                    <li><a href="zasebnost.html" class="hover:text-white transition">Politika zasebnosti</a></li>
+                    <li><a href="#" class="hover:text-white transition">Piškotki</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto pt-8 text-center text-white/40 text-sm">
+            © 2026 UniqueStays. Vse pravice pridržane.
+        </div>
+    </footer>
+
+    <script src="js/nav.js"></script>
+    <script src="js/potrditev_rezervacije.js"></script>
+
+</body>
+</html>
