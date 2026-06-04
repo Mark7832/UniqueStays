@@ -473,6 +473,108 @@ let _rezervacijaData = {
 
 let _zasedenObdobja = [];
 
+// ---- MINI KALENDAR ----
+let _kalendarDatum = new Date();
+
+function izrisiKalendar() {
+    const leto = _kalendarDatum.getFullYear();
+    const mesec = _kalendarDatum.getMonth();
+
+    const mesecIme = new Date(leto, mesec, 1).toLocaleDateString('sl-SI', { month: 'long', year: 'numeric' });
+    const el = document.getElementById('kalendarNaslov');
+    if (el) el.textContent = mesecIme.charAt(0).toUpperCase() + mesecIme.slice(1);
+
+    const container = document.getElementById('kalendarDni');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const prihodVal = document.getElementById('datumPrihod')?.value;
+    const odhodVal  = document.getElementById('datumOdhod')?.value;
+
+    // Začni od ponedeljka
+    const prvDan = new Date(leto, mesec, 1);
+    let zacetek = prvDan.getDay(); // 0=ned, 1=pon...
+    zacetek = zacetek === 0 ? 6 : zacetek - 1;
+
+    const danes = new Date(); danes.setHours(0,0,0,0);
+
+    // Prazne celice za poravnavo
+    for (let i = 0; i < zacetek; i++) {
+        const p = document.createElement('div');
+        container.appendChild(p);
+    }
+
+    const dniVMesecu = new Date(leto, mesec + 1, 0).getDate();
+    for (let d = 1; d <= dniVMesecu; d++) {
+        const datum = new Date(leto, mesec, d);
+        const datumStr = datum.toISOString().split('T')[0];
+        const zaseden = jeZaseden(datumStr);
+        const preteklo = datum < danes;
+        const jeIzbranPrihod = datumStr === prihodVal;
+        const jeIzbranOdhod  = datumStr === odhodVal;
+
+        let vObdobju = false;
+        if (prihodVal && odhodVal) {
+            const od = new Date(prihodVal);
+            const do_ = new Date(odhodVal);
+            vObdobju = datum > od && datum < do_;
+        }
+
+        const cell = document.createElement('div');
+        cell.textContent = d;
+        cell.className = 'text-center text-xs rounded-md py-1 cursor-pointer transition-all font-medium ';
+
+        if (preteklo) {
+            cell.className += 'text-slate-300 cursor-default';
+        } else if (zaseden) {
+            cell.className += 'bg-red-400 text-white font-bold cursor-not-allowed';
+            cell.title = 'Zasedeno';
+        } else if (jeIzbranPrihod || jeIzbranOdhod) {
+            cell.className += 'bg-blue-600 text-white font-bold shadow-sm';
+            cell.title = jeIzbranPrihod ? 'Prihod' : 'Odhod';
+        } else if (vObdobju) {
+            cell.className += 'bg-blue-100 text-blue-800';
+        } else {
+            cell.className += 'hover:bg-slate-200 text-slate-700';
+            cell.onclick = () => izberiDatum(datumStr);
+        }
+
+        container.appendChild(cell);
+    }
+}
+
+function izberiDatum(datumStr) {
+    const prihod = document.getElementById('datumPrihod');
+    const odhod  = document.getElementById('datumOdhod');
+    if (!prihod || !odhod) return;
+
+    if (!prihod.value || (prihod.value && odhod.value)) {
+        prihod.value = datumStr;
+        odhod.value = '';
+    } else {
+        if (datumStr <= prihod.value) {
+            prihod.value = datumStr;
+            odhod.value = '';
+        } else {
+            odhod.value = datumStr;
+            onOdhodChange();
+        }
+    }
+    posodobiCeno();
+    izrisiKalendar();
+}
+
+function kalendarPrejsniMesec() {
+    _kalendarDatum.setMonth(_kalendarDatum.getMonth() - 1);
+    izrisiKalendar();
+}
+
+function kalendarNaslednjMesec() {
+    _kalendarDatum.setMonth(_kalendarDatum.getMonth() + 1);
+    izrisiKalendar();
+}
+// ---- KONEC MINI KALENDAR ----
+
 function jeZaseden(datumStr) {
     const d = new Date(datumStr);
     return _zasedenObdobja.some(({ od, do_ }) => d >= od && d < do_);
@@ -546,6 +648,8 @@ async function odpriRezervacijo() {
     prihod?.addEventListener('change', onPrihodChange);
     odhod?.addEventListener('change', onOdhodChange);
 
+    _kalendarDatum = new Date();
+    izrisiKalendar();
     posodobiCeno();
 }
 
@@ -560,6 +664,7 @@ function onPrihodChange() {
         napaka.classList.add('hidden');
     }
     posodobiCeno();
+    izrisiKalendar();
 }
 
 function onOdhodChange() {
@@ -580,11 +685,13 @@ function onOdhodChange() {
             napaka.textContent = '⚠️ Izbrano obdobje vsebuje zasedene datume. Izberite drug datum odhoda.';
             napaka.classList.remove('hidden');
             el.value = '';
+            izrisiKalendar();
             return;
         }
     }
     napaka.classList.add('hidden');
     posodobiCeno();
+    izrisiKalendar();
 }
 
 function zapriRezervacijo() {
@@ -692,10 +799,21 @@ async function potrdiRezervacijo() {
         });
 
         if (response.ok) {
-            uspeh?.classList.remove('hidden');
-            if (btn) btn.disabled = true;
-            if (btnTxt) btnTxt.textContent = '✅ Rezervirano!';
-            setTimeout(() => zapriRezervacijo(), 3000);
+            const rezervacijaData = await response.json().catch(() => ({}));
+            const noci = Math.round((new Date(odhodVal) - new Date(prihodVal)) / 86400000);
+            const skupaj = noci * _rezervacijaData.cenaNaNoc;
+
+            const params = new URLSearchParams({
+                naziv: _rezervacijaData.naziv,
+                prihod: prihodVal,
+                odhod: odhodVal,
+                gostov: gostov,
+                noci: noci,
+                cena: skupaj.toFixed(2),
+                prenocisceId: prenocisceId
+            });
+
+            window.location.href = `potrditev_rezervacije.html?${params.toString()}`;
         } else {
             const err = await response.json().catch(() => ({}));
             const msg = err.message || err.error || `Napaka strežnika (${response.status})`;
