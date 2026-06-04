@@ -7,6 +7,9 @@ const path = require('path');
 require('dotenv').config();
 const authRouter = require('./routes/auth');
 const { preveriToken, preveriAdmin } = require('./routes/auth');
+<<<<<<< HEAD
+const { get } = require('http');
+=======
 const nodemailer = require('nodemailer');
 
 // ===== EMAIL KONFIGURACIJA =====
@@ -133,6 +136,7 @@ async function posljiPotrditevRezervacije({ email, ime, naziv, prihod, odhod, go
         html
     });
 }
+>>>>>>> a7e5fee4d1e092007ca252380825e5491d93f996
 
 const app = express();
 const PORT = 3000;
@@ -1115,10 +1119,6 @@ app.put('/api/sporocila/:id', preveriToken, async (req, res) => {
             .where('TK_uporabnik', req.uporabnik.id)
             .first();
 
-        console.log('uporabnik id:', req.uporabnik.id);
-        console.log('lastnik prenocisca:', jeLastnik);
-        console.log('je admin:', req.uporabnik.je_admin);
-
         if (!jeAdmin && !jeLastnik) {
             return res.status(403).json({ napaka: 'Nimate pravice odgovoriti na to sporočilo.' });
         }
@@ -1132,7 +1132,7 @@ app.put('/api/sporocila/:id', preveriToken, async (req, res) => {
         console.error(err);
         res.status(500).json({ napaka: 'Napaka pri shranjevanju odgovora.' });
     }
-});
+}); 
 
 //PRILJUBLJENO
 
