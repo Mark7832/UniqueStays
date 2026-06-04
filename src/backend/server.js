@@ -27,7 +27,7 @@ const db = knex({
     client: 'mysql2',
     connection: {
         host: '127.0.0.1',
-        user: 'root',
+        user: 'uniquestays',
         password: 'geslo',
         database: 'uniquestays'
     }
@@ -626,6 +626,192 @@ app.get('/api/prenocisce/:id/dozivetja', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ napaka: 'Napaka.' });
+    }
+});
+
+// Vrni sliko doživetja (javno)
+app.get('/api/slika-dozivetja/:id', async (req, res) => {
+    try {
+        const slika = await db('Slika').where('TK_dozivetje', req.params.id).first();
+        if (!slika || !slika.slika) return res.status(404).end();
+        const ext = (slika.ime_slike || '').split('.').pop().toLowerCase();
+        const mime = { png: 'image/png', gif: 'image/gif', webp: 'image/webp' }[ext] || 'image/jpeg';
+        res.set('Content-Type', mime);
+        res.set('Cache-Control', 'public, max-age=86400');
+        res.send(slika.slika);
+    } catch (err) {
+        console.error(err);
+        res.status(500).end();
+    }
+});
+ 
+//Dodaj sliko doživetja (samo lastnik)
+app.post(
+    '/api/dozivetje/:id/slike',
+    preveriToken,
+    upload.array('slike', 20),
+    async (req, res) => {
+        try {
+            const files = req.files || [];
+
+            const dozivetje = await db('Dozivetje')
+                .where('ID_dozivetje', req.params.id)
+                .where('TK_uporabnik', req.uporabnik.id)
+                .first();
+
+            if (!dozivetje) {
+                return res.status(404).json({ napaka: 'Ni najdeno.' });
+            }
+
+            await Promise.all(files.map(async (file) => {
+                const buffer = fs.readFileSync(file.path);
+
+                await db('Slika').insert({
+                    slika: buffer,
+                    ime_slike: file.filename,
+                    cover: false,
+                    TK_prenocisce: null,
+                    TK_uporabnik: req.uporabnik.id,
+                    TK_dozivetje: req.params.id
+                });
+
+                fs.unlinkSync(file.path);
+            }));
+
+            res.json({ uspeh: true });
+
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ napaka: 'Upload error' });
+        }
+    }
+);
+// Zbriši sliko doživetja (samo lastnik)
+app.delete('/api/slika/:id', preveriToken, async (req, res) => {
+    try {
+        const slika = await db('Slika').where('ID_slika', req.params.id).first();
+        if (!slika) return res.status(404).json({ napaka: 'Slika ne obstaja.' });
+
+        // Preveri lastništvo prek doživetja
+        if (slika.TK_dozivetje) {
+            const doz = await db('Dozivetje')
+                .where('ID_dozivetje', slika.TK_dozivetje)
+                .where('TK_uporabnik', req.uporabnik.id)
+                .first();
+            if (!doz) return res.status(403).json({ napaka: 'Nimate pravice.' });
+        }
+
+        if (!slika.TK_dozivetje && slika.ime_slike) {
+        const pot = path.join(imagesDir, slika.ime_slike);
+        if (fs.existsSync(pot)) fs.unlinkSync(pot);
+    }
+        await db('Slika').where('ID_slika', req.params.id).del();
+        res.json({ uspeh: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri brisanju.' });
+    }
+});
+
+//nove slike za doživetje
+app.get('/api/dozivetje/:id/slike', async (req, res) => {
+    const slike = await db('Slika').where('TK_dozivetje', req.params.id).select('ID_slika', 'ime_slike');
+    res.json(slike);
+});
+
+app.get('/api/slika-dozivetja-id/:id', async (req, res) => {
+    const slika = await db('Slika').where('ID_slika', req.params.id).first();
+    if (!slika || !slika.slika) return res.status(404).end();
+    res.set('Content-Type', 'image/jpeg');
+    res.send(slika.slika);
+});
+ 
+// Preveri ali je prijavljeni uporabnik upravicen do komentarja
+app.get('/api/komentar/upravicen/:prenocisceId', preveriToken, async (req, res) => {
+    try {
+        const danes = new Date().toISOString().split('T')[0];
+        const rezervacija = await db('Rezervacija')
+            .where('TK_prenocisce', req.params.prenocisceId)
+            .where('TK_uporabnik',  req.uporabnik.id)
+            .where('rezervirano',   true)
+            .where('datum_do', '<', danes)
+            .first();
+ 
+        const obstojeci = await db('Komentar')
+            .where('TK_prenocisce', req.params.prenocisceId)
+            .where('TK_uporabnik',  req.uporabnik.id)
+            .first();
+
+        const prenocisce = await db('Prenocisce')
+            .where('ID_prenocisce', req.params.prenocisceId)
+            .first();
+        const jeLastnik = prenocisce && prenocisce.TK_uporabnik === req.uporabnik.id;
+ 
+        res.json({
+            upravicen:      !!rezervacija && !obstojeci,
+            jeRezerviral:   !!rezervacija,
+            jeZeKomentiral: !!obstojeci,
+            jeLastnik
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka.' });
+    }
+});
+ 
+// Dodaj komentar (samo prijavljeni z preteceno rezervacijo, enkrat na prenocisce)
+app.post('/api/komentar', preveriToken, async (req, res) => {
+    try {
+        const { TK_prenocisce, komentar, ocena_splosna, ocena_udobje, ocena_unikatnost, ocena_lokacija, ocena_cenovna_ugodnost, ocena_dozivetje } = req.body;
+ 
+        if (!TK_prenocisce || !ocena_splosna) {
+            return res.status(400).json({ napaka: 'Manjkajo obvezni podatki.' });
+        }
+ 
+        const danes = new Date().toISOString().split('T')[0];
+ 
+        const rezervacija = await db('Rezervacija')
+            .where('TK_prenocisce', TK_prenocisce)
+            .where('TK_uporabnik',  req.uporabnik.id)
+            .where('rezervirano',   true)
+            .where('datum_do', '<', danes)
+            .first();
+ 
+        if (!rezervacija) {
+            return res.status(403).json({ napaka: 'Komentar lahko pustite samo po preteceni rezervaciji.' });
+        }
+
+        const prenocisce = await db('Prenocisce').where('ID_prenocisce', TK_prenocisce).first();
+        if (prenocisce && prenocisce.TK_uporabnik === req.uporabnik.id) {
+            return res.status(403).json({ napaka: 'Lastnik ne more oceniti svojega prenočišča.' });
+        }
+ 
+        const obstojeci = await db('Komentar')
+            .where('TK_prenocisce', TK_prenocisce)
+            .where('TK_uporabnik',  req.uporabnik.id)
+            .first();
+ 
+        if (obstojeci) {
+            return res.status(409).json({ napaka: 'Za to prenocisce ste ze pustili oceno.' });
+        }
+ 
+        await db('Komentar').insert({
+            komentar:               komentar || null,
+            datum_komentar:         danes,
+            ocena_splosna:          parseInt(ocena_splosna),
+            ocena_udobje:           parseInt(ocena_udobje)           || 0,
+            ocena_unikatnost:       parseInt(ocena_unikatnost)       || 0,
+            ocena_lokacija:         parseInt(ocena_lokacija)         || 0,
+            ocena_cenovna_ugodnost: parseInt(ocena_cenovna_ugodnost) || 0,
+            ocena_dozivetje:        parseInt(ocena_dozivetje)        || 0,
+            TK_uporabnik:           req.uporabnik.id,
+            TK_prenocisce:          TK_prenocisce
+        });
+ 
+        res.status(201).json({ uspeh: true, sporocilo: 'Vasa ocena je bila shranjena.' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri shranjevanju ocene.' });
     }
 });
 

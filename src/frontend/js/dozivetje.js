@@ -5,6 +5,8 @@ if (!authToken) window.location.href = 'login.html';
 
 let vsaDozivetja = []; //globalni seznam vseh doživetij uporabnika
 let idZaBrisanje = null; //ID doživetja, ki ga želi uporabnik izbrisati
+let noveSlike = [];
+let obstojeceSlike = [];
 
 //nalaganje doživetij
 async function naloziDozivetja() {
@@ -94,6 +96,9 @@ function odpriObrazecDodajanje() {
     document.getElementById('obrazecDoplacilo').value = '';
     document.getElementById('obrazecNapaka').classList.add('hidden');
     document.getElementById('obrazec').classList.remove('hidden');
+    document.getElementById('obrazecSlikaSekcija').classList.remove('hidden');
+    document.getElementById('obrazecSlikeContainer').innerHTML = '';
+    noveSlike = [];
 }
 
 //urejanje doživetja
@@ -107,6 +112,9 @@ function odpriObrazecUrejanje(id) {
     document.getElementById('obrazecDoplacilo').value = d.doplacilo;
     document.getElementById('obrazecNapaka').classList.add('hidden');
     document.getElementById('obrazec').classList.remove('hidden');
+    document.getElementById('obrazecSlikaSekcija').classList.remove('hidden');
+    naloziSlikeZaObrazec(id);
+    noveSlike = [];
 }
 
 function zapriObrazec() {
@@ -145,6 +153,23 @@ async function shraniDozivetje() {
         const r = await res.json();
 
         if (res.ok) {
+            const novoId = id || r.id;
+            if (noveSlike.length > 0) {
+
+    const formData = new FormData();
+
+    noveSlike.forEach(file => {
+        formData.append('slike', file);
+    });
+
+    await fetch(`/api/dozivetje/${novoId}/slike`, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + authToken
+        },
+        body: formData
+    });
+}
             zapriObrazec();
             prikaziSporocilo('✓ ' + (id ? 'Doživetje posodobljeno.' : 'Doživetje dodano.'), true);
             await naloziDozivetja();
@@ -201,3 +226,115 @@ function prikaziSporocilo(besedilo, uspeh) {
 
 //init
 naloziDozivetja();
+
+// Nalaganje slike dozivetja
+async function naloziSlikeZaObrazec(dozivetjeId) {
+    const container = document.getElementById('obrazecSlikeContainer');
+
+    const res = await fetch(`/api/dozivetje/${dozivetjeId}/slike`, {
+        headers: { 'Authorization': 'Bearer ' + authToken }
+    });
+
+    const slike = await res.json();
+    obstojeceSlike = slike;
+
+    // Ohrani predoglede novih slik, pobriši samo obstoječe (data-obstojeca)
+    container.querySelectorAll('[data-obstojeca]').forEach(el => el.remove());
+
+    slike.forEach(s => {
+        const wrap = document.createElement('div');
+        wrap.className = 'relative group';
+        wrap.dataset.obstojeca = s.ID_slika;
+
+        wrap.innerHTML = `
+            <img src="/api/slika-dozivetja-id/${s.ID_slika}"
+                 class="w-20 h-16 object-cover rounded-xl border border-slate-200" />
+            <button type="button"
+                onclick="izbrisiSlikoDozivetja(${s.ID_slika}, ${dozivetjeId})"
+                class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-red-500 text-white text-xs font-bold leading-none">
+                ✕
+            </button>
+        `;
+
+        // Vstavi obstoječe PRED nove (na začetek)
+        container.insertBefore(wrap, container.firstChild);
+    });
+}
+
+async function naloziSlikeIzObrazca(input) {
+    const id = document.getElementById('obrazecId').value;
+
+    if (!id) return;
+
+    await naloziSlikeDozivetja(id, input);
+    await naloziSlikeZaObrazec(id);
+}
+
+async function izbrisiSlikoDozivetja(slikaId, dozivetjeId) {
+    await fetch(`/api/slika/${slikaId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + authToken }
+    });
+
+    await naloziSlikeZaObrazec(dozivetjeId);
+}
+
+function izberiNovoSliko(input) {
+    if (!input.files.length) return;
+
+    const novoIzbrane = [...input.files];
+    noveSlike = [...noveSlike, ...novoIzbrane]; // DODAJ k že izbranim, ne zamenjaj
+
+    const container = document.getElementById('obrazecSlikeContainer');
+
+    novoIzbrane.forEach((file, i) => {
+        const idx = noveSlike.length - novoIzbrane.length + i;
+        const wrap = document.createElement('div');
+        wrap.className = 'relative group';
+        wrap.dataset.novaIdx = idx;
+        wrap.innerHTML = `
+            <img src="${URL.createObjectURL(file)}"
+                 class="w-20 h-16 object-cover rounded-xl border border-slate-200">
+            <button type="button"
+                onclick="odstraniNovoSlikoDozivetja(this)"
+                class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-red-500 text-white text-xs font-bold leading-none">✕</button>
+        `;
+        container.appendChild(wrap);
+    });
+
+    input.value = ''; // ponastavi da lahko izbereš enako sliko večkrat
+}
+
+function odstraniNovoSlikoDozivetja(btn) {
+    const wrap = btn.closest('[data-nova-idx]');
+    const idx = parseInt(wrap.dataset.novaIdx);
+    noveSlike.splice(idx, 1);
+    wrap.closest('#obrazecSlikeContainer').querySelectorAll('[data-nova-idx]').forEach(el => {
+        const elIdx = parseInt(el.dataset.novaIdx);
+        if (elIdx > idx) el.dataset.novaIdx = elIdx - 1;
+    });
+    wrap.remove();
+}
+
+async function naloziSlikeDozivetja(dozivetjeId, input) {
+
+    if (!input.files.length) return;
+
+    const formData = new FormData();
+
+    [...input.files].forEach(file => {
+        formData.append('slike', file);
+    });
+
+    const res = await fetch(`/api/dozivetje/${dozivetjeId}/slike`, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + authToken
+        },
+        body: formData
+    });
+
+    if (!res.ok) {
+        throw new Error('Napaka pri nalaganju slik');
+    }
+}
