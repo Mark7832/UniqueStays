@@ -227,7 +227,7 @@ function prikaziSporocilo(besedilo, uspeh) {
 //init
 naloziDozivetja();
 
-// Nalaganje slike dozivetja
+//nalaganje slike dozivetja
 async function naloziSlikeZaObrazec(dozivetjeId) {
     const container = document.getElementById('obrazecSlikeContainer');
 
@@ -238,7 +238,7 @@ async function naloziSlikeZaObrazec(dozivetjeId) {
     const slike = await res.json();
     obstojeceSlike = slike;
 
-    // Ohrani predoglede novih slik, pobriši samo obstoječe (data-obstojeca)
+    //ohrani predoglede novih slik, pobriši samo obstoječe (data-obstojeca)
     container.querySelectorAll('[data-obstojeca]').forEach(el => el.remove());
 
     slike.forEach(s => {
@@ -256,7 +256,7 @@ async function naloziSlikeZaObrazec(dozivetjeId) {
             </button>
         `;
 
-        // Vstavi obstoječe PRED nove (na začetek)
+        //vstavi obstoječe PRED nove (na začetek)
         container.insertBefore(wrap, container.firstChild);
     });
 }

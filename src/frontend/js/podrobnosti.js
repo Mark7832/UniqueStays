@@ -210,17 +210,13 @@ function prikaziPodatke(data) {
     if (prenocisce.razgled) {
         document.getElementById('razgledCard').style.display = 'block';
     }
-    
-    // Tagi
+    //tagi
     prikaziTage(prenocisce.tagi);
-    
-    // Doživetja
+    //doživetja
     prikaziDozivetja(dozivetja || []).catch(console.error);
-    
-    // Komentarji
+    //komentarji
     prikaziKomentarje(komentarji || []);
-
-    // Shrani podatke za rezervacijski modal
+    //shrani podatke za rezervacijski modal
     _rezervacijaData.naziv     = prenocisce.naziv || '';
     _rezervacijaData.cenaNaNoc = parseFloat(prenocisce.cena_na_noc) || 0;
     _rezervacijaData.maxGostov = parseInt(prenocisce.max_gostov) || 10;
@@ -309,7 +305,7 @@ function prikaziTage(tagiString) {
     }
 }
 
-// Prikaz doživetij
+//prikaz doživetij
 async function prikaziDozivetja(dozivetja) {
     const container = document.getElementById('dozivetjaContainer');
     if (!container) return;
@@ -321,7 +317,8 @@ async function prikaziDozivetja(dozivetja) {
     }
     document.getElementById('dozivetjaSection').style.display = 'block';
 
-    for (const dozivetje of dozivetja) {  // ← for...of namesto forEach
+    //za vsako doživetje pridobi slike iz baze in zgradi carousel
+    for (const dozivetje of dozivetja) {  //for...of namesto forEach
         let carouselHtml;
         try {
             const slikeRes = await fetch(`/api/dozivetje/${dozivetje.ID_dozivetje}/slike`);
@@ -338,9 +335,9 @@ async function prikaziDozivetja(dozivetja) {
                        <button onclick="nextSlika(this)" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 font-bold text-slate-700 hover:bg-white transition flex items-center justify-center shadow">›</button>
                      ` : ''}
                    </div>`
-                : `<div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-teal-100 flex items-center justify-center text-3xl mb-6">🎭</div>`;
+                : `<div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-teal-100 flex items-center justify-center text-3xl mb-6">🎭</div>`; //ni slik, prikaže privzeti emoji
         } catch {
-            carouselHtml = `<div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-teal-100 flex items-center justify-center text-3xl mb-6">🎭</div>`;
+            carouselHtml = `<div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-teal-100 flex items-center justify-center text-3xl mb-6">🎭</div>`; //če fetch ne uspe pokaže emoji, namesto da stran ne dela
         }
 
         const card = document.createElement('div');
@@ -361,6 +358,7 @@ async function prikaziDozivetja(dozivetja) {
 }
 
 //funkciji za carousel slik
+//premakne na prejšnjo sliko
 function prevSlika(btn) {
     const carousel = btn.closest('[data-carousel]');
     const imgs = carousel.querySelectorAll('img');
@@ -368,7 +366,7 @@ function prevSlika(btn) {
     imgs[trenutni].classList.replace('opacity-100', 'opacity-0');
     imgs[(trenutni - 1 + imgs.length) % imgs.length].classList.replace('opacity-0', 'opacity-100');
 }
-
+//premakne na naslednjo sliko
 function nextSlika(btn) {
     const carousel = btn.closest('[data-carousel]');
     const imgs = carousel.querySelectorAll('img');
@@ -377,7 +375,7 @@ function nextSlika(btn) {
     imgs[(trenutni + 1) % imgs.length].classList.replace('opacity-0', 'opacity-100');
 }
 
-// Prikaz komentarjev
+//prikaz komentarjev
 function prikaziKomentarje(komentarji) {
     const container = document.getElementById('komentarjiContainer');
     if (!container) return;
@@ -1003,16 +1001,15 @@ async function togglePriljubljeno() {
             headers: { 'Authorization': 'Bearer ' + token }
         });
         const data = await res.json();
-        // posodobi stanje priljubljenega prenočišča
+        //posodobi stanje priljubljenega prenočišča
         jePriljubljeno = data.priljubljeno;
-          // spremeni prikaz srčka glede na stanje
+          //spremeni prikaz srčka glede na stanje
         document.getElementById('btnPriljubljeno').textContent = jePriljubljeno ? '♥' : '♡';
         document.getElementById('btnPriljubljeno').classList.toggle('active', jePriljubljeno);
     } catch (err) {}
 }
 
 //OCENA/KOMENTAR
- 
 let _prenocisceId = null;
  
 //nastavi interaktivne zvezdice za eno skupino
@@ -1053,11 +1050,12 @@ async function preveriUpravicenostOcene(prenocisceId) {
  
     const token = sessionStorage.getItem('token');
  
-    // Skrij vse bloke
+    //skrij vse bloke preden preverimo, eden se bo prikazal glede na razultat
     ['ocenaNiPrijavljen', 'ocenaObrazec', 'ocenaZeOddana', 'ocenaNiRezervacije'].forEach(id => {
         document.getElementById(id)?.classList.add('hidden');
     });
  
+    //uporabnik ni prijavljen
     if (!token) {
         document.getElementById('ocenaNiPrijavljen')?.classList.remove('hidden');
         sekcija.classList.remove('hidden');
@@ -1094,6 +1092,7 @@ async function oddajOceno() {
     const btn = document.getElementById('btnOddajOceno');
     if (napaka) napaka.classList.add('hidden');
  
+    //splošna ocena je edino obvezno polje
     const ocena_splosna = document.getElementById('ocena_splosna')?.value || '0';
     if (ocena_splosna === '0') {
         if (napaka) {
@@ -1103,8 +1102,9 @@ async function oddajOceno() {
         return;
     }
  
+    //zberi vse ocene in komentar v en objekt za POST
     const telo = {
-        TK_prenocisce: _prenocisceId,
+        TK_prenocisce: _prenocisceId, //ID prenočišča shranjen ob nalaganju strani
         komentar: document.getElementById('ocenaKomentar')?.value?.trim() || null,
         ocena_splosna,
         ocena_udobje: document.getElementById('ocena_udobje')?.value || 0,
@@ -1114,7 +1114,7 @@ async function oddajOceno() {
         ocena_dozivetje: document.getElementById('ocena_dozivetje')?.value || 0
     };
  
-    if (btn) { btn.disabled = true; btn.textContent = 'Pošiljam...'; }
+    if (btn) { btn.disabled = true; btn.textContent = 'Pošiljam...'; } //onemogoči gumb med pošiljanjem, da ne more dvakrat klikniti
  
     try {
         const res = await fetch('/api/komentar', {
@@ -1125,10 +1125,10 @@ async function oddajOceno() {
         const r = await res.json();
  
         if (res.ok) {
-            // Skrij obrazec, pokazi zahvalo
+            //skrij obrazec, pokazi zahvalo
             document.getElementById('ocenaObrazec')?.classList.add('hidden');
             document.getElementById('ocenaZeOddana')?.classList.remove('hidden');
-            // Osveži seznam komentarjev in povprečno oceno brez ponovnega nalaganja strani
+            //osveži seznam komentarjev in povprečno oceno brez ponovnega nalaganja strani
             const resp = await fetch(`${API_URL}/prenocisce/${_prenocisceId}`);
             const freshData = await resp.json();
             prikaziKomentarje(freshData.komentarji || []);

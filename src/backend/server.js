@@ -813,13 +813,13 @@ app.post(
         }
     }
 );
-// Zbriši sliko doživetja (samo lastnik)
+//zbriši sliko doživetja (samo lastnik)
 app.delete('/api/slika/:id', preveriToken, async (req, res) => {
     try {
         const slika = await db('Slika').where('ID_slika', req.params.id).first();
         if (!slika) return res.status(404).json({ napaka: 'Slika ne obstaja.' });
 
-        // Preveri lastništvo prek doživetja
+        //preveri lastništvo prek doživetja
         if (slika.TK_dozivetje) {
             const doz = await db('Dozivetje')
                 .where('ID_dozivetje', slika.TK_dozivetje)
@@ -853,7 +853,7 @@ app.get('/api/slika-dozivetja-id/:id', async (req, res) => {
     res.send(slika.slika);
 });
  
-// Preveri ali je prijavljeni uporabnik upravicen do komentarja
+//preveri ali je prijavljeni uporabnik upravicen do komentarja
 app.get('/api/komentar/upravicen/:prenocisceId', preveriToken, async (req, res) => {
     try {
         const danes = new Date().toISOString().split('T')[0];
@@ -861,7 +861,7 @@ app.get('/api/komentar/upravicen/:prenocisceId', preveriToken, async (req, res) 
             .where('TK_prenocisce', req.params.prenocisceId)
             .where('TK_uporabnik',  req.uporabnik.id)
             .where('rezervirano',   true)
-            .where('datum_do', '<', danes)
+            .where('datum_do', '<', db.raw('CURDATE()'))
             .first();
  
         const obstojeci = await db('Komentar')
@@ -886,7 +886,7 @@ app.get('/api/komentar/upravicen/:prenocisceId', preveriToken, async (req, res) 
     }
 });
  
-// Dodaj komentar (samo prijavljeni z preteceno rezervacijo, enkrat na prenocisce)
+//dodaj komentar (samo prijavljeni z preteceno rezervacijo, enkrat na prenocisce)
 app.post('/api/komentar', preveriToken, async (req, res) => {
     try {
         const { TK_prenocisce, komentar, ocena_splosna, ocena_udobje, ocena_unikatnost, ocena_lokacija, ocena_cenovna_ugodnost, ocena_dozivetje } = req.body;
