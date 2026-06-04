@@ -141,9 +141,11 @@ async function naloziPodatke() {
         }
         
         const data = await response.json();
-        prikaziPodatke(data);  // ← lastnikId se nastavi tukaj
-        
-        naloziSporocila(prenocisceId);  // ← šele potem naloži sporočila
+        prikaziPodatke(data);
+        preveriPriljubljeno(prenocisceId);
+        naloziSporocila(prenocisceId);
+        preveriUpravicenostOcene(prenocisceId);  
+        _prenocisceId = prenocisceId;
         
         if (data.prenocisce && data.prenocisce.koordinate) {
             setTimeout(() => {
@@ -174,7 +176,7 @@ function prikaziPodatke(data) {
     lastnikId = prenocisce.TK_uporabnik;
 
     // Osnovni podatki
-    setElementText('tipPrenocisca', `🏠 ${prenocisce.tip_prenocisca || 'Neznano'} • Slovenija`);
+    setElementText('tipPrenocisca', `🏠 ${prenocisce.tip_prenocisca || 'Neznano'}`);
     setElementText('nazivPrenocisca', prenocisce.naziv || 'Neznano prenočišče');
     setElementText('opisPrenocisca', prenocisce.opis_prenocisca || 'Opis ni na voljo');
     setElementText('opisPodrobno', prenocisce.opis_prenocisca || 'Opis ni na voljo');
@@ -213,7 +215,7 @@ function prikaziPodatke(data) {
     prikaziTage(prenocisce.tagi);
     
     // Doživetja
-    prikaziDozivetja(dozivetja || []);
+    prikaziDozivetja(dozivetja || []).catch(console.error);
     
     // Komentarji
     prikaziKomentarje(komentarji || []);
@@ -308,49 +310,71 @@ function prikaziTage(tagiString) {
 }
 
 // Prikaz doživetij
-function prikaziDozivetja(dozivetja) {
+async function prikaziDozivetja(dozivetja) {
     const container = document.getElementById('dozivetjaContainer');
     if (!container) return;
-    
     container.innerHTML = '';
 
     if (!dozivetja || dozivetja.length === 0) {
         document.getElementById('dozivetjaSection').style.display = 'none';
         return;
     }
-    
     document.getElementById('dozivetjaSection').style.display = 'block';
 
-    dozivetja.forEach(dozivetje => {
+    for (const dozivetje of dozivetja) {  // ← for...of namesto forEach
+        let carouselHtml;
+        try {
+            const slikeRes = await fetch(`/api/dozivetje/${dozivetje.ID_dozivetje}/slike`);
+            const slike = await slikeRes.json();
+            carouselHtml = slike.length > 0
+                ? `<div class="relative overflow-hidden rounded-2xl h-48 mb-6" data-carousel>
+                     ${slike.map((s, i) => `
+                       <img src="/api/slika-dozivetja-id/${s.ID_slika}"
+                            class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${i === 0 ? 'opacity-100' : 'opacity-0'}"
+                            data-idx="${i}" />
+                     `).join('')}
+                     ${slike.length > 1 ? `
+                       <button onclick="prevSlika(this)" class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 font-bold text-slate-700 hover:bg-white transition flex items-center justify-center shadow">‹</button>
+                       <button onclick="nextSlika(this)" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 font-bold text-slate-700 hover:bg-white transition flex items-center justify-center shadow">›</button>
+                     ` : ''}
+                   </div>`
+                : `<div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-teal-100 flex items-center justify-center text-3xl mb-6">🎭</div>`;
+        } catch {
+            carouselHtml = `<div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-teal-100 flex items-center justify-center text-3xl mb-6">🎭</div>`;
+        }
+
         const card = document.createElement('div');
-        card.className = 'group relative overflow-hidden rounded-3xl bg-white border-2 border-slate-200 p-8 transition-all hover:border-blue-500 hover:shadow-2xl hover:-translate-y-2';
-        
+        card.className = 'group relative overflow-hidden rounded-3xl bg-white border-2 border-slate-200 transition-all hover:border-blue-500 hover:shadow-2xl hover:-translate-y-2';
         card.innerHTML = `
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-teal-100 flex items-center justify-center text-3xl mb-6">
-                🎭
-            </div>
-
-            <h3 class="text-2xl font-bold text-slate-900 mb-3">
-                ${dozivetje.naziv || 'Neznano doživetje'}
-            </h3>
-
-            <p class="text-slate-600 mb-6 leading-relaxed">
-                ${dozivetje.opis || 'Ni opisa'}
-            </p>
-
-            <div class="flex items-center justify-between">
-                <div class="text-3xl font-extrabold text-blue-600">
-                    ${dozivetje.doplacilo || '0'} €
+            ${carouselHtml}
+            <div class="p-8 pt-0">
+                <h3 class="text-2xl font-bold text-slate-900 mb-3">${dozivetje.naziv || 'Neznano doživetje'}</h3>
+                <p class="text-slate-600 mb-6 leading-relaxed">${dozivetje.opis || 'Ni opisa'}</p>
+                <div class="flex items-center justify-between">
+                    <div class="text-3xl font-extrabold text-blue-600">${parseFloat(dozivetje.doplacilo || 0).toFixed(2)} €</div>
+                    <button class="px-6 py-3 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all">Dodaj</button>
                 </div>
-
-                <button class="px-6 py-3 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all">
-                    Dodaj
-                </button>
             </div>
         `;
-        
         container.appendChild(card);
-    });
+    }
+}
+
+//funkciji za carousel slik
+function prevSlika(btn) {
+    const carousel = btn.closest('[data-carousel]');
+    const imgs = carousel.querySelectorAll('img');
+    const trenutni = [...imgs].findIndex(img => img.classList.contains('opacity-100'));
+    imgs[trenutni].classList.replace('opacity-100', 'opacity-0');
+    imgs[(trenutni - 1 + imgs.length) % imgs.length].classList.replace('opacity-0', 'opacity-100');
+}
+
+function nextSlika(btn) {
+    const carousel = btn.closest('[data-carousel]');
+    const imgs = carousel.querySelectorAll('img');
+    const trenutni = [...imgs].findIndex(img => img.classList.contains('opacity-100'));
+    imgs[trenutni].classList.replace('opacity-100', 'opacity-0');
+    imgs[(trenutni + 1) % imgs.length].classList.replace('opacity-0', 'opacity-100');
 }
 
 // Prikaz komentarjev
@@ -449,6 +473,108 @@ let _rezervacijaData = {
 
 let _zasedenObdobja = [];
 
+// ---- MINI KALENDAR ----
+let _kalendarDatum = new Date();
+
+function izrisiKalendar() {
+    const leto = _kalendarDatum.getFullYear();
+    const mesec = _kalendarDatum.getMonth();
+
+    const mesecIme = new Date(leto, mesec, 1).toLocaleDateString('sl-SI', { month: 'long', year: 'numeric' });
+    const el = document.getElementById('kalendarNaslov');
+    if (el) el.textContent = mesecIme.charAt(0).toUpperCase() + mesecIme.slice(1);
+
+    const container = document.getElementById('kalendarDni');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const prihodVal = document.getElementById('datumPrihod')?.value;
+    const odhodVal  = document.getElementById('datumOdhod')?.value;
+
+    // Začni od ponedeljka
+    const prvDan = new Date(leto, mesec, 1);
+    let zacetek = prvDan.getDay(); // 0=ned, 1=pon...
+    zacetek = zacetek === 0 ? 6 : zacetek - 1;
+
+    const danes = new Date(); danes.setHours(0,0,0,0);
+
+    // Prazne celice za poravnavo
+    for (let i = 0; i < zacetek; i++) {
+        const p = document.createElement('div');
+        container.appendChild(p);
+    }
+
+    const dniVMesecu = new Date(leto, mesec + 1, 0).getDate();
+    for (let d = 1; d <= dniVMesecu; d++) {
+        const datum = new Date(leto, mesec, d);
+        const datumStr = datum.toISOString().split('T')[0];
+        const zaseden = jeZaseden(datumStr);
+        const preteklo = datum < danes;
+        const jeIzbranPrihod = datumStr === prihodVal;
+        const jeIzbranOdhod  = datumStr === odhodVal;
+
+        let vObdobju = false;
+        if (prihodVal && odhodVal) {
+            const od = new Date(prihodVal);
+            const do_ = new Date(odhodVal);
+            vObdobju = datum > od && datum < do_;
+        }
+
+        const cell = document.createElement('div');
+        cell.textContent = d;
+        cell.className = 'text-center text-xs rounded-md py-1 cursor-pointer transition-all font-medium ';
+
+        if (preteklo) {
+            cell.className += 'text-slate-300 cursor-default';
+        } else if (zaseden) {
+            cell.className += 'bg-red-400 text-white font-bold cursor-not-allowed';
+            cell.title = 'Zasedeno';
+        } else if (jeIzbranPrihod || jeIzbranOdhod) {
+            cell.className += 'bg-blue-600 text-white font-bold shadow-sm';
+            cell.title = jeIzbranPrihod ? 'Prihod' : 'Odhod';
+        } else if (vObdobju) {
+            cell.className += 'bg-blue-100 text-blue-800';
+        } else {
+            cell.className += 'hover:bg-slate-200 text-slate-700';
+            cell.onclick = () => izberiDatum(datumStr);
+        }
+
+        container.appendChild(cell);
+    }
+}
+
+function izberiDatum(datumStr) {
+    const prihod = document.getElementById('datumPrihod');
+    const odhod  = document.getElementById('datumOdhod');
+    if (!prihod || !odhod) return;
+
+    if (!prihod.value || (prihod.value && odhod.value)) {
+        prihod.value = datumStr;
+        odhod.value = '';
+    } else {
+        if (datumStr <= prihod.value) {
+            prihod.value = datumStr;
+            odhod.value = '';
+        } else {
+            odhod.value = datumStr;
+            onOdhodChange();
+        }
+    }
+    posodobiCeno();
+    izrisiKalendar();
+}
+
+function kalendarPrejsniMesec() {
+    _kalendarDatum.setMonth(_kalendarDatum.getMonth() - 1);
+    izrisiKalendar();
+}
+
+function kalendarNaslednjMesec() {
+    _kalendarDatum.setMonth(_kalendarDatum.getMonth() + 1);
+    izrisiKalendar();
+}
+// ---- KONEC MINI KALENDAR ----
+
 function jeZaseden(datumStr) {
     const d = new Date(datumStr);
     return _zasedenObdobja.some(({ od, do_ }) => d >= od && d < do_);
@@ -522,6 +648,8 @@ async function odpriRezervacijo() {
     prihod?.addEventListener('change', onPrihodChange);
     odhod?.addEventListener('change', onOdhodChange);
 
+    _kalendarDatum = new Date();
+    izrisiKalendar();
     posodobiCeno();
 }
 
@@ -536,6 +664,7 @@ function onPrihodChange() {
         napaka.classList.add('hidden');
     }
     posodobiCeno();
+    izrisiKalendar();
 }
 
 function onOdhodChange() {
@@ -556,11 +685,13 @@ function onOdhodChange() {
             napaka.textContent = '⚠️ Izbrano obdobje vsebuje zasedene datume. Izberite drug datum odhoda.';
             napaka.classList.remove('hidden');
             el.value = '';
+            izrisiKalendar();
             return;
         }
     }
     napaka.classList.add('hidden');
     posodobiCeno();
+    izrisiKalendar();
 }
 
 function zapriRezervacijo() {
@@ -668,10 +799,21 @@ async function potrdiRezervacijo() {
         });
 
         if (response.ok) {
-            uspeh?.classList.remove('hidden');
-            if (btn) btn.disabled = true;
-            if (btnTxt) btnTxt.textContent = '✅ Rezervirano!';
-            setTimeout(() => zapriRezervacijo(), 3000);
+            const rezervacijaData = await response.json().catch(() => ({}));
+            const noci = Math.round((new Date(odhodVal) - new Date(prihodVal)) / 86400000);
+            const skupaj = noci * _rezervacijaData.cenaNaNoc;
+
+            const params = new URLSearchParams({
+                naziv: _rezervacijaData.naziv,
+                prihod: prihodVal,
+                odhod: odhodVal,
+                gostov: gostov,
+                noci: noci,
+                cena: skupaj.toFixed(2),
+                prenocisceId: prenocisceId
+            });
+
+            window.location.href = `potrditev_rezervacije.html?${params.toString()}`;
         } else {
             const err = await response.json().catch(() => ({}));
             const msg = err.message || err.error || `Napaka strežnika (${response.status})`;
@@ -833,5 +975,180 @@ async function posljiOdgovor(sporosiloId) {
         }
     } catch (err) {
         console.error('Napaka pri pošiljanju odgovora:', err);
+    }
+}
+
+// PRILJUBLJENO 
+
+// hrani trenutno stanje priljubljenega prenočišča
+let jePriljubljeno = false;
+
+// preveri ali je trenutno prenočišče dodano med priljubljene in nastavi prikaz srčka
+async function preveriPriljubljeno(prenocisceId) {
+    const token = sessionStorage.getItem('token');
+    if (!token) return;
+    try {
+        const res = await fetch(`${API_URL}/priljubljeno/${prenocisceId}`, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        jePriljubljeno = data.priljubljeno;
+        document.getElementById('btnPriljubljeno').textContent = jePriljubljeno ? '♥' : '♡';
+        document.getElementById('btnPriljubljeno').classList.toggle('active', jePriljubljeno);
+    } catch (err) {}
+}
+
+// doda ali odstrani prenočišče iz priljubljenih ob kliku na srček
+async function togglePriljubljeno() {
+    const token = sessionStorage.getItem('token');
+     // preusmeri na prijavo če uporabnik ni prijavljen
+    if (!token) { window.location.href = 'login.html'; return; }
+    const prenocisceId = new URLSearchParams(window.location.search).get('id') || 2;
+    try {
+        const res = await fetch(`${API_URL}/priljubljeno/${prenocisceId}`, {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        // posodobi stanje priljubljenega prenočišča
+        jePriljubljeno = data.priljubljeno;
+          // spremeni prikaz srčka glede na stanje
+        document.getElementById('btnPriljubljeno').textContent = jePriljubljeno ? '♥' : '♡';
+        document.getElementById('btnPriljubljeno').classList.toggle('active', jePriljubljeno);
+    } catch (err) {}
+}
+
+//OCENA/KOMENTAR
+ 
+let _prenocisceId = null;
+ 
+//nastavi interaktivne zvezdice za eno skupino
+function nastaviZvezdice(skupinaId) {
+    const zvezdice = document.querySelectorAll(`[data-skupina="${skupinaId}"]`);
+    const hiddenInput = document.getElementById(`ocena_${skupinaId}`);
+    if (!zvezdice.length || !hiddenInput) return;
+ 
+    zvezdice.forEach(z => {
+        z.addEventListener('mouseenter', () => {
+            const val = parseInt(z.dataset.vrednost);
+            zvezdice.forEach(s => {
+                s.textContent = parseInt(s.dataset.vrednost) <= val ? '⭐' : '☆';
+                s.style.transform = parseInt(s.dataset.vrednost) === val ? 'scale(1.25)' : 'scale(1)';
+            });
+        });
+        z.addEventListener('mouseleave', () => {
+            const izbrana = parseInt(hiddenInput.value) || 0;
+            zvezdice.forEach(s => {
+                s.textContent = parseInt(s.dataset.vrednost) <= izbrana ? '⭐' : '☆';
+                s.style.transform = 'scale(1)';
+            });
+        });
+        z.addEventListener('click', () => {
+            hiddenInput.value = z.dataset.vrednost;
+            const val = parseInt(z.dataset.vrednost);
+            zvezdice.forEach(s => {
+                s.textContent = parseInt(s.dataset.vrednost) <= val ? '⭐' : '☆';
+                s.style.transform = 'scale(1)';
+            });
+        });
+    });
+}
+ 
+async function preveriUpravicenostOcene(prenocisceId) {
+    const sekcija = document.getElementById('ocenaSekcija');
+    if (!sekcija) return;
+ 
+    const token = sessionStorage.getItem('token');
+ 
+    // Skrij vse bloke
+    ['ocenaNiPrijavljen', 'ocenaObrazec', 'ocenaZeOddana', 'ocenaNiRezervacije'].forEach(id => {
+        document.getElementById(id)?.classList.add('hidden');
+    });
+ 
+    if (!token) {
+        document.getElementById('ocenaNiPrijavljen')?.classList.remove('hidden');
+        sekcija.classList.remove('hidden');
+        return;
+    }
+ 
+    try {
+        const res = await fetch(`/api/komentar/upravicen/${prenocisceId}`, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+ 
+        if (data.jeLastnik) { //lastnik ne ocenjuje svojega prenočišča (sekcija ostane skrita)
+            return;
+        } else if (data.jeZeKomentiral) { //uporabnik lahko komentira le enkrat
+            document.getElementById('ocenaZeOddana')?.classList.remove('hidden');
+        } else if (!data.jeRezerviral) { //uporabnik je rabil rezervirati
+            document.getElementById('ocenaNiRezervacije')?.classList.remove('hidden');
+        } else {
+            document.getElementById('ocenaObrazec')?.classList.remove('hidden');
+            ['splosna', 'udobje', 'unikatnost', 'lokacija', 'cenovna_ugodnost', 'dozivetje'].forEach(nastaviZvezdice);
+        }
+ 
+        sekcija.classList.remove('hidden');
+
+    } catch (err) {
+        console.error('Napaka pri preverjanju upravičenosti:', err);
+    }
+}
+ 
+async function oddajOceno() {
+    const token = sessionStorage.getItem('token');
+    const napaka = document.getElementById('ocenaNapaka');
+    const btn = document.getElementById('btnOddajOceno');
+    if (napaka) napaka.classList.add('hidden');
+ 
+    const ocena_splosna = document.getElementById('ocena_splosna')?.value || '0';
+    if (ocena_splosna === '0') {
+        if (napaka) {
+            napaka.textContent = 'Prosimo izberite splošno oceno.';
+            napaka.classList.remove('hidden');
+        }
+        return;
+    }
+ 
+    const telo = {
+        TK_prenocisce: _prenocisceId,
+        komentar: document.getElementById('ocenaKomentar')?.value?.trim() || null,
+        ocena_splosna,
+        ocena_udobje: document.getElementById('ocena_udobje')?.value || 0,
+        ocena_unikatnost: document.getElementById('ocena_unikatnost')?.value || 0,
+        ocena_lokacija: document.getElementById('ocena_lokacija')?.value || 0,
+        ocena_cenovna_ugodnost: document.getElementById('ocena_cenovna_ugodnost')?.value || 0,
+        ocena_dozivetje: document.getElementById('ocena_dozivetje')?.value || 0
+    };
+ 
+    if (btn) { btn.disabled = true; btn.textContent = 'Pošiljam...'; }
+ 
+    try {
+        const res = await fetch('/api/komentar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify(telo)
+        });
+        const r = await res.json();
+ 
+        if (res.ok) {
+            // Skrij obrazec, pokazi zahvalo
+            document.getElementById('ocenaObrazec')?.classList.add('hidden');
+            document.getElementById('ocenaZeOddana')?.classList.remove('hidden');
+            // Osveži seznam komentarjev in povprečno oceno brez ponovnega nalaganja strani
+            const resp = await fetch(`${API_URL}/prenocisce/${_prenocisceId}`);
+            const freshData = await resp.json();
+            prikaziKomentarje(freshData.komentarji || []);
+            if (freshData.povprecnaOcena) {
+                setElementText('povprecnaOcena', freshData.povprecnaOcena);
+                setElementText('povprecnaOcenaCard', freshData.povprecnaOcena);
+            }
+        } else {
+            if (napaka) { napaka.textContent = r.napaka || 'Napaka pri oddaji ocene.'; napaka.classList.remove('hidden'); }
+            if (btn) { btn.disabled = false; btn.textContent = 'Oddaj oceno'; }
+        }
+    } catch {
+        if (napaka) { napaka.textContent = 'Napaka pri povezavi s strežnikom.'; napaka.classList.remove('hidden'); }
+        if (btn) { btn.disabled = false; btn.textContent = 'Oddaj oceno'; }
     }
 }
