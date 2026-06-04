@@ -138,6 +138,14 @@
                     </div>
                     <p class="text-xs text-slate-400 mt-1.5 ml-1">Vnesite 0 za brezplačno doživetje.</p>
                 </div>
+                <!-- ZA UREJANJE: pokaži samo ko je id -->
+                <div id="obrazecSlikaSekcija" class="hidden">
+                    <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Slika doživetja</label>
+                    <div id="obrazecSlikeContainer" class="flex flex-wrap gap-3 mb-3"></div>
+                    <label class="cursor-pointer inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl border-2 border-dashed border-slate-300 hover:border-teal-400 text-slate-500 hover:text-teal-600 transition text-sm font-semibold">📷 Dodaj sliko
+                    <input type="file" accept="image/*" multiple class="hidden" onchange="izberiNovoSliko(this)" />
+                    </label>
+                </div>
                 <p id="obrazecNapaka" class="hidden text-red-600 text-sm font-semibold bg-red-50 px-4 py-3 rounded-xl border border-red-200"></p>
             </div>
             <div class="px-8 py-6 border-t border-slate-100 flex items-center justify-between gap-4">

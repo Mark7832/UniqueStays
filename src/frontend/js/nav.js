@@ -11,7 +11,10 @@ if (token && uporabnik) {
     if (prijavaNaGumb) prijavaNaGumb.classList.add('hidden');
     if (registracijaGumb) registracijaGumb.classList.add('hidden');
     if (odjavaGumb) odjavaGumb.classList.remove('hidden');
-    if (imeUporabnika) imeUporabnika.textContent = podatki.ime;
+    if (imeUporabnika) imeUporabnika.textContent = 'Profil';
+    // skrij moznost profil ce si na profilu 
+    const naProfilu = window.location.pathname.includes('profile.html');
+    if (naProfilu && imeUporabnika) imeUporabnika.classList.add('hidden');
 } else {
     if (prijavaNaGumb) prijavaNaGumb.classList.remove('hidden');
     if (registracijaGumb) registracijaGumb.classList.remove('hidden');

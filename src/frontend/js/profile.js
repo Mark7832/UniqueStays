@@ -37,7 +37,7 @@ async function nalagajProfil() {
     }
 }
 
-document.getElementById('profilForm').addEventListener('submit', async function(e) {
+document.getElementById('profilForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const podatki = {
@@ -86,7 +86,7 @@ document.getElementById('profilForm').addEventListener('submit', async function(
     }
 });
 
-document.getElementById('gesloForm').addEventListener('submit', async function(e) {
+document.getElementById('gesloForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const gesloNapaka = document.getElementById('gesloNapaka');
@@ -158,7 +158,7 @@ async function naloziMojaPrenocisca() {
         if (prenocisca.length === 0) return; // ce nima uporabnik prenocisc nic ne pokaze
 
         document.getElementById('mojaPrenocisca').classList.remove('hidden'); //prikaze seznam prenocisc
-        const seznam = document.getElementById('seznamPrenocisc'); 
+        const seznam = document.getElementById('seznamPrenocisc');
         seznam.innerHTML = '';// pocisti stare kartice da se seznam pravilno osvezi
 
         prenocisca.forEach(p => {
@@ -204,15 +204,15 @@ async function naloziVezavoPovezava() {
     try {
         //vzporedno naloži prenočišča in doživetja
         const [resP, resD] = await Promise.all([
-            fetch('/moja-prenocisca',  { headers: { 'Authorization': 'Bearer ' + token } }),
-            fetch('/api/dozivetja',    { headers: { 'Authorization': 'Bearer ' + token } })
+            fetch('/moja-prenocisca', { headers: { 'Authorization': 'Bearer ' + token } }),
+            fetch('/api/dozivetja', { headers: { 'Authorization': 'Bearer ' + token } })
         ]);
         const prenocisca = await resP.json();
-        const dozivetja  = await resD.json();
+        const dozivetja = await resD.json();
 
         const sekcija = document.getElementById('sekcijaPovezava');
-        const seznam  = document.getElementById('vezavaSeznam');
-        const prazno  = document.getElementById('vezavaPrazno');
+        const seznam = document.getElementById('vezavaSeznam');
+        const prazno = document.getElementById('vezavaPrazno');
 
         //prikaže sekcijo samo če ima prenočišča
         if (!prenocisca.length) return;
@@ -248,9 +248,9 @@ async function naloziVezavoPovezava() {
                 <!--vezana doživetja - klic funkcije karticeVezano-->
                 <div id="vezana-${p.ID_prenocisce}" class="space-y-2 mb-3">
                     ${vezana.length === 0
-                        ? `<p class="text-sm text-slate-400 italic px-1">Ni vezanih doživetij.</p>`
-                        : vezana.map(d => karticeVezano(d, p.ID_prenocisce)).join('')
-                    }
+                    ? `<p class="text-sm text-slate-400 italic px-1">Ni vezanih doživetij.</p>`
+                    : vezana.map(d => karticeVezano(d, p.ID_prenocisce)).join('')
+                }
                 </div>
 
                 <!--dodaj doživetje na to prenočišče-->
@@ -260,8 +260,8 @@ async function naloziVezavoPovezava() {
                         class="flex-1 px-4 py-2.5 rounded-2xl border border-slate-200 bg-slate-50 font-semibold text-sm outline-none focus:border-teal-400 focus:bg-white transition appearance-none cursor-pointer">
                         <option value="">Izberi prosto doživetje…</option>
                         ${prosta.map(d =>
-                            `<option value="${d.ID_dozivetje}">${d.naziv} (€ ${parseFloat(d.doplacilo).toFixed(2)})</option>`
-                        ).join('')}
+                    `<option value="${d.ID_dozivetje}">${d.naziv} (€ ${parseFloat(d.doplacilo).toFixed(2)})</option>`
+                ).join('')}
                     </select>
                     <button onclick="veziDozivetje(${p.ID_prenocisce})"
                         class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold text-sm hover:scale-[1.02] transition-all duration-200 shadow">
@@ -298,15 +298,15 @@ function karticeVezano(d, idPrenocisca) {
 //veži doživetje na prenočišče
 async function veziDozivetje(idPrenocisca) {
     const token = sessionStorage.getItem('token');
-    const sel   = document.getElementById(`dodajSelect-${idPrenocisca}`);
+    const sel = document.getElementById(`dodajSelect-${idPrenocisca}`);
     const idDoz = sel.value;
     if (!idDoz) return;
 
     try {
         const res = await fetch(`/api/dozivetje/${idDoz}/vezava`, {
-            method:  'PUT',
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-            body:    JSON.stringify({ TK_prenocisce: parseInt(idPrenocisca) })
+            body: JSON.stringify({ TK_prenocisce: parseInt(idPrenocisca) })
         });
         const r = await res.json();
         if (res.ok) {
@@ -325,9 +325,9 @@ async function odveziDozivetje(idDoz, idPrenocisca) {
     const token = sessionStorage.getItem('token');
     try {
         const res = await fetch(`/api/dozivetje/${idDoz}/vezava`, {
-            method:  'PUT',
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-            body:    JSON.stringify({ TK_prenocisce: null })
+            body: JSON.stringify({ TK_prenocisce: null })
         });
         const r = await res.json();
         if (res.ok) {
@@ -351,3 +351,76 @@ function prikaziSporociloPovezava(besedilo, uspeh) {
     el.classList.remove('hidden');
     setTimeout(() => el.classList.add('hidden'), 4000);
 }
+
+// PRILJUBLJENO
+
+// Vrne HTML kartico za eno priljubljeno prenočišče
+function renderPriljubljena(p) {
+    return `
+        <div class="p-4 rounded-2xl border border-slate-200 flex justify-between items-center hover:shadow-md transition">
+
+            <a href="podrobnosti.html?id=${p.id}" class="flex-1">
+                <div class="font-bold text-lg">${p.naziv}</div>
+                <div class="text-sm text-slate-500">${p.cena} € / noč</div>
+            </a>
+
+            <button onclick="odstraniPriljubljeno(${p.id})"
+                class="text-red-500 text-xl hover:scale-110 transition">
+                ✕
+            </button>
+
+        </div>
+    `;
+}
+
+// Naloži priljubljena prenočišča uporabnika
+async function naloziPriljubljene() {
+    const token = sessionStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const res = await fetch('http://localhost:3000/api/priljubljeno', {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+
+        const data = await res.json();
+        const el = document.getElementById('seznamPriljubljenih');
+
+        if (!data.length) {
+            el.innerHTML = `
+                <p class="text-slate-500 italic">
+                    Nimate še priljubljenih prenočišč
+                </p>`;
+            return;
+        }
+
+        el.innerHTML = data.map(renderPriljubljena).join('');
+
+    } catch (err) {
+        console.error('Napaka pri nalaganju priljubljenih:', err);
+    }
+}
+
+// Odstrani priljubljeno prenočišče iz seznama
+async function odstraniPriljubljeno(id) {
+    if (!confirm('Ste prepričani, da želite odstraniti iz priljubljenih?')) return;
+    const token = sessionStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        await fetch(`http://localhost:3000/api/priljubljeno/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        naloziPriljubljene();
+    } catch (err) {
+        console.error('Napaka pri odstranjevanju:', err);
+    }
+}
+
+// samodejno nalozi seznam priljubljenih ob odprtju strani
+document.addEventListener("DOMContentLoaded", () => {
+    naloziPriljubljene();
+});
