@@ -345,6 +345,172 @@
         </div>
     </section>
 
+    <!-- ODDAJ OCENO -->
+    <section class="py-24 px-6 bg-slate-50">
+        <div class="max-w-4xl mx-auto">
+ 
+            <div class="text-center mb-12">
+                <span class="inline-block px-4 py-2 rounded-full bg-amber-100 text-amber-700 font-bold text-sm uppercase tracking-widest mb-4">
+                    Vaša izkušnja
+                </span>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">
+                    Ocenite bivanje
+                </h2>
+                <p class="text-lg text-slate-500">
+                    Ocene so vidne samo gostom, ki so pri nas že prenočili.
+                </p>
+            </div>
+ 
+            <!-- Dinamična vsebina — JS nastavi pravilen blok -->
+            <div id="ocenaSekcija" class="hidden">
+ 
+                <!-- Ni prijavljen -->
+                <div id="ocenaNiPrijavljen" class="hidden p-10 rounded-3xl bg-white border-2 border-slate-200 text-center shadow-sm">
+                    <p class="text-5xl mb-4">🔒</p>
+                    <h3 class="text-xl font-extrabold text-slate-800 mb-2">Za oddajo ocene se prijavite</h3>
+                    <p class="text-slate-500 text-sm mb-7">Ocenijo lahko le prijavljeni gostje, ki so pri nas že prenočili.</p>
+                    <a href="login.html"
+                        class="inline-block px-8 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.02] transition-all duration-200 shadow-lg text-sm">
+                        Prijava
+                    </a>
+                </div>
+ 
+                <!-- Nima pretečene rezervacije -->
+                <div id="ocenaNiRezervacije" class="hidden p-10 rounded-3xl bg-blue-50 border-2 border-blue-200 text-center shadow-sm">
+                    <p class="text-5xl mb-4">🏠</p>
+                    <h3 class="text-xl font-extrabold text-slate-800 mb-2">Oceniti je mogoče le po bivanju</h3>
+                    <p class="text-slate-500 text-sm">Ko se vaša rezervacija konča, boste tukaj lahko oddali oceno.</p>
+                </div>
+ 
+                <!-- Že oddana ocena -->
+                <div id="ocenaZeOddana" class="hidden p-10 rounded-3xl bg-teal-50 border-2 border-teal-200 text-center shadow-sm">
+                    <p class="text-5xl mb-4">✅</p>
+                    <h3 class="text-xl font-extrabold text-slate-800 mb-2">Vaša ocena je bila oddana</h3>
+                    <p class="text-slate-500 text-sm">Hvala, ker ste delili svojo izkušnjo z drugimi gosti.</p>
+                </div>
+ 
+                <!-- Obrazec za oceno -->
+                <div id="ocenaObrazec" class="hidden bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+ 
+                    <div class="px-8 py-6 border-b border-slate-100 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-100 flex items-center justify-center text-xl">⭐</div>
+                        <div>
+                            <h3 class="font-extrabold text-slate-900">Oddajte oceno</h3>
+                            <p class="text-xs text-slate-400">Vsa polja razen komentarja so neobvezna.</p>
+                        </div>
+                    </div>
+ 
+                    <div class="px-8 py-8 space-y-8">
+ 
+                        <!-- Splošna ocena — obvezno -->
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-3">
+                                Splošna ocena <span class="text-red-400 normal-case text-sm">*</span>
+                            </label>
+                            <div class="flex gap-2">
+                                <span data-skupina="splosna" data-vrednost="1" class="text-3xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                <span data-skupina="splosna" data-vrednost="2" class="text-3xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                <span data-skupina="splosna" data-vrednost="3" class="text-3xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                <span data-skupina="splosna" data-vrednost="4" class="text-3xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                <span data-skupina="splosna" data-vrednost="5" class="text-3xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                            </div>
+                            <input type="hidden" id="ocena_splosna" value="0" />
+                        </div>
+ 
+                        <!-- Podocene v mreži -->
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+ 
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Udobje</label>
+                                <div class="flex gap-1">
+                                    <span data-skupina="udobje" data-vrednost="1" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="udobje" data-vrednost="2" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="udobje" data-vrednost="3" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="udobje" data-vrednost="4" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="udobje" data-vrednost="5" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                </div>
+                                <input type="hidden" id="ocena_udobje" value="0" />
+                            </div>
+ 
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Unikatnost</label>
+                                <div class="flex gap-1">
+                                    <span data-skupina="unikatnost" data-vrednost="1" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="unikatnost" data-vrednost="2" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="unikatnost" data-vrednost="3" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="unikatnost" data-vrednost="4" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="unikatnost" data-vrednost="5" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                </div>
+                                <input type="hidden" id="ocena_unikatnost" value="0" />
+                            </div>
+ 
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Lokacija</label>
+                                <div class="flex gap-1">
+                                    <span data-skupina="lokacija" data-vrednost="1" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="lokacija" data-vrednost="2" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="lokacija" data-vrednost="3" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="lokacija" data-vrednost="4" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="lokacija" data-vrednost="5" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                </div>
+                                <input type="hidden" id="ocena_lokacija" value="0" />
+                            </div>
+ 
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Cena / vrednost</label>
+                                <div class="flex gap-1">
+                                    <span data-skupina="cenovna_ugodnost" data-vrednost="1" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="cenovna_ugodnost" data-vrednost="2" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="cenovna_ugodnost" data-vrednost="3" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="cenovna_ugodnost" data-vrednost="4" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="cenovna_ugodnost" data-vrednost="5" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                </div>
+                                <input type="hidden" id="ocena_cenovna_ugodnost" value="0" />
+                            </div>
+ 
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Doživetje</label>
+                                <div class="flex gap-1">
+                                    <span data-skupina="dozivetje" data-vrednost="1" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="dozivetje" data-vrednost="2" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="dozivetje" data-vrednost="3" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="dozivetje" data-vrednost="4" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                    <span data-skupina="dozivetje" data-vrednost="5" class="text-xl cursor-pointer select-none transition-transform duration-100">☆</span>
+                                </div>
+                                <input type="hidden" id="ocena_dozivetje" value="0" />
+                            </div>
+ 
+                        </div>
+ 
+                        <!-- Besedilni komentar -->
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
+                                Komentar <span class="text-slate-300 font-normal normal-case">(neobvezno)</span>
+                            </label>
+                            <textarea id="ocenaKomentar" rows="4"
+                                placeholder="Opišite svojo izkušnjo..."
+                                class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 font-semibold outline-none focus:border-teal-400 focus:bg-white transition resize-none text-sm leading-relaxed">
+                            </textarea>
+                        </div>
+ 
+                        <!-- Napaka -->
+                        <p id="ocenaNapaka" class="hidden px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm font-semibold"></p>
+ 
+                    </div>
+ 
+                    <div class="px-8 py-6 border-t border-slate-100 flex justify-end">
+                        <button id="btnOddajOceno" onclick="oddajOceno()"
+                            class="px-10 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-[1.02] transition-all duration-200 shadow-lg text-sm">
+                            Oddaj oceno
+                        </button>
+                    </div>
+ 
+                </div>
+            </div>
+ 
+        </div>
+    </section>
+
     <!-- REZERVACIJSKI MODAL START -->
     <div id="rezervacijaModal" aria-modal="true" role="dialog"
         class="fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-opacity duration-300"
