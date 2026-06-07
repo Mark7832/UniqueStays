@@ -122,10 +122,10 @@ async function isci() {
                         </span>
 
                         <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
-                            🛏️ ${p.stevilo_sob} ${p.stevilo_sob === 1 ? 'soba' : 'sobe'}
+                            🛏️ ${p.stevilo_sob} ${p.stevilo_sob === 1 ? 'soba' : p.stevilo_sob === 2 ? 'sobi' : 'sobe'}
                         </span>
 
-                        ${p.wifi == 1        ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">📶 Wi-Fi</span>` : ''}
+                        ${p.wifi == 1        ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate700 text-sm font-bold">📶 Wi-Fi</span>` : ''}
                         ${p.bazen == 1       ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">🏊 Zasebni bazen</span>` : ''}
                         ${p.parking == 1     ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">🅿️ Parking</span>` : ''}
                         ${p.zajtrk == 1      ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">🥐 Zajtrk vključen</span>` : ''}
