@@ -8,6 +8,14 @@ let lastnikId = null;
 
 const API_URL = 'http://localhost:3000/api';
 
+function slikaVUrl(s) {
+    if (!s) return null;
+    if (s.slika) return s.slika;
+    if (s.pot_slike) return s.pot_slike;
+    if (s.url) return s.url;
+    return null;
+}
+
 // Funkcija za inicializacijo zemljevida
 function inicializirajZemljevid(koordinate) {
     const coords = koordinate.split(',').map(c => parseFloat(c.trim()));
@@ -30,7 +38,7 @@ function inicializirajZemljevid(koordinate) {
     
     const customIcon = L.divIcon({
         className: 'custom-marker',
-        html: '<div style="background: #2563eb; width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 4px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3);"><div style="transform: rotate(45deg); color: white; font-size: 20px; text-align: center; line-height: 32px;">🏰</div></div>',
+        html: '<div style="background: #2563eb; width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 4px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3);"><div style="transform: rotate(45deg); color: white; font-size: 20px; text-align: center; line-height: 32px;">🏠</div></div>',
         iconSize: [40, 40],
         iconAnchor: [20, 40],
         popupAnchor: [0, -40]
@@ -222,41 +230,113 @@ function prikaziPodatke(data) {
     _rezervacijaData.maxGostov = parseInt(prenocisce.max_gostov) || 10;
 }
 
-// Prikaz hero background slike
+// Hero carousel state
+let _heroCarouselIndex = 0;
+let _heroCarouselUrls = [];
+ 
+// Prikaz hero background slike + carousel vseh slik prenočišča
 function prikaziHeroSliko(slike) {
-    const coverSlika = slike.find(s => s.cover === true || s.cover === 1);
-    
-    if (!coverSlika) {
-        console.warn('⚠️ Ni cover slike');
-        return;
-    }
-    
-    const heroBackground = document.getElementById('heroBackground');
-    if (!heroBackground) {
-        console.error('❌ heroBackground element ne obstaja!');
-        return;
-    }
-    
-    let imageUrl = '';
-    
-    if (coverSlika.slika && typeof coverSlika.slika === 'string') {
-        if (coverSlika.slika.startsWith('data:')) {
-            imageUrl = coverSlika.slika;
-        } else {
-            const ext = coverSlika.ime_slike.split('.').pop().toLowerCase();
-            const mimeType = ext === 'png' ? 'image/png' : 'image/jpeg';
-            imageUrl = `data:${mimeType};base64,${coverSlika.slika}`;
+    // filtriramo samo slike prenočišča
+    const prenocisceSlike = slike.filter(
+        s => s.TK_prenocisce !== undefined && s.TK_prenocisce !== null
+    );
+    if (prenocisceSlike.length === 0) return;
+ 
+    // ── 1. cover slika kot ozadje hero sekcije ───────────────
+    const coverSlika = prenocisceSlike.find(s => s.cover === true || s.cover === 1);
+    const heroSection = document.getElementById('heroSection');
+    const heroDekor = document.getElementById('heroDekor');
+ 
+    if (coverSlika) {
+        const url = slikaVUrl(coverSlika);
+        if (url && heroSection) {
+            heroSection.style.backgroundImage = `linear-gradient(to bottom right, rgba(15,23,42,0.72), rgba(30,58,138,0.65), rgba(17,94,89,0.55)), url('${url}')`;
+            heroSection.style.backgroundSize = 'cover';
+            heroSection.style.backgroundPosition = 'center';
         }
-    } else if (coverSlika.ID_slika) {
-        imageUrl = `${API_URL}/slika/${coverSlika.ID_slika}`;
-    } else {
-        console.error('❌ Slika nima ne base64 ne ID_slika!');
-        return;
+        if (heroDekor) heroDekor.style.display = 'none';
     }
-    
-    heroBackground.style.backgroundImage = `url('${imageUrl}')`;
-    heroBackground.style.display = 'block';
+ 
+    // ── 2. VSE slike v carousel (cover prva, potem ostale) ──────
+    const vseSlike = [
+        ...(coverSlika ? [coverSlika] : []),
+        ...prenocisceSlike.filter(s => s.cover !== true && s.cover !== 1)
+    ];
+    if (vseSlike.length === 0) return;
+ 
+    const wrap = document.getElementById('heroGalerijaWrap');
+    const track = document.getElementById('heroCarouselTrack');
+    const dotsContainer = document.getElementById('heroCarouselDots');
+    if (!wrap || !track || !dotsContainer) return;
+ 
+    _heroCarouselUrls = vseSlike.map(s => slikaVUrl(s)).filter(Boolean);
+    _heroCarouselIndex = 0;
+ 
+    track.innerHTML = '';
+    dotsContainer.innerHTML = '';
+ 
+    // track: relativno, polna višina
+    track.style.cssText = 'position:relative; width:100%; height:100%;';
+ 
+    _heroCarouselUrls.forEach((url, i) => {
+        const slide = document.createElement('div');
+        slide.style.cssText = 'position:absolute; inset:0; transition:opacity 0.4s ease;';
+        slide.style.opacity = i === 0 ? '1' : '0';
+        slide.style.pointerEvents = i === 0 ? 'auto' : 'none';
+ 
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = `Slika ${i + 1}`;
+        img.style.cssText = 'width:100%; height:100%; object-fit:cover; display:block;';
+        img.onerror = () => { slide.style.display = 'none'; };
+        slide.appendChild(img);
+        track.appendChild(slide);
+ 
+        const dot = document.createElement('button');
+        dot.style.cssText = `width:8px; height:8px; border-radius:50%; border:none; cursor:pointer; transition:all 0.2s; background:${i === 0 ? 'white' : 'rgba(255,255,255,0.4)'};`;
+        dot.onclick = () => heroCarouselGoTo(i);
+        dotsContainer.appendChild(dot);
+    });
+ 
+    wrap.classList.remove('hidden');
+    _heroCarouselUpdate();
 }
+ 
+function _heroCarouselUpdate() {
+    const slides = document.querySelectorAll('#heroCarouselTrack > div');
+    const dots = document.querySelectorAll('#heroCarouselDots button');
+    slides.forEach((s, i) => {
+        const active = i === _heroCarouselIndex;
+        s.style.opacity = active ? '1' : '0';
+        s.style.pointerEvents = active ? 'auto' : 'none';
+    });
+    dots.forEach((d, i) => {
+        d.style.background = i === _heroCarouselIndex ? 'white' : 'rgba(255,255,255,0.4)';
+        d.style.transform = i === _heroCarouselIndex ? 'scale(1.3)' : 'scale(1)';
+    });
+}
+ 
+function heroCarouselNext() {
+    if (_heroCarouselUrls.length === 0) return;
+    _heroCarouselIndex = (_heroCarouselIndex + 1) % _heroCarouselUrls.length;
+    _heroCarouselUpdate();
+}
+ 
+function heroCarouselPrev() {
+    if (_heroCarouselUrls.length === 0) return;
+    _heroCarouselIndex = (_heroCarouselIndex - 1 + _heroCarouselUrls.length) % _heroCarouselUrls.length;
+    _heroCarouselUpdate();
+}
+ 
+function heroCarouselGoTo(i) {
+    _heroCarouselIndex = i;
+    _heroCarouselUpdate();
+}
+ 
+// Ohrani prazne stub funkcije za nazaj-kompatibilnost (carousel ni več v HTML)
+function premakniCarousel() {}
+function postaviCarousel() {}
+function osveziCarousel() {}
 
 // Helper funkcija za nastavljanje teksta elementov
 function setElementText(id, text) {

@@ -71,7 +71,7 @@ app.get('/api/prenocisce/:id', async (req, res) => {
         // Pridobi slike
         const slike = await db('Slika')
             .where('TK_prenocisce', id)
-            .select('slika', 'ime_slike', 'cover');
+            .select('slika', 'ime_slike', 'cover', 'TK_prenocisce');
 
         const slikeBase64 = slike.map(s => ({
             ...s,

@@ -64,85 +64,96 @@
     <!-- HERO -->
     <section id="heroSection"
         class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-teal-900 text-white"
-        style="min-height: 600px;">
+        style="min-height: 780px;">
         <!-- Background slika iz baze -->
         <div id="heroBackground" class="absolute inset-0 bg-cover bg-center" style="display: none;">
             <div class="absolute inset-0 bg-gradient-to-br from-slate-900/70 via-blue-900/60 to-teal-900/50"></div>
         </div>
-
-        <div class="absolute inset-0 opacity-10 z-10">
-            <div class="absolute top-10 left-10 text-9xl">🏠</div>
-            <div class="absolute bottom-10 right-10 text-9xl">✨</div>
-        </div>
-
-        <div class="relative z-20 max-w-7xl mx-auto px-6 py-32">
-            <div class="flex items-center gap-4 mb-6">
-
-                <div class="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md">
-                    <span class="text-sm font-bold uppercase tracking-wider" id="tipPrenocisca">
-                        🏠 Nalaganje...
-                    </span>
+ 
+        <div class="relative z-20 max-w-7xl mx-auto px-6 py-20 flex flex-col lg:flex-row items-center gap-12">
+ 
+            <!-- LEVO: tekst, stats, gumbi -->
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md">
+                        <span class="text-sm font-bold uppercase tracking-wider" id="tipPrenocisca">
+                            🏠 Nalaganje...
+                        </span>
+                    </div>
+ 
+                    <!-- srcek za priljubljena prenocisca -->
+                    <button id="btnPriljubljeno" onclick="togglePriljubljeno()"
+                        class="text-white text-3xl hover:scale-110 transition-transform duration-200 bg-transparent border-none cursor-pointer"
+                        title="Dodaj med priljubljene">
+                        ♡
+                    </button>
                 </div>
-
-                <!-- srcek za priljubljena prenocisca -->
-                <button id="btnPriljubljeno" onclick="togglePriljubljeno()"
-                    class="text-white text-3xl hover:scale-110 transition-transform duration-200 bg-transparent border-none cursor-pointer"
-                    title="Dodaj med priljubljene">
-                    ♡
-                </button>
-
+ 
+                <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-6" id="nazivPrenocisca">
+                    Nalaganje podatkov...
+                </h1>
+ 
+                <p class="text-xl text-white/90 mb-10 leading-relaxed" id="opisPrenocisca">
+                    Prosimo počakajte...
+                </p>
+ 
+                <!-- stats -->
+                <div class="flex flex-wrap gap-4 mb-10">
+                    <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
+                        <div class="text-sm text-white/70">Cena na noč</div>
+                        <div class="text-3xl font-bold" id="cenaNaNoc">-</div>
+                    </div>
+ 
+                    <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
+                        <div class="text-sm text-white/70">Gostov</div>
+                        <div class="text-3xl font-bold" id="maxGostov">-</div>
+                    </div>
+ 
+                    <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
+                        <div class="text-sm text-white/70">Spalnic</div>
+                        <div class="text-3xl font-bold" id="steviloSob">-</div>
+                    </div>
+ 
+                    <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
+                        <div class="text-sm text-white/70">Ocena</div>
+                        <div class="text-3xl font-bold" id="povprecnaOcena">-</div>
+                    </div>
+                </div>
+ 
+                <!-- buttons -->
+                <div class="flex flex-wrap gap-4">
+                    <button id="btnRezervacija" onclick="odpriRezervacijo()"
+                        class="group px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-105 transition-all duration-200 shadow-lg flex items-center gap-3">
+                        <span>Rezerviraj zdaj</span>
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </button>
+                    <button onclick="scrollToMap()"
+                        class="px-8 py-4 rounded-full bg-white/10 backdrop-blur-md text-white font-bold hover:bg-white/20 transition-all duration-200">
+                        Poglej lokacijo 📍
+                    </button>
+                </div>
             </div>
-
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6" id="nazivPrenocisca">
-                Nalaganje podatkov...
-            </h1>
-
-
-            <p class="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl leading-relaxed" id="opisPrenocisca">
-                Prosimo počakajte...
-            </p>
-
-            <!-- stats -->
-            <div class="flex flex-wrap gap-4 mb-10">
-                <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
-                    <div class="text-sm text-white/70">Cena na noč</div>
-                    <div class="text-3xl font-bold" id="cenaNaNoc">-</div>
-                </div>
-
-                <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
-                    <div class="text-sm text-white/70">Gostov</div>
-                    <div class="text-3xl font-bold" id="maxGostov">-</div>
-                </div>
-
-                <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
-                    <div class="text-sm text-white/70">Spalnic</div>
-                    <div class="text-3xl font-bold" id="steviloSob">-</div>
-                </div>
-
-                <div class="px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md">
-                    <div class="text-sm text-white/70">Ocena</div>
-                    <div class="text-3xl font-bold" id="povprecnaOcena">-</div>
+ 
+            <!-- DESNO: carousel slik -->
+            <div id="heroGalerijaWrap" class="hidden lg:block flex-shrink-0 w-96 xl:w-[440px]">
+                <!-- carousel se zgradi dinamično -->
+                <div id="heroCarousel" class="relative rounded-3xl overflow-hidden shadow-2xl border border-white/20" style="height: 420px;">
+                    <div id="heroCarouselTrack" class="flex h-full transition-transform duration-500 ease-in-out"></div>
+                    <!-- arrows -->
+                    <button onclick="heroCarouselPrev()" class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/60 transition z-10 text-lg">‹</button>
+                    <button onclick="heroCarouselNext()" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/60 transition z-10 text-lg">›</button>
+                    <!-- dots -->
+                    <div id="heroCarouselDots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10"></div>
                 </div>
             </div>
-
-            <!-- buttons -->
-            <div class="flex flex-wrap gap-4">
-                <button id="btnRezervacija" onclick="odpriRezervacijo()"
-                    class="group px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold hover:scale-105 transition-all duration-200 shadow-lg flex items-center gap-3">
-                    <span>Rezerviraj zdaj</span>
-                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                </button>
-                <button onclick="scrollToMap()"
-                    class="px-8 py-4 rounded-full bg-white/10 backdrop-blur-md text-white font-bold hover:bg-white/20 transition-all duration-200">
-                    Poglej lokacijo 📍
-                </button>
-            </div>
+ 
         </div>
     </section>
+
 
     <!-- O PRENOČIŠČU -->
     <section class="py-24 px-6 bg-white">
