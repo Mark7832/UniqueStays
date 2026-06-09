@@ -321,6 +321,7 @@ async function nalozi_destinacije() {
     }
 }
 
+//6 najnovejših prenočišč (vsa dodana manj kot 30 dni nazaj)
 async function nalozi_nova() {
     try {
         const res = await fetch('http://localhost:3000/isci_prenocisca?');
