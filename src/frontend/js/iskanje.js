@@ -118,11 +118,11 @@ async function isci() {
                     <!--značke-->
                     <div class="flex flex-wrap gap-3 mb-8">
                         <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
-                            👥 do ${p.max_gostov} gostov
+                            👥 do ${p.max_gostov} ${p.max_gostov === 1 ? 'gost': p.max_gostov === 2 ? 'gosta' : p.max_gostov <= 4 ? 'gostje' : 'gostov'}
                         </span>
 
                         <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
-                            🛏️ ${p.stevilo_sob} ${p.stevilo_sob === 1 ? 'soba' : 'sobe'}
+                            🛏️ ${p.stevilo_sob} ${p.stevilo_sob === 1 ? 'soba' : p.stevilo_sob === 2 ? 'sobi' : p.stevilo_sob <= 4 ? 'sobe' : 'sob'}
                         </span>
 
                         ${p.wifi == 1        ? `<span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">📶 Wi-Fi</span>` : ''}
@@ -135,7 +135,7 @@ async function isci() {
 
                         ${tagi.map(t => `
                             <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
-                                ${t.emoji} ${t.naziv}
+                                ${t.naziv}
                             </span>
                         `).join('')}
                     </div>
@@ -265,5 +265,113 @@ function prikaziZemljevid() {
     if (markers.length > 0) {
         const group = L.featureGroup(markers);
         map.fitBounds(group.getBounds().pad(0.2));
+    }
+}
+
+//na strani index.html prikaz najbolj popularnih destinacij (top 6, ki imajo oceno nad 4.8)
+async function nalozi_destinacije() {
+    try {
+        const res = await fetch('http://localhost:3000/isci_prenocisca?');
+        const prenocisca = await res.json();
+        
+        if (!Array.isArray(prenocisca)) return;
+
+        //filtriraj samo gostova izbira (ocena >= 4.8) in vzemi top 6
+        const priljubljene = prenocisca
+            .filter(p => p.povprecna_ocena >= 4.8)
+            .sort((a, b) => b.povprecna_ocena - a.povprecna_ocena)
+            .slice(0, 6);
+
+        const container = document.getElementById('destinacijeContainer');
+
+        if (priljubljene.length === 0) {
+            container.innerHTML = `<div class="col-span-full text-center text-slate-400">Ni priljubljenih destinacij.</div>`;
+            return;
+        }
+
+        container.innerHTML = priljubljene.map(p => `
+            <a href="podrobnosti.html?id=${p.ID_prenocisce}"
+               class="group relative rounded-[28px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[320px] flex flex-col justify-end">
+                
+                <img src="${p.cover_slika || 'images/default.jpg'}" alt="${p.naziv}"
+                     class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent"></div>
+                
+                <!-- Gostova izbira značka -->
+                <span class="absolute top-5 left-5 px-3 py-2 rounded-full bg-purple-100 text-purple-700 text-sm font-bold">
+                    🏆 Gostova izbira
+                </span>
+
+                <!-- Ocena -->
+                <span class="absolute top-5 right-5 px-3 py-2 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">
+                    ⭐ ${p.povprecna_ocena}
+                </span>
+
+                <!-- Vsebina spodaj -->
+                <div class="relative p-6">
+                    <p class="text-white/70 text-sm font-semibold uppercase tracking-widest mb-1">📍 ${p.naslov}</p>
+                    <h3 class="text-2xl font-extrabold text-white mb-2">${p.naziv}</h3>
+                </div>
+            </a>
+        `).join('');
+
+    } catch (err) {
+        console.error('Napaka pri nalaganju destinacij:', err);
+    }
+}
+
+async function nalozi_nova() {
+    try {
+        const res = await fetch('http://localhost:3000/isci_prenocisca?');
+        const prenocisca = await res.json();
+        
+        if (!Array.isArray(prenocisca)) return;
+
+        const zdaj = new Date();
+        const nova = prenocisca
+            .filter(p => {
+                const dodano = new Date(p.datum_dodano);
+                const dni = (zdaj - dodano) / (1000 * 60 * 60 * 24);
+                return dni <= 30;
+            })
+            .sort((a, b) => new Date(b.datum_dodano) - new Date(a.datum_dodano))
+            .slice(0, 6);
+
+        const container = document.getElementById('novaContainer');
+        if (!container) return;
+
+        if (nova.length === 0) {
+            container.innerHTML = `<div class="col-span-full text-center text-slate-400">Ni novih prenočišč.</div>`;
+            return;
+        }
+
+        container.innerHTML = nova.map(p => `
+            <a href="podrobnosti.html?id=${p.ID_prenocisce}"
+               class="group relative rounded-[28px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[320px] flex flex-col justify-end">
+                
+                <img src="${p.cover_slika || 'images/default.jpg'}" alt="${p.naziv}"
+                     class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent"></div>
+                
+                <span class="absolute top-5 left-5 px-3 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold">
+                    ✨ Novo
+                </span>
+
+                ${p.povprecna_ocena ? `
+                <span class="absolute top-5 right-5 px-3 py-2 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">
+                    ⭐ ${p.povprecna_ocena}
+                </span>` : ''}
+
+                <div class="relative p-6">
+                    <p class="text-white/70 text-sm font-semibold uppercase tracking-widest mb-1">📍 ${p.naslov}</p>
+                    <h3 class="text-2xl font-extrabold text-white mb-2">${p.naziv}</h3>
+                </div>
+            </a>
+        `).join('');
+
+    } catch (err) {
+        console.error('Napaka pri nalaganju novih:', err);
     }
 }

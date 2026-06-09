@@ -212,11 +212,23 @@ function prikaziPodatke(data) {
     if (prenocisce.wifi) {
         document.getElementById('wifiCard').style.display = 'block';
     }
+    if (prenocisce.bazen) {
+        document.getElementById('bazenCard').style.display = 'block';
+    }
     if (prenocisce.parking) {
         document.getElementById('parkingCard').style.display = 'block';
     }
+    if (prenocisce.zajtrk) {
+        document.getElementById('zajtrkCard').style.display = 'block';
+    }
     if (prenocisce.razgled) {
         document.getElementById('razgledCard').style.display = 'block';
+    }
+    if (prenocisce.ljubljencki) {
+        document.getElementById('ljubljenckiCard').style.display = 'block';
+    }
+    if (prenocisce.trajnostno) {
+        document.getElementById('trajnostnoCard').style.display = 'block';
     }
     //tagi
     prikaziTage(prenocisce.tagi);
