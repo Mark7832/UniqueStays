@@ -1145,6 +1145,9 @@ function nastaviZvezdice(skupinaId) {
  
 async function preveriUpravicenostOcene(prenocisceId) {
     const sekcija = document.getElementById('ocenaSekcija');
+    const ocenaSekcijaWrapper = document.getElementById('ocenaSekcijaWrapper');
+    const komentarjiSekcija = document.getElementById('komentarjiSekcija');
+
     if (!sekcija) return;
  
     const token = sessionStorage.getItem('token');
@@ -1154,10 +1157,8 @@ async function preveriUpravicenostOcene(prenocisceId) {
         document.getElementById(id)?.classList.add('hidden');
     });
  
-    //uporabnik ni prijavljen
+    //uporabnik ni prijavljen - skrij vse sekcije z ocenami
     if (!token) {
-        document.getElementById('ocenaNiPrijavljen')?.classList.remove('hidden');
-        sekcija.classList.remove('hidden');
         return;
     }
  
@@ -1169,17 +1170,20 @@ async function preveriUpravicenostOcene(prenocisceId) {
  
         if (data.jeLastnik) { //lastnik ne ocenjuje svojega prenočišča (sekcija ostane skrita)
             return;
-        } else if (data.jeZeKomentiral) { //uporabnik lahko komentira le enkrat
+        } else if (data.jeZeKomentiral) { //uporabnik lahko komentira le enkrat, prikaže mu zahvalo
             document.getElementById('ocenaZeOddana')?.classList.remove('hidden');
-        } else if (!data.jeRezerviral) { //uporabnik je rabil rezervirati
-            document.getElementById('ocenaNiRezervacije')?.classList.remove('hidden');
-        } else {
+            sekcija.classList.remove('hidden');
+            if (ocenaSekcijaWrapper) ocenaSekcijaWrapper.style.display = 'block';
+            if (komentarjiSekcija) komentarjiSekcija.style.display = 'block';
+        } else if (!data.jeRezerviral) { //uporabnik ni rezerviral (sekcija ostane skrita)
+            return;
+        } else { //ima pretečeno rezervacijo in še ni komentiral - prikaže mu obrazec
             document.getElementById('ocenaObrazec')?.classList.remove('hidden');
             ['splosna', 'udobje', 'unikatnost', 'lokacija', 'cenovna_ugodnost', 'dozivetje'].forEach(nastaviZvezdice);
+            sekcija.classList.remove('hidden');
+            if (ocenaSekcijaWrapper) ocenaSekcijaWrapper.style.display = 'block';
+            if (komentarjiSekcija) komentarjiSekcija.style.display = 'block';
         }
- 
-        sekcija.classList.remove('hidden');
-
     } catch (err) {
         console.error('Napaka pri preverjanju upravičenosti:', err);
     }
