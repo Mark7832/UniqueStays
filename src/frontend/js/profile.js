@@ -357,7 +357,7 @@ function prikaziSporociloPovezava(besedilo, uspeh) {
 // Vrne HTML kartico za eno priljubljeno prenočišče
 function renderPriljubljena(p) {
     return `
-        <div class="p-4 rounded-2xl border border-slate-200 flex justify-between items-center hover:shadow-md transition">
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex justify-between items-center hover:shadow-md transition">
 
             <a href="podrobnosti.html?id=${p.id}" class="flex-1">
                 <div class="font-bold text-lg">${p.naziv}</div>
@@ -424,10 +424,8 @@ async function odstraniPriljubljeno(id) {
 document.addEventListener("DOMContentLoaded", () => {
     naloziPriljubljene();
 });
-// ============================================================
-// MOJE REZERVACIJE
-// ============================================================
 
+// MOJE REZERVACIJE
 document.addEventListener("DOMContentLoaded", () => {
     naloziMojeRezervacije();
 });
@@ -472,7 +470,7 @@ function renderRezervacija(r) {
     const moznoPreklicati = !vPreteklosti && razlikaUre >= 48;
 
     const statusBadge = vPreteklosti
-        ? `<span class="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-bold">Zaključena</span>`
+        ? `<span class="inline-block px-3 py-1 rounded-full bg-purple-100 text-purple-500 text-xs font-bold">✓ Zaključena</span>`
         : razlikaUre < 48
         ? `<span class="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-600 text-xs font-bold">⚠️ Ni mogoče preklicati</span>`
         : `<span class="inline-block px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-xs font-bold">✓ Aktivna</span>`;
@@ -486,11 +484,11 @@ function renderRezervacija(r) {
                 </div>
                 <p class="text-sm text-slate-500 mb-2">${r.naslov || ''}</p>
                 <div class="flex flex-wrap gap-4 text-sm text-slate-600">
-                    <span>📅 <strong>${formatDatum(prihod)}</strong> → <strong>${formatDatum(odhod)}</strong></span>
-                    <span>🌙 ${noci} ${noci === 1 ? 'noč' : 'noči'}</span>
-                    <span>💶 ${cena.toFixed(2)} €</span>
+                    <span class="justify-between gap-2 p-2 rounded-2xl border border-red-300">📅 <strong>${formatDatum(prihod)}</strong> → <strong>${formatDatum(odhod)}</strong></span>
+                    <span class="justify-between gap-2 p-2 rounded-2xl border border-amber-300">🌙 ${noci} ${noci === 1 ? 'noč' : 'noči'}</span>
+                    <span class="justify-between gap-2 p-2 rounded-2xl border border-emerald-300">💶 ${cena.toFixed(2)} €</span>
                 </div>
-                <p class="text-xs text-slate-400 mt-1">Rezervacija #${r.ID_rezervacija} · oddana ${new Date(r.datum_rezervacije).toLocaleDateString('sl-SI')}</p>
+                <p class="text-xs text-slate-400 mt-1">Številka rezervacije #${r.ID_rezervacija} · oddana ${new Date(r.datum_rezervacije).toLocaleDateString('sl-SI')}</p>
             </div>
             ${moznoPreklicati ? `
             <button onclick="prekliciRezervacijo(${r.ID_rezervacija})"

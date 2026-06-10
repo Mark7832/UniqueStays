@@ -154,7 +154,7 @@ const db = knex({
     client: 'mysql2',
     connection: {
         host: '127.0.0.1',
-        user: 'root',
+        user: 'uniquestays',
         password: 'geslo',
         database: 'uniquestays'
     }
@@ -756,6 +756,38 @@ app.get('/api/prenocisce/:id/dozivetja', async (req, res) => {
     }
 });
 
+//slike doživetja
+app.get('/api/dozivetje/:id/slike', async (req, res) => {
+    try {
+        const slike = await db('Slika')
+            .where('TK_dozivetje', req.params.id)
+            .select('ID_slika', 'ime_slike', 'cover');
+        res.json(slike);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri pridobivanju slik.' });
+    }
+});
+
+app.get('/api/slika-dozivetja-id/:id', async (req, res) => {
+    try {
+        const slika = await db('Slika')
+            .where('ID_slika', req.params.id)
+            .select('slika', 'ime_slike')
+            .first();
+
+        if (!slika || !slika.slika) {
+            return res.status(404).json({ napaka: 'Slika ne obstaja.' });
+        }
+
+        res.set('Content-Type', 'image/jpeg');
+        res.send(slika.slika);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri pridobivanju slike.' });
+    }
+});
+
 // REZERVACIJA - vrni zasedene datume za prenočišče
 app.get('/api/rezervacija/:id/zasedeni', async (req, res) => {
     try {
@@ -988,7 +1020,6 @@ app.post('/api/priljubljeno/:id', preveriToken, async (req, res) => {
         res.status(500).json({ napaka: 'Napaka.' });
     }
 });
-
 
 // pridobi podatke in vrne seznam priljubljenih prenočišč prijavljenega uporabnika
 app.get('/api/priljubljeno', preveriToken, async (req, res) => {

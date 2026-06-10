@@ -28,7 +28,7 @@ function inicializirajZemljevid(koordinate) {
     const coords = koordinate.split(',').map(c => parseFloat(c.trim()));
     
     if (coords.length !== 2 || isNaN(coords[0]) || isNaN(coords[1])) {
-        console.error('❌ Neveljavne koordinate:', koordinate);
+        console.error('✗ Neveljavne koordinate:', koordinate);
         return;
     }
     
@@ -70,12 +70,12 @@ function inicializirajZemljevid(koordinate) {
 // Funkcija za prikaz uporabnikove lokacije in routinga
 function prikaziMojoLokacijo() {
     if (!map || !destinationCoords) {
-        alert('❌ Zemljevid še ni inicializiran!');
+        console.error('✗ Zemljevid še ni inicializiran!');
         return;
     }
     
     if (!navigator.geolocation) {
-        alert('❌ Vaša naprava ne podpira geolokacije!');
+        console.error('✗ Vaša naprava ne podpira geolokacije!');
         return;
     }
     
@@ -124,8 +124,12 @@ function prikaziMojoLokacijo() {
             map.fitBounds(bounds, { padding: [50, 50] });
         },
         function(error) {
-            console.error('❌ Napaka pri pridobivanju lokacije:', error);
-            alert('❌ Ne morem pridobiti vaše lokacije. Prosimo omogočite dostop do lokacije v nastavitvah brskalnika.');
+            console.error('✗ Napaka pri pridobivanju lokacije:', error);
+            const el = document.getElementById(lokacijaNapaka);
+            if(el){
+                el.textContent = '✗ Ne morem pridobiti vaše lokacije. Prosimo omogočite dostop do lokacije v nastavitvah brskalnika.';
+                el.classList.remove('hidden');
+            }
         },
         {
             enableHighAccuracy: true,

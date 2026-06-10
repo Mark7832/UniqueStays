@@ -231,13 +231,26 @@ document.addEventListener('DOMContentLoaded', function () {
             var data = await res.json();
             //sporocilo
             if (data.uspeh) {
-                alert(urejanjeId ? 'Prenočišče je bilo uspešno posodobljeno!' : 'Prenočišče je bilo uspešno dodano!');
-                window.location.href = 'profile.html';
+                if (uspeh) {
+                    uspeh.textContent = urejanjeId
+                        ? '✓ Prenočišče je bilo uspešno posodobljeno!'
+                        : '✓ Prenočišče je bilo uspešno dodano!';
+                    uspeh.classList.remove('hidden');
+                }
+                setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
             } else {
-                alert('Napaka pri shranjevanju.');
+                console.error('Napaka pri shranjevanju:', data);
+                if (napaka) {
+                    napaka.textContent = '✗ Napaka pri shranjevanju.';
+                    napaka.classList.remove('hidden');
+                }
             }
         } catch (err) {
-            alert('Napaka pri povezavi s strežnikom.');
+            console.error('Napaka pri povezavi s strežnikom:', err);
+            if (napaka) {
+                napaka.textContent = '✗ Napaka pri povezavi s strežnikom.';
+                napaka.classList.remove('hidden');
+            }
         }
     });
 });
@@ -288,7 +301,12 @@ async function poisciNaslov() {
     const podatki = await odgovor.json();
 
     if (podatki.length === 0) {
-        alert('Naslova ni bilo mogoče najti. Poskusite z bolj natančnim naslovom.');
+        console.error('Naslov ni bil najden:', naslov);
+        const el = document.getElementById('naslovNapaka');
+        if (el) {
+            el.textContent = 'Naslova ni bilo mogoče najti. Poskusite z bolj natančnim naslovom.';
+            el.classList.remove('hidden');
+        }        
         return;
     }
 
