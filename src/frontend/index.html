@@ -19,7 +19,7 @@
     </script>
     <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-slate-50 text-slate-700 antialiased">
+<body onload="nalozi_destinacije(); nalozi_nova()" class="bg-slate-50 text-slate-700 antialiased">
 
     <!--header-->
     <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-xl">
@@ -30,8 +30,9 @@
             </a>
 
             <div class="flex flex-wrap items-center justify-center gap-5">
-                <a href="#destinations" class="font-semibold hover:text-blue-600 transition">Destinacije</a>
+                <a href="#popular" class="font-semibold hover:text-blue-600 transition">Priljubljeno</a>
                 <a href="#about" class="font-semibold hover:text-blue-600 transition">O nas</a>
+                <a href="#new" class="px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold hover:bg-emerald-200 transition-all duration-200">Novo</a>
 
                 <a id="btnPrijava" href="login.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
                     Prijava
@@ -62,7 +63,7 @@
                 </span>
 
                 <span class="px-4 py-2 rounded-full bg-teal-400/20 border border-teal-300/20 text-teal-100 text-sm font-bold">
-                    🏠 1.200+ lokacij
+                    🏠 800+ lokacij
                 </span>
 
                 <span class="px-4 py-2 rounded-full bg-blue-400/20 border border-blue-300/20 text-blue-100 text-sm font-bold">
@@ -164,7 +165,7 @@
                     </span> 
 
                     <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" name="ljubljencki"> Hišni ljubljenčki
+                        <input type="checkbox" name="wifi"> Wi-Fi
                     </label>
 
                     <label class="flex items-center gap-2 text-sm">
@@ -172,15 +173,7 @@
                     </label>
 
                     <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" name="trajnostno"> Trajnostno
-                    </label>
-
-                    <label class="flex items-center gap-2 text-sm">
                         <input type="checkbox" name="parking"> Parking
-                    </label>
-
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" name="razgled"> Panoramski razgled
                     </label>
 
                     <label class="flex items-center gap-2 text-sm">
@@ -188,7 +181,15 @@
                     </label>
 
                     <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" name="wifi"> Wi-Fi
+                        <input type="checkbox" name="razgled"> Panoramski razgled
+                    </label>
+
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" name="ljubljencki"> Hišni ljubljenčki
+                    </label>
+
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" name="trajnostno"> Trajnostno
                     </label>
                 </div>
             </form>
@@ -201,7 +202,7 @@
         <div class="max-w-5xl mx-auto grid md:grid-cols-4 gap-8 text-center">
 
             <div>
-                <h3 class="text-5xl font-extrabold text-slate-900">1.200+</h3>
+                <h3 class="text-5xl font-extrabold text-slate-900">800+</h3>
                 <p class="mt-2 text-sm uppercase tracking-widest text-slate-400 font-bold">
                     Posebnih lokacij
                 </p>
@@ -215,7 +216,7 @@
             </div>
 
             <div>
-                <h3 class="text-5xl font-extrabold text-slate-900">320k+</h3>
+                <h3 class="text-5xl font-extrabold text-slate-900">120k+</h3>
                 <p class="mt-2 text-sm uppercase tracking-widest text-slate-400 font-bold">
                     Zadovoljnih gostov
                 </p>
@@ -277,7 +278,7 @@
                 </h3>
 
                 <p class="text-slate-500 leading-relaxed">
-                    Vsako prenočišče je izbrano glede na udobje, izkušnjo, lokacijo in varnost.
+                    Vsako prenočišče je izbrano glede na udobje, izkušnje drugih, lokacijo in varnost.
                 </p>
             </article>
 
@@ -319,8 +320,8 @@
         </div>
     </section>
 
-    <!--priljubljene lokacije tega meseca-->
-    <section id="destinations" class="py-24 px-6 bg-slate-50">
+    <!--priljubljene lokacije-->
+    <section id="popular" class="py-24 px-6 bg-slate-50">
 
         <div class="max-w-3xl mx-auto text-center mb-16">
             <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-5">
@@ -328,7 +329,7 @@
             </h2>
 
             <p class="text-lg text-slate-500">
-                Odkrijte najbolj iskane edinstvene kraje tega meseca.
+                Odkrijte najbolj priljubljene destinacije naših gostov.
             </p>
         </div>
 
@@ -337,53 +338,81 @@
         </div>
     </section>
 
-    <!--več informacij za lastnike-->
-    <section class="bg-slate-900 py-24 px-6 text-center text-white">
-
-        <p class="uppercase tracking-[0.3em] text-teal-400 font-bold text-sm mb-4">
-            Za lastnike posebnih prostorov
-        </p>
-
-        <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">
-            Imate posebno lokacijo?
-        </h2>
-
-        <p class="max-w-2xl mx-auto text-lg text-slate-400 mb-10 leading-relaxed">
-            Grad, jama, svetilnik ali hiška na drevesu — objavite jo na UniqueStays.
-        </p>
-
-        <div class="flex flex-wrap justify-center gap-4">
-
-            <button class="px-8 py-4 rounded-full bg-teal-500 hover:bg-teal-400 font-bold transition-all hover:-translate-y-1">
-                Postanite lastnik
-            </button>
-
-            <button class="px-8 py-4 rounded-full bg-white text-slate-900 hover:bg-slate-200 font-bold transition-all hover:-translate-y-1">
-                Več informacij
-            </button>
+    <!--nova prenočišča-->
+    <section id="new" class="py-24 px-6 bg-white">
+        <div class="max-w-3xl mx-auto text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-5">
+                Nova prenočišča
+            </h2>
+            <p class="text-lg text-slate-500">
+                Sveže dodane lokacije, ki čakajo na vas.
+            </p>
+        </div>
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-3 gap-6" id="novaContainer">
+            <div class="col-span-full text-center text-slate-400">Nalaganje...</div>
         </div>
     </section>
 
     <!--o nas-->
-    <section id="about" class="py-24 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white text-center">
-
+    <section id="about" class="py-24 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-teal-800 text-white text-center">
         <div class="max-w-4xl mx-auto">
-
             <span class="inline-block px-4 py-2 rounded-full bg-white/10 text-sm font-bold uppercase tracking-widest mb-6">
                 O nas
             </span>
-
             <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-8">
                 Za ljudi, ki iščejo nekaj več kot samo sobo.
             </h2>
-
-            <p class="text-lg md:text-2xl text-white/70 leading-relaxed mb-10">
-                UniqueStays združuje najbolj posebna prenočišča na svetu.
+            
+        </div>
+            <p class="text-lg md:text-2xl leading-relaxed mb-10">
+                UniqueStays združuje najbolj posebna prenočišča na svetu - od gorskih koč do podvodnih vil.<br>Verjamemo, da je prenočišče del doživetja, ne le kraj za spanje.
             </p>
 
-            <button class="px-8 py-4 rounded-full bg-white text-slate-900 font-bold hover:bg-teal-400 hover:text-white transition-all duration-200 hover:-translate-y-1">
-                Začni iskati →
-            </button>
+            <div class="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                
+                <article class="bg-white/10 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center text-3xl mb-6 shadow-sm">
+                        🌍
+                    </div>
+
+                    <h3 class="text-2xl font-bold mb-3">
+                        Naša zgodba
+                    </h3>
+
+                    <p class="text-white/60 leading-relaxed">
+                        Nastali smo iz ljubezni do potovanj in prepričanja, da si vsako potovanje zasluži nepozabno prenočišče.
+                    </p>
+                </article>
+
+                <article class="bg-white/10 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center text-3xl mb-6 shadow-sm">
+                        🤝
+                    </div>
+
+                    <h3 class="text-2xl font-bold mb-3">
+                        Naša misija
+                    </h3>
+
+                    <p class="text-white/60 leading-relaxed">
+                        Povezujemo popotnike z lastniki edinstvenih prenočišč po vsem svetu na preprost in zaupanja vreden način.
+                    </p>
+                </article>
+
+                <article class="bg-white/10 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center text-3xl mb-6 shadow-sm">
+                        💚
+                    </div>
+
+                    <h3 class="text-2xl font-bold mb-3">
+                        Naše vrednote
+                    </h3>
+
+                    <p class="text-white/60 leading-relaxed">
+                        Trajnostnost, avtentičnost in skrb za lokalne skupnosti so bistvo vsega, kar počnemo.
+                    </p>
+                </article>
+            
+            </div>
         </div>
     </section>
 

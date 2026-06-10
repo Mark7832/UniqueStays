@@ -11,10 +11,12 @@ if (token && uporabnik) {
     if (prijavaNaGumb) prijavaNaGumb.classList.add('hidden');
     if (registracijaGumb) registracijaGumb.classList.add('hidden');
     if (odjavaGumb) odjavaGumb.classList.remove('hidden');
-    if (imeUporabnika) imeUporabnika.textContent = 'Profil';
-    // skrij moznost profil ce si na profilu 
+    if (imeUporabnika) {
+    imeUporabnika.textContent = 'Moj profil';
+    imeUporabnika.className = 'px-5 py-2.5 rounded-full bg-gradient-to-r from-teal-500 to-blue-600 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1';
+    }
     const naProfilu = window.location.pathname.includes('profile.html');
-    if (naProfilu && imeUporabnika) imeUporabnika.classList.add('hidden');
+    if (naProfilu && imeUporabnika) imeUporabnika.href = '#';
 } else {
     if (prijavaNaGumb) prijavaNaGumb.classList.remove('hidden');
     if (registracijaGumb) registracijaGumb.classList.remove('hidden');

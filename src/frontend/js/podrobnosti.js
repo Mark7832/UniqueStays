@@ -8,12 +8,27 @@ let lastnikId = null;
 
 const API_URL = 'http://localhost:3000/api';
 
+function slikaVUrl(s) {
+    if (!s) return null;
+    if (s.slika) return s.slika;
+    if (s.pot_slike) return s.pot_slike;
+    if (s.url) return s.url;
+    return null;
+}
+
+// Parsa datum string "YYYY-MM-DD" brez timezone zamika
+function parseDatum(str) {
+    if (!str) return null;
+    const [y, m, d] = str.split('-').map(Number);
+    return new Date(y, m - 1, d);
+}
+
 // Funkcija za inicializacijo zemljevida
 function inicializirajZemljevid(koordinate) {
     const coords = koordinate.split(',').map(c => parseFloat(c.trim()));
     
     if (coords.length !== 2 || isNaN(coords[0]) || isNaN(coords[1])) {
-        console.error('❌ Neveljavne koordinate:', koordinate);
+        console.error('✗ Neveljavne koordinate:', koordinate);
         return;
     }
     
@@ -30,7 +45,7 @@ function inicializirajZemljevid(koordinate) {
     
     const customIcon = L.divIcon({
         className: 'custom-marker',
-        html: '<div style="background: #2563eb; width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 4px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3);"><div style="transform: rotate(45deg); color: white; font-size: 20px; text-align: center; line-height: 32px;">🏰</div></div>',
+        html: '<div style="background: #2563eb; width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 4px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3);"><div style="transform: rotate(45deg); color: white; font-size: 20px; text-align: center; line-height: 32px;">🏠</div></div>',
         iconSize: [40, 40],
         iconAnchor: [20, 40],
         popupAnchor: [0, -40]
@@ -55,12 +70,12 @@ function inicializirajZemljevid(koordinate) {
 // Funkcija za prikaz uporabnikove lokacije in routinga
 function prikaziMojoLokacijo() {
     if (!map || !destinationCoords) {
-        alert('❌ Zemljevid še ni inicializiran!');
+        console.error('✗ Zemljevid še ni inicializiran!');
         return;
     }
     
     if (!navigator.geolocation) {
-        alert('❌ Vaša naprava ne podpira geolokacije!');
+        console.error('✗ Vaša naprava ne podpira geolokacije!');
         return;
     }
     
@@ -109,8 +124,12 @@ function prikaziMojoLokacijo() {
             map.fitBounds(bounds, { padding: [50, 50] });
         },
         function(error) {
-            console.error('❌ Napaka pri pridobivanju lokacije:', error);
-            alert('❌ Ne morem pridobiti vaše lokacije. Prosimo omogočite dostop do lokacije v nastavitvah brskalnika.');
+            console.error('✗ Napaka pri pridobivanju lokacije:', error);
+            const el = document.getElementById(lokacijaNapaka);
+            if(el){
+                el.textContent = '✗ Ne morem pridobiti vaše lokacije. Prosimo omogočite dostop do lokacije v nastavitvah brskalnika.';
+                el.classList.remove('hidden');
+            }
         },
         {
             enableHighAccuracy: true,
@@ -204,11 +223,23 @@ function prikaziPodatke(data) {
     if (prenocisce.wifi) {
         document.getElementById('wifiCard').style.display = 'block';
     }
+    if (prenocisce.bazen) {
+        document.getElementById('bazenCard').style.display = 'block';
+    }
     if (prenocisce.parking) {
         document.getElementById('parkingCard').style.display = 'block';
     }
+    if (prenocisce.zajtrk) {
+        document.getElementById('zajtrkCard').style.display = 'block';
+    }
     if (prenocisce.razgled) {
         document.getElementById('razgledCard').style.display = 'block';
+    }
+    if (prenocisce.ljubljencki) {
+        document.getElementById('ljubljenckiCard').style.display = 'block';
+    }
+    if (prenocisce.trajnostno) {
+        document.getElementById('trajnostnoCard').style.display = 'block';
     }
     //tagi
     prikaziTage(prenocisce.tagi);
@@ -222,41 +253,113 @@ function prikaziPodatke(data) {
     _rezervacijaData.maxGostov = parseInt(prenocisce.max_gostov) || 10;
 }
 
-// Prikaz hero background slike
+// Hero carousel state
+let _heroCarouselIndex = 0;
+let _heroCarouselUrls = [];
+ 
+// Prikaz hero background slike + carousel vseh slik prenočišča
 function prikaziHeroSliko(slike) {
-    const coverSlika = slike.find(s => s.cover === true || s.cover === 1);
-    
-    if (!coverSlika) {
-        console.warn('⚠️ Ni cover slike');
-        return;
-    }
-    
-    const heroBackground = document.getElementById('heroBackground');
-    if (!heroBackground) {
-        console.error('❌ heroBackground element ne obstaja!');
-        return;
-    }
-    
-    let imageUrl = '';
-    
-    if (coverSlika.slika && typeof coverSlika.slika === 'string') {
-        if (coverSlika.slika.startsWith('data:')) {
-            imageUrl = coverSlika.slika;
-        } else {
-            const ext = coverSlika.ime_slike.split('.').pop().toLowerCase();
-            const mimeType = ext === 'png' ? 'image/png' : 'image/jpeg';
-            imageUrl = `data:${mimeType};base64,${coverSlika.slika}`;
+    // filtriramo samo slike prenočišča
+    const prenocisceSlike = slike.filter(
+        s => s.TK_prenocisce !== undefined && s.TK_prenocisce !== null
+    );
+    if (prenocisceSlike.length === 0) return;
+ 
+    // ── 1. cover slika kot ozadje hero sekcije ───────────────
+    const coverSlika = prenocisceSlike.find(s => s.cover === true || s.cover === 1);
+    const heroSection = document.getElementById('heroSection');
+    const heroDekor = document.getElementById('heroDekor');
+ 
+    if (coverSlika) {
+        const url = slikaVUrl(coverSlika);
+        if (url && heroSection) {
+            heroSection.style.backgroundImage = `linear-gradient(to bottom right, rgba(15,23,42,0.72), rgba(30,58,138,0.65), rgba(17,94,89,0.55)), url('${url}')`;
+            heroSection.style.backgroundSize = 'cover';
+            heroSection.style.backgroundPosition = 'center';
         }
-    } else if (coverSlika.ID_slika) {
-        imageUrl = `${API_URL}/slika/${coverSlika.ID_slika}`;
-    } else {
-        console.error('❌ Slika nima ne base64 ne ID_slika!');
-        return;
+        if (heroDekor) heroDekor.style.display = 'none';
     }
-    
-    heroBackground.style.backgroundImage = `url('${imageUrl}')`;
-    heroBackground.style.display = 'block';
+ 
+    // ── 2. VSE slike v carousel (cover prva, potem ostale) ──────
+    const vseSlike = [
+        ...(coverSlika ? [coverSlika] : []),
+        ...prenocisceSlike.filter(s => s.cover !== true && s.cover !== 1)
+    ];
+    if (vseSlike.length === 0) return;
+ 
+    const wrap = document.getElementById('heroGalerijaWrap');
+    const track = document.getElementById('heroCarouselTrack');
+    const dotsContainer = document.getElementById('heroCarouselDots');
+    if (!wrap || !track || !dotsContainer) return;
+ 
+    _heroCarouselUrls = vseSlike.map(s => slikaVUrl(s)).filter(Boolean);
+    _heroCarouselIndex = 0;
+ 
+    track.innerHTML = '';
+    dotsContainer.innerHTML = '';
+ 
+    // track: relativno, polna višina
+    track.style.cssText = 'position:relative; width:100%; height:100%;';
+ 
+    _heroCarouselUrls.forEach((url, i) => {
+        const slide = document.createElement('div');
+        slide.style.cssText = 'position:absolute; inset:0; transition:opacity 0.4s ease;';
+        slide.style.opacity = i === 0 ? '1' : '0';
+        slide.style.pointerEvents = i === 0 ? 'auto' : 'none';
+ 
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = `Slika ${i + 1}`;
+        img.style.cssText = 'width:100%; height:100%; object-fit:cover; display:block;';
+        img.onerror = () => { slide.style.display = 'none'; };
+        slide.appendChild(img);
+        track.appendChild(slide);
+ 
+        const dot = document.createElement('button');
+        dot.style.cssText = `width:8px; height:8px; border-radius:50%; border:none; cursor:pointer; transition:all 0.2s; background:${i === 0 ? 'white' : 'rgba(255,255,255,0.4)'};`;
+        dot.onclick = () => heroCarouselGoTo(i);
+        dotsContainer.appendChild(dot);
+    });
+ 
+    wrap.classList.remove('hidden');
+    _heroCarouselUpdate();
 }
+ 
+function _heroCarouselUpdate() {
+    const slides = document.querySelectorAll('#heroCarouselTrack > div');
+    const dots = document.querySelectorAll('#heroCarouselDots button');
+    slides.forEach((s, i) => {
+        const active = i === _heroCarouselIndex;
+        s.style.opacity = active ? '1' : '0';
+        s.style.pointerEvents = active ? 'auto' : 'none';
+    });
+    dots.forEach((d, i) => {
+        d.style.background = i === _heroCarouselIndex ? 'white' : 'rgba(255,255,255,0.4)';
+        d.style.transform = i === _heroCarouselIndex ? 'scale(1.3)' : 'scale(1)';
+    });
+}
+ 
+function heroCarouselNext() {
+    if (_heroCarouselUrls.length === 0) return;
+    _heroCarouselIndex = (_heroCarouselIndex + 1) % _heroCarouselUrls.length;
+    _heroCarouselUpdate();
+}
+ 
+function heroCarouselPrev() {
+    if (_heroCarouselUrls.length === 0) return;
+    _heroCarouselIndex = (_heroCarouselIndex - 1 + _heroCarouselUrls.length) % _heroCarouselUrls.length;
+    _heroCarouselUpdate();
+}
+ 
+function heroCarouselGoTo(i) {
+    _heroCarouselIndex = i;
+    _heroCarouselUpdate();
+}
+ 
+// Ohrani prazne stub funkcije za nazaj-kompatibilnost (carousel ni več v HTML)
+function premakniCarousel() {}
+function postaviCarousel() {}
+function osveziCarousel() {}
 
 // Helper funkcija za nastavljanje teksta elementov
 function setElementText(id, text) {
@@ -504,8 +607,9 @@ function izrisiKalendar() {
 
     const dniVMesecu = new Date(leto, mesec + 1, 0).getDate();
     for (let d = 1; d <= dniVMesecu; d++) {
+        // Ustvarimo datum lokalno (brez UTC zamika)
         const datum = new Date(leto, mesec, d);
-        const datumStr = datum.toISOString().split('T')[0];
+        const datumStr = `${leto}-${String(mesec + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
         const zaseden = jeZaseden(datumStr);
         const preteklo = datum < danes;
         const jeIzbranPrihod = datumStr === prihodVal;
@@ -513,8 +617,8 @@ function izrisiKalendar() {
 
         let vObdobju = false;
         if (prihodVal && odhodVal) {
-            const od = new Date(prihodVal);
-            const do_ = new Date(odhodVal);
+            const od = parseDatum(prihodVal);
+            const do_ = parseDatum(odhodVal);
             vObdobju = datum > od && datum < do_;
         }
 
@@ -574,14 +678,14 @@ function kalendarNaslednjMesec() {
 // ---- KONEC MINI KALENDAR ----
 
 function jeZaseden(datumStr) {
-    const d = new Date(datumStr);
+    const d = parseDatum(datumStr);
     return _zasedenObdobja.some(({ od, do_ }) => d >= od && d < do_);
 }
 
 function prvProstDatum(odStr) {
-    let d = new Date(odStr);
+    let d = parseDatum(odStr);
     for (let i = 0; i < 365; i++) {
-        const str = d.toISOString().split('T')[0];
+        const str = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         if (!jeZaseden(str)) return str;
         d.setDate(d.getDate() + 1);
     }
@@ -596,8 +700,8 @@ async function naloziZasedenost(prenocisceId) {
             ...(data.rezervacije || []),
             ...(data.termini || [])
         ].map(r => ({
-            od:  new Date(r.datum_od),
-            do_: new Date(r.datum_do)
+            od:  parseDatum(r.datum_od.split('T')[0]),
+            do_: parseDatum(r.datum_do.split('T')[0])
         }));
     } catch (e) {
         _zasedenObdobja = [];
@@ -631,17 +735,19 @@ async function odpriRezervacijo() {
     const prenocisceId = urlParams.get('id') || 2;
     await naloziZasedenost(prenocisceId);
 
-    const danes = new Date().toISOString().split('T')[0];
-    const prihodStr = prvProstDatum(danes);
+    const danes = new Date();
+    const danesStr = `${danes.getFullYear()}-${String(danes.getMonth() + 1).padStart(2, '0')}-${String(danes.getDate()).padStart(2, '0')}`;
+    const prihodStr = prvProstDatum(danesStr);
 
-    const naslednji = new Date(prihodStr);
+    const naslednji = parseDatum(prihodStr);
     naslednji.setDate(naslednji.getDate() + 1);
-    const odhodStr = prvProstDatum(naslednji.toISOString().split('T')[0]);
+    const naslednjStr = `${naslednji.getFullYear()}-${String(naslednji.getMonth() + 1).padStart(2, '0')}-${String(naslednji.getDate()).padStart(2, '0')}`;
+    const odhodStr = prvProstDatum(naslednjStr);
 
     const prihod = document.getElementById('datumPrihod');
     const odhod  = document.getElementById('datumOdhod');
-    if (prihod) { prihod.min = danes; prihod.value = prihodStr; }
-    if (odhod)  { odhod.min  = danes; odhod.value  = odhodStr; }
+    if (prihod) { prihod.min = danesStr; prihod.value = prihodStr; }
+    if (odhod)  { odhod.min  = danesStr; odhod.value  = odhodStr; }
 
     prihod?.addEventListener('change', onPrihodChange);
     odhod?.addEventListener('change', onOdhodChange);
@@ -671,12 +777,13 @@ function onOdhodChange() {
     const prihodVal = document.getElementById('datumPrihod')?.value;
 
     if (prihodVal && el.value) {
-        const od = new Date(prihodVal);
-        const do_ = new Date(el.value);
+        const od = parseDatum(prihodVal);
+        const do_ = parseDatum(el.value);
         let zaseden = false;
-        let d = new Date(od);
+        let d = parseDatum(prihodVal);
         while (d < do_) {
-            if (jeZaseden(d.toISOString().split('T')[0])) { zaseden = true; break; }
+            const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            if (jeZaseden(dStr)) { zaseden = true; break; }
             d.setDate(d.getDate() + 1);
         }
         if (zaseden) {
@@ -725,14 +832,16 @@ function posodobiCeno() {
 
     if (!prihodVal || !odhodVal) { if (summary) summary.style.display = 'none'; return; }
 
-    const p = new Date(prihodVal);
-    const o = new Date(odhodVal);
+    const p = parseDatum(prihodVal);
+    const o = parseDatum(odhodVal);
     const noci = Math.round((o - p) / 86400000);
 
     if (noci <= 0) {
-        const novOdhod = new Date(p); novOdhod.setDate(novOdhod.getDate() + 1);
+        const novOdhod = parseDatum(prihodVal);
+        novOdhod.setDate(novOdhod.getDate() + 1);
+        const novOdhodStr = `${novOdhod.getFullYear()}-${String(novOdhod.getMonth() + 1).padStart(2, '0')}-${String(novOdhod.getDate()).padStart(2, '0')}`;
         const odEl = document.getElementById('datumOdhod');
-        if (odEl) odEl.value = novOdhod.toISOString().split('T')[0];
+        if (odEl) odEl.value = novOdhodStr;
         posodobiCeno();
         return;
     }
@@ -763,7 +872,7 @@ async function potrdiRezervacijo() {
         if (napaka) { napaka.textContent = '❌ Prosimo izberite datume prihoda in odhoda.'; napaka.classList.remove('hidden'); }
         return;
     }
-    if (new Date(odhodVal) <= new Date(prihodVal)) {
+    if (parseDatum(odhodVal) <= parseDatum(prihodVal)) {
         if (napaka) { napaka.textContent = '❌ Datum odhoda mora biti po datumu prihoda.'; napaka.classList.remove('hidden'); }
         return;
     }
@@ -798,7 +907,7 @@ async function potrdiRezervacijo() {
 
         if (response.ok) {
             const rezervacijaData = await response.json().catch(() => ({}));
-            const noci = Math.round((new Date(odhodVal) - new Date(prihodVal)) / 86400000);
+            const noci = Math.round((parseDatum(odhodVal) - parseDatum(prihodVal)) / 86400000);
             const skupaj = noci * _rezervacijaData.cenaNaNoc;
 
             const params = new URLSearchParams({
@@ -1053,6 +1162,9 @@ function nastaviZvezdice(skupinaId) {
  
 async function preveriUpravicenostOcene(prenocisceId) {
     const sekcija = document.getElementById('ocenaSekcija');
+    const ocenaSekcijaWrapper = document.getElementById('ocenaSekcijaWrapper');
+    const komentarjiSekcija = document.getElementById('komentarjiSekcija');
+
     if (!sekcija) return;
  
     const token = sessionStorage.getItem('token');
@@ -1062,10 +1174,8 @@ async function preveriUpravicenostOcene(prenocisceId) {
         document.getElementById(id)?.classList.add('hidden');
     });
  
-    //uporabnik ni prijavljen
+    //uporabnik ni prijavljen - skrij vse sekcije z ocenami
     if (!token) {
-        document.getElementById('ocenaNiPrijavljen')?.classList.remove('hidden');
-        sekcija.classList.remove('hidden');
         return;
     }
  
@@ -1077,17 +1187,20 @@ async function preveriUpravicenostOcene(prenocisceId) {
  
         if (data.jeLastnik) { //lastnik ne ocenjuje svojega prenočišča (sekcija ostane skrita)
             return;
-        } else if (data.jeZeKomentiral) { //uporabnik lahko komentira le enkrat
+        } else if (data.jeZeKomentiral) { //uporabnik lahko komentira le enkrat, prikaže mu zahvalo
             document.getElementById('ocenaZeOddana')?.classList.remove('hidden');
-        } else if (!data.jeRezerviral) { //uporabnik je rabil rezervirati
-            document.getElementById('ocenaNiRezervacije')?.classList.remove('hidden');
-        } else {
+            sekcija.classList.remove('hidden');
+            if (ocenaSekcijaWrapper) ocenaSekcijaWrapper.style.display = 'block';
+            if (komentarjiSekcija) komentarjiSekcija.style.display = 'block';
+        } else if (!data.jeRezerviral) { //uporabnik ni rezerviral (sekcija ostane skrita)
+            return;
+        } else { //ima pretečeno rezervacijo in še ni komentiral - prikaže mu obrazec
             document.getElementById('ocenaObrazec')?.classList.remove('hidden');
             ['splosna', 'udobje', 'unikatnost', 'lokacija', 'cenovna_ugodnost', 'dozivetje'].forEach(nastaviZvezdice);
+            sekcija.classList.remove('hidden');
+            if (ocenaSekcijaWrapper) ocenaSekcijaWrapper.style.display = 'block';
+            if (komentarjiSekcija) komentarjiSekcija.style.display = 'block';
         }
- 
-        sekcija.classList.remove('hidden');
-
     } catch (err) {
         console.error('Napaka pri preverjanju upravičenosti:', err);
     }

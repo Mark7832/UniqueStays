@@ -27,8 +27,11 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         if (odgovor.ok) {
             sessionStorage.setItem('token', rezultat.token);
             sessionStorage.setItem('uporabnik', JSON.stringify(rezultat.uporabnik));
-            alert('Prijava uspešna!');
-            window.location.href = 'index.html';
+            if(uspeh){
+                uspeh.textContent = 'Prijava uspešna!';
+                uspeh.classList.remove('hidden');
+            }
+            setTimeout(() => { window.location.href = 'index.html';}, 1500);
         } else {
             napaka.textContent = rezultat.napaka;
             napaka.classList.remove('hidden');

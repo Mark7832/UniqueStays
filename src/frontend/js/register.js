@@ -34,8 +34,11 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         const rezultat = await odgovor.json();
 
         if (odgovor.ok) {
-            alert('Registracija uspešna! Preusmeritev na prijavo...');
-            window.location.href = 'login.html';
+            if (uspeh){
+                uspeh.textContent = 'Registracija uspešna! Preusmeritev na prijavo...';
+                uspeh.classList.remove('hidden');
+            }
+            setTimeout(() => { window.location.href = 'login.html';}, 1500);
         } else {
             napaka.textContent = rezultat.napaka;
             napaka.classList.remove('hidden');

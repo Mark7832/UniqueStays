@@ -39,8 +39,9 @@
             </a>
 
             <div class="flex flex-wrap items-center justify-center gap-5">
-                <a href="index.html#destinations" class="font-semibold hover:text-blue-600 transition">Destinacije</a>
+                <a href="index.html#popular" class="font-semibold hover:text-blue-600 transition">Priljubljeno</a>
                 <a href="index.html#about" class="font-semibold hover:text-blue-600 transition">O nas</a>
+                <a href="index.html#new" class="px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold hover:bg-emerald-200 transition-all duration-200">Novo</a>
 
                 <a id="btnPrijava" href="login.html" class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">
                     Prijava
@@ -150,8 +151,6 @@
         </div>
  
     </div>
-
-
         <!--filtri-->
         <div class="border-t bg-slate-50 px-5 py-4 flex flex-wrap gap-3">
 
@@ -160,7 +159,7 @@
             </span> 
 
             <label class="flex items-center gap-2 text-sm">
-                <input type="checkbox" name="ljubljencki"> Hišni ljubljenčki
+                <input type="checkbox" name="wifi"> Wi-Fi
             </label>
 
             <label class="flex items-center gap-2 text-sm">
@@ -168,15 +167,7 @@
             </label>
 
             <label class="flex items-center gap-2 text-sm">
-                <input type="checkbox" name="trajnostno"> Trajnostno
-            </label>
-
-            <label class="flex items-center gap-2 text-sm">
                 <input type="checkbox" name="parking"> Parking
-            </label>
-
-            <label class="flex items-center gap-2 text-sm">
-                <input type="checkbox" name="razgled"> Panoramski razgled
             </label>
 
             <label class="flex items-center gap-2 text-sm">
@@ -184,7 +175,15 @@
             </label>
 
             <label class="flex items-center gap-2 text-sm">
-                <input type="checkbox" name="wifi"> Wi-Fi
+                <input type="checkbox" name="razgled"> Panoramski razgled
+            </label>
+
+            <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" name="ljubljencki"> Hišni ljubljenčki
+            </label>
+
+            <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" name="trajnostno"> Trajnostno
             </label>
         </div>
         
@@ -197,11 +196,8 @@
                 <option value="price_asc">Cena ↑</option>
                 <option value="price_desc">Cena ↓</option>
             </select>
-
         </div>
-
     </form>
-
 </div>
 </section>
 

@@ -7,21 +7,21 @@ const path = require('path');
 require('dotenv').config();
 const authRouter = require('./routes/auth');
 const { preveriToken, preveriAdmin } = require('./routes/auth');
-<<<<<<< HEAD
-const { get } = require('http');
-=======
 const nodemailer = require('nodemailer');
+const { get } = require('http');
 
-// ===== EMAIL KONFIGURACIJA =====
-// Nastavite svoje SMTP podatke v spremenljivkah okolja (.env)
-// EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS, EMAIL_FROM
+// EMAIL KONFIGURACIJA
+if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    throw new Error("EMAIL credentials are missing in .env");
+}
+
 const emailTransporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.EMAIL_PORT) || 587,
     secure: false,
     auth: {
-        user: process.env.EMAIL_USER || '',
-        pass: process.env.EMAIL_PASS || ''
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
 });
 
@@ -136,7 +136,6 @@ async function posljiPotrditevRezervacije({ email, ime, naziv, prihod, odhod, go
         html
     });
 }
->>>>>>> a7e5fee4d1e092007ca252380825e5491d93f996
 
 const app = express();
 const PORT = 3000;
@@ -200,7 +199,7 @@ app.get('/api/prenocisce/:id', async (req, res) => {
         // Pridobi slike
         const slike = await db('Slika')
             .where('TK_prenocisce', id)
-            .select('slika', 'ime_slike', 'cover');
+            .select('slika', 'ime_slike', 'cover', 'TK_prenocisce');
 
         const slikeBase64 = slike.map(s => ({
             ...s,
@@ -662,7 +661,7 @@ app.get('/api/dozivetja', preveriToken, async (req, res) => {
         res.status(500).json({ napaka: 'Napaka pri pridobivanju doživetij.' });
     }
 });
-
+ 
 //dodaj novo doživetje (brez prenočišča)
 app.post('/api/dozivetje', preveriToken, async (req, res) => {
     try {
@@ -684,7 +683,7 @@ app.post('/api/dozivetje', preveriToken, async (req, res) => {
         res.status(500).json({ napaka: 'Napaka pri dodajanju doživetja.' });
     }
 });
-
+ 
 //posodobi naziv/opis/doplačilo (samo lastnik)
 app.put('/api/dozivetje/:id', preveriToken, async (req, res) => {
     try {
@@ -700,7 +699,7 @@ app.put('/api/dozivetje/:id', preveriToken, async (req, res) => {
         res.status(500).json({ napaka: 'Napaka pri posodabljanju doživetja.' });
     }
 });
-
+ 
 //izbriši doživetje (samo lastnik)
 app.delete('/api/dozivetje/:id', preveriToken, async (req, res) => {
     try {
@@ -715,7 +714,7 @@ app.delete('/api/dozivetje/:id', preveriToken, async (req, res) => {
         res.status(500).json({ napaka: 'Napaka pri brisanju doživetja.' });
     }
 });
-
+ 
 //veži/odveži doživetje na prenočišče (profil)
 // Body: { TK_prenocisce: <id ali null> }
 app.put('/api/dozivetje/:id/vezava', preveriToken, async (req, res) => {
@@ -735,18 +734,18 @@ app.put('/api/dozivetje/:id/vezava', preveriToken, async (req, res) => {
                 .first();
             if (!prenoc) return res.status(403).json({ napaka: 'Prenočišče ne pripada vam.' });
         }
-
+ 
         await db('Dozivetje')
             .where('ID_dozivetje', req.params.id)
             .update({ TK_prenocisce: TK_prenocisce || null });
-
+ 
         res.json({ uspeh: true });
     } catch (err) {
         console.error(err);
         res.status(500).json({ napaka: 'Napaka pri vezavi.' });
     }
 });
-
+ 
 //javna doživetja za konkretno prenočišče (za podrobnosti)
 app.get('/api/prenocisce/:id/dozivetja', async (req, res) => {
     try {
@@ -759,7 +758,7 @@ app.get('/api/prenocisce/:id/dozivetja', async (req, res) => {
         res.status(500).json({ napaka: 'Napaka.' });
     }
 });
-
+ 
 // Vrni sliko doživetja (javno)
 app.get('/api/slika-dozivetja/:id', async (req, res) => {
     try {
@@ -784,19 +783,19 @@ app.post(
     async (req, res) => {
         try {
             const files = req.files || [];
-
+ 
             const dozivetje = await db('Dozivetje')
                 .where('ID_dozivetje', req.params.id)
                 .where('TK_uporabnik', req.uporabnik.id)
                 .first();
-
+ 
             if (!dozivetje) {
                 return res.status(404).json({ napaka: 'Ni najdeno.' });
             }
-
+ 
             await Promise.all(files.map(async (file) => {
                 const buffer = fs.readFileSync(file.path);
-
+ 
                 await db('Slika').insert({
                     slika: buffer,
                     ime_slike: file.filename,
@@ -805,12 +804,12 @@ app.post(
                     TK_uporabnik: req.uporabnik.id,
                     TK_dozivetje: req.params.id
                 });
-
+ 
                 fs.unlinkSync(file.path);
             }));
-
+ 
             res.json({ uspeh: true });
-
+ 
         } catch (err) {
             console.error(err);
             res.status(500).json({ napaka: 'Upload error' });
@@ -822,7 +821,7 @@ app.delete('/api/slika/:id', preveriToken, async (req, res) => {
     try {
         const slika = await db('Slika').where('ID_slika', req.params.id).first();
         if (!slika) return res.status(404).json({ napaka: 'Slika ne obstaja.' });
-
+ 
         //preveri lastništvo prek doživetja
         if (slika.TK_dozivetje) {
             const doz = await db('Dozivetje')
@@ -831,7 +830,7 @@ app.delete('/api/slika/:id', preveriToken, async (req, res) => {
                 .first();
             if (!doz) return res.status(403).json({ napaka: 'Nimate pravice.' });
         }
-
+ 
         if (!slika.TK_dozivetje && slika.ime_slike) {
         const pot = path.join(imagesDir, slika.ime_slike);
         if (fs.existsSync(pot)) fs.unlinkSync(pot);
@@ -843,20 +842,21 @@ app.delete('/api/slika/:id', preveriToken, async (req, res) => {
         res.status(500).json({ napaka: 'Napaka pri brisanju.' });
     }
 });
-
+ 
 //nove slike za doživetje
 app.get('/api/dozivetje/:id/slike', async (req, res) => {
     const slike = await db('Slika').where('TK_dozivetje', req.params.id).select('ID_slika', 'ime_slike');
     res.json(slike);
 });
-
+ 
 app.get('/api/slika-dozivetja-id/:id', async (req, res) => {
     const slika = await db('Slika').where('ID_slika', req.params.id).first();
     if (!slika || !slika.slika) return res.status(404).end();
     res.set('Content-Type', 'image/jpeg');
     res.send(slika.slika);
 });
- 
+
+
 //preveri ali je prijavljeni uporabnik upravicen do komentarja
 app.get('/api/komentar/upravicen/:prenocisceId', preveriToken, async (req, res) => {
     try {
@@ -872,7 +872,7 @@ app.get('/api/komentar/upravicen/:prenocisceId', preveriToken, async (req, res) 
             .where('TK_prenocisce', req.params.prenocisceId)
             .where('TK_uporabnik',  req.uporabnik.id)
             .first();
-
+ 
         const prenocisce = await db('Prenocisce')
             .where('ID_prenocisce', req.params.prenocisceId)
             .first();
@@ -890,7 +890,7 @@ app.get('/api/komentar/upravicen/:prenocisceId', preveriToken, async (req, res) 
     }
 });
  
-//dodaj komentar (samo prijavljeni z preteceno rezervacijo, enkrat na prenocisce)
+//dodaj komentar (samo prijavljeni s pretečeno rezervacijo, enkrat na prenocisce)
 app.post('/api/komentar', preveriToken, async (req, res) => {
     try {
         const { TK_prenocisce, komentar, ocena_splosna, ocena_udobje, ocena_unikatnost, ocena_lokacija, ocena_cenovna_ugodnost, ocena_dozivetje } = req.body;
@@ -911,7 +911,7 @@ app.post('/api/komentar', preveriToken, async (req, res) => {
         if (!rezervacija) {
             return res.status(403).json({ napaka: 'Komentar lahko pustite samo po preteceni rezervaciji.' });
         }
-
+ 
         const prenocisce = await db('Prenocisce').where('ID_prenocisce', TK_prenocisce).first();
         if (prenocisce && prenocisce.TK_uporabnik === req.uporabnik.id) {
             return res.status(403).json({ napaka: 'Lastnik ne more oceniti svojega prenočišča.' });
@@ -1119,6 +1119,10 @@ app.put('/api/sporocila/:id', preveriToken, async (req, res) => {
             .where('TK_uporabnik', req.uporabnik.id)
             .first();
 
+        console.log('uporabnik id:', req.uporabnik.id);
+        console.log('lastnik prenocisca:', jeLastnik);
+        console.log('je admin:', req.uporabnik.je_admin);
+
         if (!jeAdmin && !jeLastnik) {
             return res.status(403).json({ napaka: 'Nimate pravice odgovoriti na to sporočilo.' });
         }
@@ -1132,7 +1136,7 @@ app.put('/api/sporocila/:id', preveriToken, async (req, res) => {
         console.error(err);
         res.status(500).json({ napaka: 'Napaka pri shranjevanju odgovora.' });
     }
-}); 
+});
 
 //PRILJUBLJENO
 
@@ -1175,7 +1179,6 @@ app.post('/api/priljubljeno/:id', preveriToken, async (req, res) => {
     }
 });
 
-
 // pridobi podatke in vrne seznam priljubljenih prenočišč prijavljenega uporabnika
 app.get('/api/priljubljeno', preveriToken, async (req, res) => {
     try {
@@ -1205,6 +1208,259 @@ app.delete('/api/priljubljeno/:id', preveriToken, async (req, res) => {
         res.json({ uspeh: true });
     } catch (err) {
         res.status(500).json({ napaka: 'Napaka.' });
+    }
+});
+
+// EMAIL - pošlje obvestilo o prekinitvi rezervacije
+async function posljiPrekinitevRezervacije({ email, ime, naziv, prihod, odhod, rezervacijaId }) {
+    const formatirajDatum = (str) => {
+        const d = new Date(str);
+        return d.toLocaleDateString('sl-SI', { day: 'numeric', month: 'long', year: 'numeric' });
+    };
+
+    const mailOptions = {
+        from: `"UniqueStays" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: `Rezervacija #${rezervacijaId} je bila preklicana`,
+        html: `
+        <div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#f8fafc;border-radius:16px;overflow:hidden;">
+            <div style="background:linear-gradient(135deg,#1e293b,#dc2626);padding:32px 40px;text-align:center;">
+                <h1 style="color:white;font-size:28px;margin:0;font-weight:800;">✨ UniqueStays</h1>
+                <p style="color:rgba(255,255,255,0.85);font-size:16px;margin:8px 0 0;">Vaša rezervacija je bila preklicana.</p>
+            </div>
+            <div style="padding:40px;">
+                <p style="font-size:16px;color:#334155;">Pozdravljeni, <strong>${ime}</strong>,</p>
+                <p style="font-size:15px;color:#475569;">Obveščamo vas, da je bila vaša rezervacija uspešno preklicana.</p>
+                <div style="background:white;border-radius:12px;padding:24px;margin:24px 0;border:1px solid #e2e8f0;">
+                    <h2 style="color:#1e293b;font-size:20px;margin:0 0 16px;">${naziv}</h2>
+                    <table style="width:100%;border-collapse:collapse;">
+                        <tr><td style="padding:8px 0;color:#64748b;font-size:14px;">Prihod</td><td style="padding:8px 0;font-weight:600;color:#1e293b;">${formatirajDatum(prihod)}</td></tr>
+                        <tr><td style="padding:8px 0;color:#64748b;font-size:14px;">Odhod</td><td style="padding:8px 0;font-weight:600;color:#1e293b;">${formatirajDatum(odhod)}</td></tr>
+                        <tr><td style="padding:8px 0;color:#64748b;font-size:14px;">ID rezervacije</td><td style="padding:8px 0;font-weight:600;color:#dc2626;">#${rezervacijaId}</td></tr>
+                    </table>
+                </div>
+                <p style="font-size:14px;color:#94a3b8;margin-top:32px;">Ekipa UniqueStays</p>
+            </div>
+        </div>`
+    };
+
+    await emailTransporter.sendMail(mailOptions);
+}
+
+// REZERVACIJE - pridobi vse aktivne rezervacije prijavljenega uporabnika
+app.get('/api/moje-rezervacije', preveriToken, async (req, res) => {
+    try {
+        const rezervacije = await db('Rezervacija')
+            .join('Prenocisce', 'Rezervacija.TK_prenocisce', 'Prenocisce.ID_prenocisce')
+            .where('Rezervacija.TK_uporabnik', req.uporabnik.id)
+            .where('Rezervacija.rezervirano', true)
+            .select(
+                'Rezervacija.ID_rezervacija',
+                'Rezervacija.datum_od',
+                'Rezervacija.datum_do',
+                'Rezervacija.datum_rezervacije',
+                'Prenocisce.naziv',
+                'Prenocisce.naslov',
+                'Prenocisce.cena_na_noc'
+            )
+            .orderBy('Rezervacija.datum_od', 'desc');
+
+        res.json(rezervacije);
+    } catch (err) {
+        console.error('Napaka pri pridobivanju rezervacij:', err);
+        res.status(500).json({ napaka: 'Napaka pri pridobivanju rezervacij.' });
+    }
+});
+
+// REZERVACIJA - preklic rezervacije (samo 48h pred prihodom)
+app.delete('/api/rezervacija/:id', preveriToken, async (req, res) => {
+    try {
+        const rezervacija = await db('Rezervacija')
+            .where('ID_rezervacija', req.params.id)
+            .where('TK_uporabnik', req.uporabnik.id)
+            .first();
+
+        if (!rezervacija) {
+            return res.status(404).json({ napaka: 'Rezervacija ni najdena.' });
+        }
+
+        // Preveri 48h pravilo
+        const zdaj = new Date();
+        const prihod = new Date(rezervacija.datum_od);
+        const razlikaMs = prihod - zdaj;
+        const razlikaUre = razlikaMs / (1000 * 60 * 60);
+
+        if (razlikaUre < 48) {
+            return res.status(403).json({
+                napaka: 'Rezervacije ni mogoče preklicati manj kot 48 ur pred prihodom.'
+            });
+        }
+
+        // Preklic - nastavi rezervirano na false
+        await db('Rezervacija')
+            .where('ID_rezervacija', req.params.id)
+            .update({ rezervirano: false });
+
+        // Pošlji email o preklicu
+        try {
+            const uporabnik = await db('Uporabnik')
+                .where('ID_uporabnik', req.uporabnik.id)
+                .select('ime_uporabnika', 'email')
+                .first();
+
+            const prenocisce = await db('Prenocisce')
+                .where('ID_prenocisce', rezervacija.TK_prenocisce)
+                .select('naziv')
+                .first();
+
+            if (uporabnik && uporabnik.email) {
+                posljiPrekinitevRezervacije({
+                    email: uporabnik.email,
+                    ime: uporabnik.ime_uporabnika,
+                    naziv: prenocisce ? prenocisce.naziv : 'Prenočišče',
+                    prihod: rezervacija.datum_od,
+                    odhod: rezervacija.datum_do,
+                    rezervacijaId: req.params.id
+                }).catch(err => console.error('⚠️  Email (preklic) ni bil poslan:', err.message));
+            }
+        } catch (emailErr) {
+            console.error('⚠️  Napaka pri pošiljanju emaila (preklic):', emailErr.message);
+        }
+
+        res.json({ uspeh: true, sporocilo: 'Rezervacija je bila uspešno preklicana.' });
+    } catch (err) {
+        console.error('Napaka pri preklicu rezervacije:', err);
+        res.status(500).json({ napaka: 'Napaka pri preklicu rezervacije.' });
+    }
+});
+
+//email - povabilo k ocenjevanju/komentiranju
+async function posljiPovabiloKOceni({ email, ime, naziv, datumOdhoda, prenocisceId }) { 
+    const oceniUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/podrobnosti.html?id=${prenocisceId}#ocena`;
+ 
+    const html = `
+    <!DOCTYPE html>
+    <html lang="sl">
+    <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+    <body style="margin:0;padding:0;background:#f1f5f9;font-family:'Segoe UI',Arial,sans-serif;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:40px 0;">
+        <tr><td align="center">
+          <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+ 
+            <tr>
+              <td style="background:linear-gradient(135deg,#2563eb,#14b8a6);padding:40px 40px 32px;text-align:center;">
+                <div style="font-size:40px;margin-bottom:10px;">✨</div>
+                <h1 style="color:#ffffff;font-size:26px;font-weight:800;margin:0 0 6px;">Kako je bilo bivanje?</h1>
+                <p style="color:rgba(255,255,255,0.85);font-size:15px;margin:0;">Vaše mnenje nam veliko pomeni</p>
+              </td>
+            </tr>
+ 
+            <tr>
+              <td style="padding:40px;">
+                <p style="font-size:16px;color:#334155;margin:0 0 12px;">Pozdravljeni, <strong>${ime}</strong>!</p>
+                <p style="font-size:15px;color:#475569;line-height:1.7;margin:0 0 28px;">
+                  Vaše bivanje v <strong>${naziv}</strong> se je zaključilo <strong>${datumOdhoda}</strong>.
+                  Upamo, da ste uživali! Vaša ocena pomaga drugim gostom pri odločitvi in lastniku prenočišča pri izboljšavah.
+                </p>
+ 
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td align="center" style="padding:0 0 36px;">
+                      <a href="${oceniUrl}"
+                         style="display:inline-block;background:linear-gradient(135deg,#2563eb,#14b8a6);color:#ffffff;font-size:16px;font-weight:700;text-decoration:none;padding:16px 44px;border-radius:50px;box-shadow:0 4px 14px rgba(37,99,235,0.35);">
+                        Oddajte oceno
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+ 
+                <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border-radius:12px;margin-bottom:28px;">
+                  <tr>
+                    <td style="padding:20px 24px;">
+                      <p style="font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 14px;">Kako oddati oceno?</p>
+                      <p style="font-size:14px;color:#475569;margin:0 0 8px;">1. Kliknite gumb zgoraj</p>
+                      <p style="font-size:14px;color:#475569;margin:0 0 8px;">2. Prijavite se v račun</p>
+                      <p style="font-size:14px;color:#475569;margin:0;">3. Izpolnite obrazec z ocenami in komentarjem</p>
+                    </td>
+                  </tr>
+                </table>
+ 
+                <p style="font-size:13px;color:#94a3b8;margin:0;">
+                  Ocenite lahko samo enkrat na bivanje. Hvala, ker ste del skupnosti UniqueStays.
+                </p>
+              </td>
+            </tr>
+ 
+            <tr>
+              <td style="background:#f8fafc;padding:20px 40px;text-align:center;border-top:1px solid #e2e8f0;">
+                <p style="font-size:13px;font-weight:700;color:#334155;margin:0 0 4px;">UniqueStays</p>
+                <p style="font-size:12px;color:#94a3b8;margin:0;">2026 UniqueStays - Vse pravice pridrzane</p>
+              </td>
+            </tr>
+ 
+          </table>
+        </td></tr>
+      </table>
+    </body>
+    </html>`;
+ 
+    await emailTransporter.sendMail({
+        from: `"UniqueStays" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: `Kako je bilo v ${naziv}? Oddajte oceno bivanja`,
+        html
+    });
+}
+ //pošlje povabilo k ocenjevanju/komentiranju prenočišča gostom, katerih rezervacija je potekla včeraj in še niso komentirali
+const cron = require('node-cron');
+ 
+cron.schedule('0 10 * * *', async () => {
+    try {
+ 
+        const rezervacije = await db('Rezervacija')
+            .join('Uporabnik', 'Rezervacija.TK_uporabnik', 'Uporabnik.ID_uporabnik')
+            .join('Prenocisce', 'Rezervacija.TK_prenocisce', 'Prenocisce.ID_prenocisce')
+            .where('Rezervacija.rezervirano', true)
+            .where('Rezervacija.povabilo_poslano', false)
+            .where('Rezervacija.datum_do', '<', db.raw('CURDATE()'))
+            .whereNotExists(function () {
+                this.select('*').from('Komentar')
+                    .whereRaw('Komentar.TK_uporabnik = Rezervacija.TK_uporabnik')
+                    .whereRaw('Komentar.TK_prenocisce = Rezervacija.TK_prenocisce');
+            })
+            .select(
+                'Rezervacija.ID_rezervacija',
+                'Uporabnik.email',
+                'Uporabnik.ime_uporabnika as ime',
+                'Prenocisce.naziv',
+                'Prenocisce.ID_prenocisce as prenocisceId',
+                'Rezervacija.datum_do as datumOdhoda'
+            );
+ 
+        for (const r of rezervacije) {
+            if (!r.email) continue;
+            try {
+                const datumFormatiran = new Date(r.datumOdhoda).toLocaleDateString('sl-SI', {
+                    day: 'numeric', month: 'long', year: 'numeric'
+                });
+                await posljiPovabiloKOceni({
+                    email: r.email,
+                    ime: r.ime,
+                    naziv: r.naziv,
+                    datumOdhoda: datumFormatiran,
+                    prenocisceId: r.prenocisceId
+                });
+                await db('Rezervacija')
+                    .where('ID_rezervacija', r.ID_rezervacija)
+                    .update({
+                        povabilo_poslano: true
+                    });
+            } catch (err) {
+                console.error(`  Napaka za ${r.email}:`, err.message);
+            }
+        }
+    } catch (err) {
+        console.error('Cron napaka:', err.message);
     }
 });
 
