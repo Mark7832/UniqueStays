@@ -2,10 +2,10 @@ console.log('Skripta se je zagnala');
 const knex = require('knex')({
     client: 'mysql2',
     connection: {
-        host: '127.0.0.1',
-        user: 'uniquestays',
-        password: 'geslo',
-        database: 'uniquestays',
+    host: '127.0.0.1',
+    user: 'root',
+    password: 'geslo',
+    database: 'uniquestays'
     }
 });
 const bcrypt = require('bcryptjs');

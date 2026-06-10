@@ -156,10 +156,10 @@ app.use('/images', express.static(imagesDir));
 const db = knex({
     client: 'mysql2',
     connection: {
-        host: '127.0.0.1',
-        user: 'uniquestays',
-        password: 'geslo',
-        database: 'uniquestays'
+        host: process.env.DB_HOST || '127.0.0.1',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME
     }
 });
 
@@ -1470,6 +1470,98 @@ cron.schedule('0 10 * * *', async () => {
         }
     } catch (err) {
         console.error('Cron napaka:', err.message);
+    }
+});
+
+// CHATBOT - cache za podatke iz baze
+let prenociscaCache = [];
+let dozivetjaCache = [];
+
+async function osveziChatbotCache() {
+    try {
+        prenociscaCache = await db('Prenocisce').select(
+            'ID_prenocisce', 'naziv', 'tip_prenocisca', 'naslov',
+            'cena_na_noc', 'sezona', 'max_gostov', 'stevilo_sob', 'opis_prenocisca',
+            'wifi', 'parking', 'bazen', 'zajtrk', 'razgled', 'ljubljencki', 'trajnostno'
+        );
+        dozivetjaCache = await db('Dozivetje').select(
+            'naziv', 'opis', 'doplacilo', 'TK_prenocisce'
+        );
+        console.log(`✅ Chatbot cache osvežen: ${prenociscaCache.length} prenočišč`);
+    } catch (err) {
+        console.error('Napaka pri osvežitvi chatbot cache:', err);
+    }
+}
+
+// Ob zagonu naloži cache, potem osveži vsakih 10 minut
+osveziChatbotCache();
+setInterval(osveziChatbotCache, 10 * 60 * 1000);
+
+// CHATBOT endpoint
+const OpenAI = require('openai');
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+app.post('/api/chatbot', async (req, res) => {
+    try {
+        const { sporocila } = req.body;
+
+        // Sestavi seznam prenočišč iz cache
+        const prenociscaInfo = prenociscaCache.map(p => {
+            const ugodnosti = [
+                p.wifi && 'WiFi',
+                p.parking && 'parking',
+                p.bazen && 'bazen',
+                p.zajtrk && 'zajtrk vključen',
+                p.razgled && 'panoramski razgled',
+                p.ljubljencki && 'hišni ljubljenčki dovoljeni',
+                p.trajnostno && 'trajnostno'
+            ].filter(Boolean).join(', ');
+
+            const dozivetja = dozivetjaCache
+                .filter(d => d.TK_prenocisce === p.ID_prenocisce)
+                .map(d => `${d.naziv} (${d.doplacilo}€)`)
+                .join(', ');
+
+            return `• ${p.naziv} [ID:${p.ID_prenocisce}]
+  Tip: ${p.tip_prenocisca} | Lokacija: ${p.naslov}
+  Cena: ${p.cena_na_noc}€/noč | Gostov: do ${p.max_gostov} | Sobe: ${p.stevilo_sob}
+  Sezona: ${p.sezona}
+  Opis: ${p.opis_prenocisca}
+  Ugodnosti: ${ugodnosti || 'osnovne'}
+  Doživetja: ${dozivetja || 'ni doživetij'}`;
+        }).join('\n\n');
+
+        const completion = await openai.chat.completions.create({
+            model: 'gpt-4o-mini',
+            messages: [
+                {
+                    role: 'system',
+                    content: `Si prijazen in strokoven pomočnik za UniqueStays — platformo za edinstvena prenočišča po svetu.
+
+TVOJA NALOGA:
+- Pomagaj uporabnikom najti idealno prenočišče glede na njihove želje
+- Odgovori na vprašanja o rezervacijah, cenah, ugodnostih in doživetjih
+- Ko priporočaš prenočišče, vedno omeni ime in ID da ga uporabnik najde
+- Odgovarjaj v slovenščini, prijazno in jedrnato
+
+PRENOČIŠČA NA PLATFORMI:
+${prenociscaInfo}
+
+SPLOŠNE INFORMACIJE:
+- Rezervacija ni zavezujoča, brezplačna odpoved do 48h pred prihodom
+- Prijava in registracija sta brezplačni
+- Za rezervacijo moraš biti prijavljen
+- Kontakt: prek obrazca na strani`
+                },
+                ...sporocila
+            ],
+            max_tokens: 600
+        });
+
+        res.json({ odgovor: completion.choices[0].message.content });
+    } catch (err) {
+        console.error('Chatbot napaka:', err);
+        res.status(500).json({ napaka: 'Napaka pri chatbotu.' });
     }
 });
 

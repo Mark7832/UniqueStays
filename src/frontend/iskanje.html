@@ -277,5 +277,51 @@
     <!--JavaScript-->
     <script src="js/iskanje.js"></script>
     <script src="js/nav.js"></script>
+
+    <!-- CHATBOT -->
+    <button id="chatToggleBtn"
+        class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white text-2xl shadow-lg hover:scale-110 transition flex items-center justify-content-center justify-center">
+        💬
+    </button>
+
+    <div id="chatOkno"
+        class="hidden fixed z-40 bg-white rounded-3xl shadow-2xl border border-slate-200 flex flex-col"
+        style="width:320px; height:420px; bottom:88px; right:24px; min-width:240px; min-height:300px; max-width:560px;">
+
+        <div class="rh-n absolute z-30 cursor-n-resize" style="top:-5px;left:16px;right:16px;height:10px;"></div>
+        <div class="rh-s absolute z-30 cursor-s-resize" style="bottom:-5px;left:16px;right:16px;height:10px;"></div>
+        <div class="rh-e absolute z-30 cursor-e-resize" style="right:-5px;top:16px;bottom:16px;width:10px;"></div>
+        <div class="rh-w absolute z-30 cursor-w-resize" style="left:-5px;top:16px;bottom:16px;width:10px;"></div>
+        <div class="rh-ne absolute z-30 cursor-ne-resize" style="top:-6px;right:-6px;width:16px;height:16px;"></div>
+        <div class="rh-nw absolute z-30 cursor-nw-resize" style="top:-6px;left:-6px;width:16px;height:16px;"></div>
+        <div class="rh-se absolute z-30 cursor-se-resize" style="bottom:-6px;right:-6px;width:16px;height:16px;"></div>
+        <div class="rh-sw absolute z-30 cursor-sw-resize" style="bottom:-6px;left:-6px;width:16px;height:16px;"></div>
+
+        <div class="absolute inset-0 rounded-3xl overflow-hidden flex flex-col">
+            <div id="chatHeader"
+                class="bg-gradient-to-r from-blue-600 to-teal-500 px-5 py-4 flex items-center justify-between cursor-grab flex-shrink-0 select-none">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-lg">🤖</div>
+                    <div>
+                        <div class="text-white font-bold text-sm">UniqueStays Pomočnik</div>
+                        <div class="text-white/70 text-xs">Vedno na voljo</div>
+                    </div>
+                </div>
+                <button id="chatCloseBtn" class="text-white/70 hover:text-white transition text-xl">✕</button>
+            </div>
+            <div id="chatSporocila" class="flex-1 overflow-y-auto p-4"></div>
+            <div class="px-4 py-3 border-t border-slate-100 flex gap-2">
+                <input id="chatInput" type="text" placeholder="Vprašajte karkoli..."
+                    class="flex-1 px-4 py-2.5 rounded-full bg-slate-50 border border-slate-200 text-sm outline-none focus:border-blue-400 transition">
+                <button id="chatSendBtn"
+                    class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white flex items-center justify-center hover:scale-105 transition">
+                    ➤
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/chatbot.js"></script>
+
 </body>
 </html>
