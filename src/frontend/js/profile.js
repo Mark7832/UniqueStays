@@ -424,3 +424,111 @@ async function odstraniPriljubljeno(id) {
 document.addEventListener("DOMContentLoaded", () => {
     naloziPriljubljene();
 });
+// ============================================================
+// MOJE REZERVACIJE
+// ============================================================
+
+document.addEventListener("DOMContentLoaded", () => {
+    naloziMojeRezervacije();
+});
+
+async function naloziMojeRezervacije() {
+    const token = sessionStorage.getItem('token');
+    if (!token) return;
+
+    const seznam = document.getElementById('seznamRezervacij');
+
+    try {
+        const res = await fetch('http://localhost:3000/api/moje-rezervacije', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        const rezervacije = await res.json();
+
+        if (!rezervacije.length) {
+            seznam.innerHTML = `<p class="text-slate-400 italic text-sm">Nimate še nobene rezervacije.</p>`;
+            return;
+        }
+
+        seznam.innerHTML = rezervacije.map(r => renderRezervacija(r)).join('');
+
+    } catch (err) {
+        console.error('Napaka pri nalaganju rezervacij:', err);
+        seznam.innerHTML = `<p class="text-red-400 italic text-sm">Napaka pri nalaganju rezervacij.</p>`;
+    }
+}
+
+function renderRezervacija(r) {
+    const prihod = new Date(r.datum_od);
+    const odhod = new Date(r.datum_do);
+    const zdaj = new Date();
+    const razlikaUre = (prihod - zdaj) / (1000 * 60 * 60);
+
+    const formatDatum = (d) => d.toLocaleDateString('sl-SI', { day: 'numeric', month: 'long', year: 'numeric' });
+    const noci = Math.round((odhod - prihod) / 86400000);
+    const cena = noci * (r.cena_na_noc || 0);
+
+    const vPreteklosti = prihod < zdaj;
+    const moznoPreklicati = !vPreteklosti && razlikaUre >= 48;
+
+    const statusBadge = vPreteklosti
+        ? `<span class="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-bold">Zaključena</span>`
+        : razlikaUre < 48
+        ? `<span class="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-600 text-xs font-bold">⚠️ Ni mogoče preklicati</span>`
+        : `<span class="inline-block px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-xs font-bold">✓ Aktivna</span>`;
+
+    return `
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl border border-slate-200 bg-slate-50 hover:shadow-sm transition">
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-3 mb-1 flex-wrap">
+                    <p class="font-extrabold text-slate-900 text-base">${r.naziv}</p>
+                    ${statusBadge}
+                </div>
+                <p class="text-sm text-slate-500 mb-2">${r.naslov || ''}</p>
+                <div class="flex flex-wrap gap-4 text-sm text-slate-600">
+                    <span>📅 <strong>${formatDatum(prihod)}</strong> → <strong>${formatDatum(odhod)}</strong></span>
+                    <span>🌙 ${noci} ${noci === 1 ? 'noč' : 'noči'}</span>
+                    <span>💶 ${cena.toFixed(2)} €</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-1">Rezervacija #${r.ID_rezervacija} · oddana ${new Date(r.datum_rezervacije).toLocaleDateString('sl-SI')}</p>
+            </div>
+            ${moznoPreklicati ? `
+            <button onclick="prekliciRezervacijo(${r.ID_rezervacija})"
+                class="shrink-0 px-5 py-2.5 rounded-full border-2 border-red-200 text-red-500 font-bold text-sm hover:bg-red-50 hover:border-red-400 transition whitespace-nowrap">
+                Prekliči
+            </button>` : ''}
+        </div>
+    `;
+}
+
+async function prekliciRezervacijo(id) {
+    if (!confirm('Ste prepričani, da želite preklicati to rezervacijo? Na vaš e-poštni naslov bo poslan email.')) return;
+
+    const token = sessionStorage.getItem('token');
+    const sporocilo = document.getElementById('sporociloRezervacija');
+
+    try {
+        const res = await fetch(`http://localhost:3000/api/rezervacija/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        const podatki = await res.json();
+
+        sporocilo.classList.remove('hidden');
+
+        if (res.ok) {
+            sporocilo.textContent = '✓ ' + podatki.sporocilo + ' Poslali smo vam potrditveni e-mail.';
+            sporocilo.className = 'mx-8 mt-6 px-5 py-3.5 rounded-2xl font-semibold text-sm bg-teal-50 border border-teal-200 text-teal-700';
+            await naloziMojeRezervacije();
+        } else {
+            sporocilo.textContent = '✗ ' + (podatki.napaka || 'Napaka pri preklicu.');
+            sporocilo.className = 'mx-8 mt-6 px-5 py-3.5 rounded-2xl font-semibold text-sm bg-red-50 border border-red-200 text-red-700';
+        }
+
+        setTimeout(() => sporocilo.classList.add('hidden'), 5000);
+
+    } catch (err) {
+        console.error('Napaka pri preklicu:', err);
+    }
+}

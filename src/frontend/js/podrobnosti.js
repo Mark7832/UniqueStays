@@ -16,6 +16,13 @@ function slikaVUrl(s) {
     return null;
 }
 
+// Parsa datum string "YYYY-MM-DD" brez timezone zamika
+function parseDatum(str) {
+    if (!str) return null;
+    const [y, m, d] = str.split('-').map(Number);
+    return new Date(y, m - 1, d);
+}
+
 // Funkcija za inicializacijo zemljevida
 function inicializirajZemljevid(koordinate) {
     const coords = koordinate.split(',').map(c => parseFloat(c.trim()));
@@ -596,8 +603,9 @@ function izrisiKalendar() {
 
     const dniVMesecu = new Date(leto, mesec + 1, 0).getDate();
     for (let d = 1; d <= dniVMesecu; d++) {
+        // Ustvarimo datum lokalno (brez UTC zamika)
         const datum = new Date(leto, mesec, d);
-        const datumStr = datum.toISOString().split('T')[0];
+        const datumStr = `${leto}-${String(mesec + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
         const zaseden = jeZaseden(datumStr);
         const preteklo = datum < danes;
         const jeIzbranPrihod = datumStr === prihodVal;
@@ -605,8 +613,8 @@ function izrisiKalendar() {
 
         let vObdobju = false;
         if (prihodVal && odhodVal) {
-            const od = new Date(prihodVal);
-            const do_ = new Date(odhodVal);
+            const od = parseDatum(prihodVal);
+            const do_ = parseDatum(odhodVal);
             vObdobju = datum > od && datum < do_;
         }
 
@@ -666,14 +674,14 @@ function kalendarNaslednjMesec() {
 // ---- KONEC MINI KALENDAR ----
 
 function jeZaseden(datumStr) {
-    const d = new Date(datumStr);
+    const d = parseDatum(datumStr);
     return _zasedenObdobja.some(({ od, do_ }) => d >= od && d < do_);
 }
 
 function prvProstDatum(odStr) {
-    let d = new Date(odStr);
+    let d = parseDatum(odStr);
     for (let i = 0; i < 365; i++) {
-        const str = d.toISOString().split('T')[0];
+        const str = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         if (!jeZaseden(str)) return str;
         d.setDate(d.getDate() + 1);
     }
@@ -688,8 +696,8 @@ async function naloziZasedenost(prenocisceId) {
             ...(data.rezervacije || []),
             ...(data.termini || [])
         ].map(r => ({
-            od:  new Date(r.datum_od),
-            do_: new Date(r.datum_do)
+            od:  parseDatum(r.datum_od.split('T')[0]),
+            do_: parseDatum(r.datum_do.split('T')[0])
         }));
     } catch (e) {
         _zasedenObdobja = [];
@@ -723,17 +731,19 @@ async function odpriRezervacijo() {
     const prenocisceId = urlParams.get('id') || 2;
     await naloziZasedenost(prenocisceId);
 
-    const danes = new Date().toISOString().split('T')[0];
-    const prihodStr = prvProstDatum(danes);
+    const danes = new Date();
+    const danesStr = `${danes.getFullYear()}-${String(danes.getMonth() + 1).padStart(2, '0')}-${String(danes.getDate()).padStart(2, '0')}`;
+    const prihodStr = prvProstDatum(danesStr);
 
-    const naslednji = new Date(prihodStr);
+    const naslednji = parseDatum(prihodStr);
     naslednji.setDate(naslednji.getDate() + 1);
-    const odhodStr = prvProstDatum(naslednji.toISOString().split('T')[0]);
+    const naslednjStr = `${naslednji.getFullYear()}-${String(naslednji.getMonth() + 1).padStart(2, '0')}-${String(naslednji.getDate()).padStart(2, '0')}`;
+    const odhodStr = prvProstDatum(naslednjStr);
 
     const prihod = document.getElementById('datumPrihod');
     const odhod  = document.getElementById('datumOdhod');
-    if (prihod) { prihod.min = danes; prihod.value = prihodStr; }
-    if (odhod)  { odhod.min  = danes; odhod.value  = odhodStr; }
+    if (prihod) { prihod.min = danesStr; prihod.value = prihodStr; }
+    if (odhod)  { odhod.min  = danesStr; odhod.value  = odhodStr; }
 
     prihod?.addEventListener('change', onPrihodChange);
     odhod?.addEventListener('change', onOdhodChange);
@@ -763,12 +773,13 @@ function onOdhodChange() {
     const prihodVal = document.getElementById('datumPrihod')?.value;
 
     if (prihodVal && el.value) {
-        const od = new Date(prihodVal);
-        const do_ = new Date(el.value);
+        const od = parseDatum(prihodVal);
+        const do_ = parseDatum(el.value);
         let zaseden = false;
-        let d = new Date(od);
+        let d = parseDatum(prihodVal);
         while (d < do_) {
-            if (jeZaseden(d.toISOString().split('T')[0])) { zaseden = true; break; }
+            const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            if (jeZaseden(dStr)) { zaseden = true; break; }
             d.setDate(d.getDate() + 1);
         }
         if (zaseden) {
@@ -817,14 +828,16 @@ function posodobiCeno() {
 
     if (!prihodVal || !odhodVal) { if (summary) summary.style.display = 'none'; return; }
 
-    const p = new Date(prihodVal);
-    const o = new Date(odhodVal);
+    const p = parseDatum(prihodVal);
+    const o = parseDatum(odhodVal);
     const noci = Math.round((o - p) / 86400000);
 
     if (noci <= 0) {
-        const novOdhod = new Date(p); novOdhod.setDate(novOdhod.getDate() + 1);
+        const novOdhod = parseDatum(prihodVal);
+        novOdhod.setDate(novOdhod.getDate() + 1);
+        const novOdhodStr = `${novOdhod.getFullYear()}-${String(novOdhod.getMonth() + 1).padStart(2, '0')}-${String(novOdhod.getDate()).padStart(2, '0')}`;
         const odEl = document.getElementById('datumOdhod');
-        if (odEl) odEl.value = novOdhod.toISOString().split('T')[0];
+        if (odEl) odEl.value = novOdhodStr;
         posodobiCeno();
         return;
     }
@@ -855,7 +868,7 @@ async function potrdiRezervacijo() {
         if (napaka) { napaka.textContent = '❌ Prosimo izberite datume prihoda in odhoda.'; napaka.classList.remove('hidden'); }
         return;
     }
-    if (new Date(odhodVal) <= new Date(prihodVal)) {
+    if (parseDatum(odhodVal) <= parseDatum(prihodVal)) {
         if (napaka) { napaka.textContent = '❌ Datum odhoda mora biti po datumu prihoda.'; napaka.classList.remove('hidden'); }
         return;
     }
@@ -890,7 +903,7 @@ async function potrdiRezervacijo() {
 
         if (response.ok) {
             const rezervacijaData = await response.json().catch(() => ({}));
-            const noci = Math.round((new Date(odhodVal) - new Date(prihodVal)) / 86400000);
+            const noci = Math.round((parseDatum(odhodVal) - parseDatum(prihodVal)) / 86400000);
             const skupaj = noci * _rezervacijaData.cenaNaNoc;
 
             const params = new URLSearchParams({
