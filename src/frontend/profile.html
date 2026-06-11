@@ -330,6 +330,58 @@
         </div>
     </footer>
 
+    <!--potrditev preklica rezervacije-->
+    <div id="preklicModal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4" style="display:none;">
+        <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
+            <div class="text-5xl mb-4">⚠️</div>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-2">Preklic rezervacije</h3>
+            <p class="text-slate-500 text-sm mb-8">Ste prepričani, da želite preklicati to rezervacijo? Na vaš e-poštni naslov bo poslan email.</p>
+            <div class="flex gap-3 justify-center">
+                <button id="preklicNe" class="px-8 py-3 rounded-full border-2 border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition">
+                    Nazaj
+                </button>
+                <button id="preklicDa" class="px-8 py-3 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition">
+                    Prekliči rezervacijo
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- potrditev brisanja prenočišča-->
+    <div id="brisiModal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4" style="display:none;">
+        <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
+            <div class="text-5xl mb-4">🗑️</div>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-2">Brisanje prenočišča</h3>
+            <p class="text-slate-500 text-sm mb-8">Ste prepričani, da želite izbrisati to prenočišče? Tega dejanja ni mogoče razveljaviti.</p>
+            <div class="flex gap-3 justify-center">
+                <button id="brisiNe" class="px-8 py-3 rounded-full border-2 border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition">
+                    Nazaj
+                </button>
+                <button id="brisiDa" class="px-8 py-3 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition">
+                    Izbriši prenočišče
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--potrditev odstranitve prenočišča iz seznama priljubljenih-->
+    <div id="priljubljeniModal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4" style="display:none;">
+        <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
+            <div class="text-5xl mb-4">❤️</div>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-2">Odstrani iz priljubljenih</h3>
+            <p class="text-slate-500 text-sm mb-8">Ste prepričani, da želite odstraniti to prenočišče iz priljubljenih?</p>
+            <div class="flex gap-3 justify-center">
+                <button id="priljubljeniNe" class="px-8 py-3 rounded-full border-2 border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition">
+                    Nazaj
+                </button>
+                <button id="priljubljeniDa" class="px-8 py-3 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition">
+                    Odstrani
+                </button>
+            </div>
+        </div>
+    </div>
+    
     <script src="js/nav.js"></script>
     <script src="js/profile.js"></script>
 </body>
