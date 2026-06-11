@@ -189,17 +189,30 @@ async function naloziMojaPrenocisca() {
 }
 
 async function izbrisiPrenocisce(id) {
-    if (!confirm('Ste prepričani, da želite izbrisati to prenočišče?')) return;
-    const token = sessionStorage.getItem('token');
-    try {
-        await fetch(`/prenocisce/${id}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': 'Bearer ' + token }
-        });
-        naloziMojaPrenocisca();
-    } catch (err) {
-        console.error(err);
-    }
+    const modal = document.getElementById('brisiModal');
+    modal.style.display = 'flex';
+
+    return new Promise((resolve) => {
+        document.getElementById('brisiDa').onclick = async () => {
+            modal.style.display = 'none';
+            const token = sessionStorage.getItem('token');
+            try {
+                await fetch(`/prenocisce/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                naloziMojaPrenocisca();
+            } catch (err) {
+                console.error(err);
+            }
+            resolve();
+        };
+
+        document.getElementById('brisiNe').onclick = () => {
+            modal.style.display = 'none';
+            resolve();
+        };
+    });
 }
 
 //vezava doživetij na prenočišča
@@ -411,19 +424,31 @@ async function naloziPriljubljene() {
 
 // Odstrani priljubljeno prenočišče iz seznama
 async function odstraniPriljubljeno(id) {
-    if (!confirm('Ste prepričani, da želite odstraniti iz priljubljenih?')) return;
-    const token = sessionStorage.getItem('token');
-    if (!token) return;
+    const modal = document.getElementById('priljubljeniModal');
+    modal.style.display = 'flex';
 
-    try {
-        await fetch(`http://localhost:3000/api/priljubljeno/${id}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': 'Bearer ' + token }
-        });
-        naloziPriljubljene();
-    } catch (err) {
-        console.error('Napaka pri odstranjevanju:', err);
-    }
+    return new Promise((resolve) => {
+        document.getElementById('priljubljeniDa').onclick = async () => {
+            modal.style.display = 'none';
+            const token = sessionStorage.getItem('token');
+            if (!token) return;
+            try {
+                await fetch(`http://localhost:3000/api/priljubljeno/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                naloziPriljubljene();
+            } catch (err) {
+                console.error('Napaka pri odstranjevanju:', err);
+            }
+            resolve();
+        };
+
+        document.getElementById('priljubljeniNe').onclick = () => {
+            modal.style.display = 'none';
+            resolve();
+        };
+    });
 }
 
 // samodejno nalozi seznam priljubljenih ob odprtju strani
@@ -465,9 +490,6 @@ async function naloziMojeRezervacije() {
 }
 
 async function renderRezervacija(r, token) {
-    console.log('rezervacija:', r);
-    console.log('TK_prenocisce:', r.TK_prenocisce);
-    console.log('vPreteklosti:', new Date(r.datum_do) < new Date());
     const prihod = new Date(r.datum_od);
     const odhod = new Date(r.datum_do);
     const zdaj = new Date();
@@ -488,7 +510,6 @@ async function renderRezervacija(r, token) {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const data = await res.json();
-            console.log('upravicen za', r.naziv, ':', data);
             if (data.upravicen) {
                 gumbOceni = `
                     <a href="podrobnosti.html?id=${r.ID_prenocisce}#ocena"
@@ -537,35 +558,46 @@ async function renderRezervacija(r, token) {
 }
 
 async function prekliciRezervacijo(id) {
-    if (!confirm('Ste prepričani, da želite preklicati to rezervacijo? Na vaš e-poštni naslov bo poslan email.')) return;
+    const modal = document.getElementById('preklicModal');
+    modal.style.display = 'flex';
 
-    const token = sessionStorage.getItem('token');
-    const sporocilo = document.getElementById('sporociloRezervacija');
+    return new Promise((resolve) => {
+        document.getElementById('preklicDa').onclick = async () => {
+            modal.style.display = 'none';
 
-    try {
-        const res = await fetch(`http://localhost:3000/api/rezervacija/${id}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': 'Bearer ' + token }
-        });
+            const token = sessionStorage.getItem('token');
+            const sporocilo = document.getElementById('sporociloRezervacija');
 
-        const podatki = await res.json();
+            try {
+                const res = await fetch(`http://localhost:3000/api/rezervacija/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
 
-        sporocilo.classList.remove('hidden');
+                const podatki = await res.json();
+                sporocilo.classList.remove('hidden');
 
-        if (res.ok) {
-            sporocilo.textContent = '✓ ' + podatki.sporocilo + ' Poslali smo vam potrditveni e-mail.';
-            sporocilo.className = 'mx-8 mt-6 px-5 py-3.5 rounded-2xl font-semibold text-sm bg-teal-50 border border-teal-200 text-teal-700';
-            await naloziMojeRezervacije();
-        } else {
-            sporocilo.textContent = '✗ ' + (podatki.napaka || 'Napaka pri preklicu.');
-            sporocilo.className = 'mx-8 mt-6 px-5 py-3.5 rounded-2xl font-semibold text-sm bg-red-50 border border-red-200 text-red-700';
-        }
+                if (res.ok) {
+                    sporocilo.textContent = '✓ ' + podatki.sporocilo + ' Poslali smo vam potrditveni e-mail.';
+                    sporocilo.className = 'mx-8 mt-6 px-5 py-3.5 rounded-2xl font-semibold text-sm bg-teal-50 border border-teal-200 text-teal-700';
+                    await naloziMojeRezervacije();
+                } else {
+                    sporocilo.textContent = '✗ ' + (podatki.napaka || 'Napaka pri preklicu.');
+                    sporocilo.className = 'mx-8 mt-6 px-5 py-3.5 rounded-2xl font-semibold text-sm bg-red-50 border border-red-200 text-red-700';
+                }
 
-        setTimeout(() => sporocilo.classList.add('hidden'), 5000);
+                setTimeout(() => sporocilo.classList.add('hidden'), 5000);
+            } catch (err) {
+                console.error('Napaka pri preklicu:', err);
+            }
+            resolve();
+        };
 
-    } catch (err) {
-        console.error('Napaka pri preklicu:', err);
-    }
+        document.getElementById('preklicNe').onclick = () => {
+            modal.style.display = 'none';
+            resolve();
+        };
+    });
 }
 
 async function uploadProfilnaSlika(input) {

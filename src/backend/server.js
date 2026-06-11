@@ -157,7 +157,7 @@ const db = knex({
     client: 'mysql2',
     connection: {
         host: process.env.DB_HOST || '127.0.0.1',
-        user: process.env.DB_USER || 'root',
+        user: process.env.DB_USER || 'uniquestays',
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME
     }
@@ -867,7 +867,7 @@ app.get('/api/komentar/upravicen/:prenocisceId', preveriToken, async (req, res) 
             .where('rezervirano',   true)
             .where('datum_do', '<', db.raw('NOW()'))
             .first();
-             
+
         const obstojeci = await db('Komentar')
             .where('TK_prenocisce', req.params.prenocisceId)
             .where('TK_uporabnik',  req.uporabnik.id)
