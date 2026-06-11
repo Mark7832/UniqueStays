@@ -506,8 +506,11 @@ function prikaziKomentarje(komentarji) {
 
         card.innerHTML = `
             <div class="flex items-center gap-4 mb-6">
-                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center text-white font-bold text-xl">
-                    ${inicialiIme}${inicialiPriimek}
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center text-white font-bold text-xl overflow-hidden">
+                    <img src="/api/auth/profilna-slika/${komentar.TK_uporabnik}" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                         class="w-full h-full object-cover" />
+                    <span style="display:none" class="w-full h-full flex items-center justify-center">${inicialiIme}${inicialiPriimek}</span>
                 </div>
 
                 <div>
@@ -990,8 +993,11 @@ function prikaziSporocila(sporocila) {
 
         card.innerHTML = `
             <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center text-white font-bold">
-                    ${inicialiIme}${inicialiPriimek}
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center text-white font-bold overflow-hidden">
+                    <img src="/api/auth/profilna-slika/${s.TK_uporabnik}" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                         class="w-full h-full object-cover" />
+                    <span style="display:none" class="w-full h-full flex items-center justify-center">${inicialiIme}${inicialiPriimek}</span>
                 </div>
                 <div>
                     <div class="font-bold text-slate-900">${s.ime_uporabnika || 'Neznano'} ${s.priimek_uporabnika || ''}</div>

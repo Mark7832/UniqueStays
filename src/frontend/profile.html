@@ -32,20 +32,23 @@
             <div class="flex flex-wrap items-center justify-center gap-5">
                 <a href="index.html#popular" class="font-semibold hover:text-blue-600 transition">Priljubljeno</a>
                 <a href="index.html#about" class="font-semibold hover:text-blue-600 transition">O nas</a>
-                <a href="index.html#new" class="px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold hover:bg-emerald-200 transition-all duration-200">Novo</a>
+                <a href="index.html#new"
+                    class="px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold hover:bg-emerald-200 transition-all duration-200">Novo</a>
 
 
                 <a id="btnPrijava" href="login.html"
                     class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">Prijava</a>
-                
-                    <a id="btnRegistracija" href="register.html"
+
+                <a id="btnRegistracija" href="register.html"
                     class="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-200 hover:-translate-y-1">Registracija</a>
-                
-                    <div id="btnOdjava" class="hidden flex items-center gap-3">
 
-                    <a href="profile.html" id="imeUporabnika" class="font-semibold text-slate-700 hover:text-blue-600 transition"></a>
+                <div id="btnOdjava" class="hidden flex items-center gap-3">
 
-                    <button onclick="odjava()" class="px-5 py-2.5 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition-all duration-200 hover:-translate-y-1">
+                    <a href="profile.html" id="imeUporabnika"
+                        class="font-semibold text-slate-700 hover:text-blue-600 transition"></a>
+
+                    <button onclick="odjava()"
+                        class="px-5 py-2.5 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition-all duration-200 hover:-translate-y-1">
                         Odjava
                     </button>
                 </div>
@@ -59,9 +62,16 @@
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.3),transparent_30%)]">
         </div>
         <div class="max-w-4xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-8">
-            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-teal-400 to-blue-600 flex items-center justify-center text-4xl font-extrabold shadow-2xl flex-shrink-0"
-                id="avatarKrog">
-                ?
+            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-teal-400 to-blue-600 flex items-center justify-center text-4xl font-extrabold shadow-2xl flex-shrink-0 overflow-hidden cursor-pointer relative group"
+                id="avatarKrog" onclick="document.getElementById('inputSlika').click()"
+                title="Kliknite za spremembo slike">
+                <span id="avatarInitials">?</span>
+                <img id="avatarSlika" class="hidden absolute inset-0 w-full h-full object-cover rounded-full" />
+                <div
+                    class="absolute inset-0 bg-black/30 rounded-full hidden group-hover:flex items-center justify-center text-white text-sm font-bold">
+                    📷</div>
+                <input type="file" id="inputSlika" accept="image/*" class="hidden"
+                    onchange="uploadProfilnaSlika(this)" />
             </div>
             <div>
                 <span class="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-sm font-bold mb-3">
@@ -199,7 +209,8 @@
                         <h2 class="text-xl font-extrabold text-slate-900">Moje rezervacije</h2>
                     </div>
 
-                    <div id="sporociloRezervacija" class="hidden mx-8 mt-6 px-5 py-3.5 rounded-2xl font-semibold text-sm"></div>
+                    <div id="sporociloRezervacija"
+                        class="hidden mx-8 mt-6 px-5 py-3.5 rounded-2xl font-semibold text-sm"></div>
 
                     <div id="seznamRezervacij" class="px-8 py-8 space-y-4">
                         <p class="text-slate-400 italic text-sm">Nalaganje rezervacij…</p>
@@ -281,7 +292,8 @@
                     <div id="vezavaPrazno" class="hidden px-8 py-12 text-center">
                         <p class="text-4xl mb-3">🌟</p>
                         <p class="font-bold text-slate-700 mb-1">Še nimate doživetij</p>
-                        <p class="text-sm text-slate-500 mb-5">Najprej ustvarite pakete doživetij, nato pa jih povežite s prenočišči.</p>
+                        <p class="text-sm text-slate-500 mb-5">Najprej ustvarite pakete doživetij, nato pa jih povežite
+                            s prenočišči.</p>
                         <a href="dozivetje.html"
                             class="inline-block px-6 py-3 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 text-white font-bold text-sm hover:scale-[1.02] transition-all duration-200 shadow-lg">
                             Ustvari doživetje

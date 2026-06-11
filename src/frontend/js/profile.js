@@ -19,7 +19,13 @@ async function nalagajProfil() {
 
         document.getElementById('profilIme').textContent = podatki.ime_uporabnika + ' ' + podatki.priimek_uporabnika;
         document.getElementById('profilEmail').textContent = podatki.email;
-        document.getElementById('avatarKrog').textContent = podatki.ime_uporabnika.charAt(0).toUpperCase();
+        document.getElementById('avatarInitials').textContent = podatki.ime_uporabnika.charAt(0).toUpperCase();
+        const avatarSlika = document.getElementById('avatarSlika');
+        if (podatki.profilna_slika) {
+            avatarSlika.src = `/api/auth/profilna-slika/${podatki.ID_uporabnik}?t=${Date.now()}`;
+            avatarSlika.classList.remove('hidden');
+            document.getElementById('avatarInitials').classList.add('hidden');
+        }
 
         document.getElementById('ime').value = podatki.ime_uporabnika || '';
         document.getElementById('priimek').value = podatki.priimek_uporabnika || '';
@@ -496,14 +502,14 @@ async function renderRezervacija(r, token) {
                         ✅ Že ocenjeno
                     </a>`;
             }
-        } catch {}
+        } catch { }
     }
 
     const statusBadge = vPreteklosti
         ? `<span class="inline-block px-3 py-1 rounded-full bg-purple-100 text-purple-500 text-xs font-bold">✓ Zaključena</span>`
         : razlikaUre < 48
-        ? `<span class="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-600 text-xs font-bold">⚠️ Ni mogoče preklicati</span>`
-        : `<span class="inline-block px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-xs font-bold">✓ Aktivna</span>`;
+            ? `<span class="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-600 text-xs font-bold">⚠️ Ni mogoče preklicati</span>`
+            : `<span class="inline-block px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-xs font-bold">✓ Aktivna</span>`;
 
     return `
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl border border-slate-200 bg-slate-50 hover:shadow-sm transition">
@@ -559,5 +565,35 @@ async function prekliciRezervacijo(id) {
 
     } catch (err) {
         console.error('Napaka pri preklicu:', err);
+    }
+}
+
+async function uploadProfilnaSlika(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const token = sessionStorage.getItem('token');
+    const formData = new FormData();
+    formData.append('slika', file);
+    try {
+        const res = await fetch('http://localhost:3000/api/auth/profilna-slika', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token },
+            body: formData
+        });
+        const r = await res.json();
+        if (res.ok) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const avatarSlika = document.getElementById('avatarSlika');
+                avatarSlika.src = e.target.result;
+                avatarSlika.classList.remove('hidden');
+                document.getElementById('avatarInitials').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert(r.napaka || 'Napaka pri nalaganju.');
+        }
+    } catch (err) {
+        console.error(err);
     }
 }

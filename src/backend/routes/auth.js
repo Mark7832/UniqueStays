@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -110,7 +112,7 @@ router.get('/profil', preveriToken, async (req, res) => {
     try {
         const uporabnik = await req.db('Uporabnik')
             .where('ID_uporabnik', req.uporabnik.id)
-            .select('ID_uporabnik', 'ime_uporabnika', 'priimek_uporabnika', 'email', 'drzava', 'opis', 'je_admin', 'ustvarjen_od')
+            .select('ID_uporabnik', 'ime_uporabnika', 'priimek_uporabnika', 'email', 'drzava', 'opis', 'je_admin', 'ustvarjen_od', 'profilna_slika')
             .first();
 
         if (!uporabnik) {
@@ -177,6 +179,34 @@ router.put('/geslo', preveriToken, async (req, res) => {
     } catch (error) {
         console.error('Napaka pri spremembi gesla:', error);
         res.status(500).json({ napaka: 'Napaka pri spremembi gesla.' });
+    }
+});
+
+router.post('/profilna-slika', preveriToken, upload.single('slika'), async (req, res) => {
+    try {
+        if (!req.file) return res.status(400).json({ napaka: 'Ni slike.' });
+        await req.db('Uporabnik')
+            .where('ID_uporabnik', req.uporabnik.id)
+            .update({ profilna_slika: req.file.buffer });
+        res.json({ sporocilo: 'Slika uspešno shranjena.' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ napaka: 'Napaka pri shranjevanju slike.' });
+    }
+});
+
+router.get('/profilna-slika/:id', async (req, res) => {
+    try {
+        const u = await req.db('Uporabnik')
+            .where('ID_uporabnik', req.params.id)
+            .select('profilna_slika')
+            .first();
+        if (!u || !u.profilna_slika) return res.status(404).end();
+        res.set('Content-Type', 'image/jpeg');
+        res.set('Cache-Control', 'public, max-age=86400');
+        res.send(u.profilna_slika);
+    } catch (err) {
+        res.status(500).end();
     }
 });
 
