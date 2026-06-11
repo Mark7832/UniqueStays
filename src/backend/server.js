@@ -7,23 +7,17 @@ const path = require('path');
 require('dotenv').config();
 const authRouter = require('./routes/auth');
 const { preveriToken, preveriAdmin } = require('./routes/auth');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const { get } = require('http');
 
 // EMAIL KONFIGURACIJA
-if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    throw new Error("EMAIL credentials are missing in .env");
-}
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const emailTransporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.EMAIL_PORT) || 587,
-    secure: false,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+const emailTransporter = {
+    sendMail: async ({ from, to, subject, html }) => {
+        return await resend.emails.send({ from, to, subject, html });
     }
-});
+};
 
 async function posljiPotrditevRezervacije({ email, ime, naziv, prihod, odhod, gostov, noci, cena, rezervacijaId }) {
     const formatirajDatum = (str) => {
@@ -130,7 +124,7 @@ async function posljiPotrditevRezervacije({ email, ime, naziv, prihod, odhod, go
     `;
 
     await emailTransporter.sendMail({
-        from: `"UniqueStays ✨" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
+        from: "UniqueStays ✨ <onboarding@resend.dev>",
         to: email,
         subject: `✅ Rezervacija potrjena – ${naziv}`,
         html
@@ -1219,7 +1213,7 @@ async function posljiPrekinitevRezervacije({ email, ime, naziv, prihod, odhod, r
     };
 
     const mailOptions = {
-        from: `"UniqueStays" <${process.env.EMAIL_USER}>`,
+        from: "UniqueStays <onboarding@resend.dev>",
         to: email,
         subject: `Rezervacija #${rezervacijaId} je bila preklicana`,
         html: `
@@ -1414,7 +1408,7 @@ async function posljiPovabiloKOceni({ email, ime, naziv, datumOdhoda, prenocisce
     `;
  
     await emailTransporter.sendMail({
-        from: `"UniqueStays" <${process.env.EMAIL_USER}>`,
+        from: "UniqueStays <onboarding@resend.dev>",
         to: email,
         subject: `🩷 Kako je bilo v ${naziv}? Oddajte oceno bivanja`,
         html
