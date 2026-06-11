@@ -459,9 +459,6 @@ async function naloziMojeRezervacije() {
 }
 
 async function renderRezervacija(r, token) {
-    console.log('rezervacija:', r);
-    console.log('TK_prenocisce:', r.TK_prenocisce);
-    console.log('vPreteklosti:', new Date(r.datum_do) < new Date());
     const prihod = new Date(r.datum_od);
     const odhod = new Date(r.datum_do);
     const zdaj = new Date();
@@ -482,7 +479,6 @@ async function renderRezervacija(r, token) {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const data = await res.json();
-            console.log('upravicen za', r.naziv, ':', data);
             if (data.upravicen) {
                 gumbOceni = `
                     <a href="podrobnosti.html?id=${r.ID_prenocisce}#ocena"
