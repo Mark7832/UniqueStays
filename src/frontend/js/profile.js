@@ -448,7 +448,9 @@ async function naloziMojeRezervacije() {
             return;
         }
 
-        seznam.innerHTML = rezervacije.map(r => renderRezervacija(r)).join('');
+        // Za vsako zaključeno rezervacijo preveri upravičenost
+        const rendered = await Promise.all(rezervacije.map(r => renderRezervacija(r, token)));
+        seznam.innerHTML = rendered.join('');
 
     } catch (err) {
         console.error('Napaka pri nalaganju rezervacij:', err);
@@ -456,7 +458,10 @@ async function naloziMojeRezervacije() {
     }
 }
 
-function renderRezervacija(r) {
+async function renderRezervacija(r, token) {
+    console.log('rezervacija:', r);
+    console.log('TK_prenocisce:', r.TK_prenocisce);
+    console.log('vPreteklosti:', new Date(r.datum_do) < new Date());
     const prihod = new Date(r.datum_od);
     const odhod = new Date(r.datum_do);
     const zdaj = new Date();
@@ -466,8 +471,33 @@ function renderRezervacija(r) {
     const noci = Math.round((odhod - prihod) / 86400000);
     const cena = noci * (r.cena_na_noc || 0);
 
-    const vPreteklosti = prihod < zdaj;
+    const vPreteklosti = odhod < zdaj;
     const moznoPreklicati = !vPreteklosti && razlikaUre >= 48;
+
+    // Preveri ali lahko oceni (samo za zaključene)
+    let gumbOceni = '';
+    if (vPreteklosti && token && r.TK_prenocisce) {
+        try {
+            const res = await fetch(`http://localhost:3000/api/komentar/upravicen/${r.TK_prenocisce}`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const data = await res.json();
+            console.log('upravicen za', r.naziv, ':', data);
+            if (data.upravicen) {
+                gumbOceni = `
+                    <a href="podrobnosti.html?id=${r.ID_prenocisce}#ocena"
+                        class="shrink-0 px-5 py-2.5 rounded-full border-2 border-amber-300 text-amber-600 font-bold text-sm hover:bg-amber-50 hover:border-amber-400 transition whitespace-nowrap">
+                        ⭐ Oceni bivanje
+                    </a>`;
+            } else if (data.jeZeKomentiral) {
+                gumbOceni = `
+                    <a href="podrobnosti.html?id=${r.ID_prenocisce}#ocena"
+                        class="shrink-0 px-5 py-2.5 rounded-full border-2 border-teal-300 text-teal-600 font-bold text-sm hover:bg-teal-50 hover:border-teal-400 transition whitespace-nowrap">
+                        ✅ Že ocenjeno
+                    </a>`;
+            }
+        } catch {}
+    }
 
     const statusBadge = vPreteklosti
         ? `<span class="inline-block px-3 py-1 rounded-full bg-purple-100 text-purple-500 text-xs font-bold">✓ Zaključena</span>`
@@ -490,10 +520,11 @@ function renderRezervacija(r) {
                 </div>
                 <p class="text-xs text-slate-400 mt-1">Številka rezervacije #${r.ID_rezervacija} · oddana ${new Date(r.datum_rezervacije).toLocaleDateString('sl-SI')}</p>
             </div>
+            ${gumbOceni}
             ${moznoPreklicati ? `
             <button onclick="prekliciRezervacijo(${r.ID_rezervacija})"
                 class="shrink-0 px-5 py-2.5 rounded-full border-2 border-red-200 text-red-500 font-bold text-sm hover:bg-red-50 hover:border-red-400 transition whitespace-nowrap">
-                Prekliči
+                ❌ Prekliči
             </button>` : ''}
         </div>
     `;

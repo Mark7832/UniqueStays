@@ -865,9 +865,9 @@ app.get('/api/komentar/upravicen/:prenocisceId', preveriToken, async (req, res) 
             .where('TK_prenocisce', req.params.prenocisceId)
             .where('TK_uporabnik',  req.uporabnik.id)
             .where('rezervirano',   true)
-            .where('datum_do', '<', db.raw('CURDATE()'))
+            .where('datum_do', '<', db.raw('NOW()'))
             .first();
- 
+             
         const obstojeci = await db('Komentar')
             .where('TK_prenocisce', req.params.prenocisceId)
             .where('TK_uporabnik',  req.uporabnik.id)
@@ -1259,6 +1259,7 @@ app.get('/api/moje-rezervacije', preveriToken, async (req, res) => {
                 'Rezervacija.datum_od',
                 'Rezervacija.datum_do',
                 'Rezervacija.datum_rezervacije',
+                'Rezervacija.TK_prenocisce',
                 'Prenocisce.naziv',
                 'Prenocisce.naslov',
                 'Prenocisce.cena_na_noc'
@@ -1335,29 +1336,31 @@ app.delete('/api/rezervacija/:id', preveriToken, async (req, res) => {
 });
 
 //email - povabilo k ocenjevanju/komentiranju
-async function posljiPovabiloKOceni({ email, ime, naziv, datumOdhoda, prenocisceId }) { 
+async function posljiPovabiloKOceni({ email, ime, naziv, datumOdhoda, prenocisceId}) { 
     const oceniUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/podrobnosti.html?id=${prenocisceId}#ocena`;
- 
+
     const html = `
     <!DOCTYPE html>
     <html lang="sl">
-    <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-    <body style="margin:0;padding:0;background:#f1f5f9;font-family:'Segoe UI',Arial,sans-serif;">
+    <head><meta charset="UTF-8"/></head>
+    <body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,Helvetica,sans-serif;">
       <table width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:40px 0;">
         <tr><td align="center">
-          <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
- 
+          <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+            <!-- HEADER -->
             <tr>
               <td style="background:linear-gradient(135deg,#2563eb,#14b8a6);padding:40px 40px 32px;text-align:center;">
-                <div style="font-size:40px;margin-bottom:10px;">✨</div>
-                <h1 style="color:#ffffff;font-size:26px;font-weight:800;margin:0 0 6px;">Kako je bilo bivanje?</h1>
-                <p style="color:rgba(255,255,255,0.85);font-size:15px;margin:0;">Vaše mnenje nam veliko pomeni</p>
+                <div style="font-size:48px;margin-bottom:8px;">⭐</div>
+                <h1 style="color:#ffffff;font-size:28px;font-weight:800;margin:0 0 8px;">Kako je bilo bivanje?</h1>
+                <p style="color:rgba(255,255,255,0.85);font-size:16px;margin:0;">Vaše mnenje nam veliko pomeni</p>
               </td>
             </tr>
- 
+
+            <!-- TELO -->
             <tr>
-              <td style="padding:40px;">
-                <p style="font-size:16px;color:#334155;margin:0 0 12px;">Pozdravljeni, <strong>${ime}</strong>!</p>
+              <td style="padding:36px 40px;">
+              <p style="font-size:16px;color:#334155;margin:0 0 12px;">Pozdravljeni, <strong>${ime}</strong>!</p>
                 <p style="font-size:15px;color:#475569;line-height:1.7;margin:0 0 28px;">
                   Vaše bivanje v <strong>${naziv}</strong> se je zaključilo <strong>${datumOdhoda}</strong>.
                   Upamo, da ste uživali! Vaša ocena pomaga drugim gostom pri odločitvi in lastniku prenočišča pri izboljšavah.
@@ -1384,30 +1387,36 @@ async function posljiPovabiloKOceni({ email, ime, naziv, datumOdhoda, prenocisce
                     </td>
                   </tr>
                 </table>
- 
-                <p style="font-size:13px;color:#94a3b8;margin:0;">
-                  Ocenite lahko samo enkrat na bivanje. Hvala, ker ste del skupnosti UniqueStays.
+
+                <!-- Opomba -->
+                <div style="background:#fffbeb;border-radius:16px;padding:16px 20px;border:1px solid #fcd34d;margin-bottom:28px;">
+                  <p style="font-size:14px;color:#92400e;margin:0;">
+                    ℹ️ <strong>Opomba:</strong> Ocenjevanje in komentiranje ni obvezno. Ocenite lahko samo enkrat na bivanje. Hvala, ker ste del skupnosti UniqueStays.
+                  </p>
+                </div>
+              </td>
+            </tr>
+
+            <!-- FOOTER -->
+            <tr>
+              <td style="background:#0f172a;padding:24px 40px;text-align:center;">
+                <p style="color:rgba(255,255,255,0.5);font-size:13px;margin:0;">
+                  © 2026 ✨ UniqueStays — Vse pravice pridržane
                 </p>
               </td>
             </tr>
- 
-            <tr>
-              <td style="background:#f8fafc;padding:20px 40px;text-align:center;border-top:1px solid #e2e8f0;">
-                <p style="font-size:13px;font-weight:700;color:#334155;margin:0 0 4px;">UniqueStays</p>
-                <p style="font-size:12px;color:#94a3b8;margin:0;">2026 UniqueStays - Vse pravice pridrzane</p>
-              </td>
-            </tr>
- 
+
           </table>
         </td></tr>
       </table>
     </body>
-    </html>`;
+    </html>
+    `;
  
     await emailTransporter.sendMail({
         from: `"UniqueStays" <${process.env.EMAIL_USER}>`,
         to: email,
-        subject: `Kako je bilo v ${naziv}? Oddajte oceno bivanja`,
+        subject: `🩷 Kako je bilo v ${naziv}? Oddajte oceno bivanja`,
         html
     });
 }
