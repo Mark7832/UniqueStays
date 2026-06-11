@@ -13,19 +13,9 @@ const { get } = require('http');
 // EMAIL KONFIGURACIJA
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-<<<<<<< HEAD
 const emailTransporter = {
     sendMail: async ({ from, to, subject, html }) => {
         return await resend.emails.send({ from, to, subject, html });
-=======
-const emailTransporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.EMAIL_PORT) || 465,
-    secure: parseInt(process.env.EMAIL_PORT) === 465,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
->>>>>>> 77daffe3fdf1bf203bdd0604e233dbc62bebfe9f
     }
 };
 
