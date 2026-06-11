@@ -867,7 +867,7 @@ app.get('/api/komentar/upravicen/:prenocisceId', preveriToken, async (req, res) 
             .where('rezervirano',   true)
             .where('datum_do', '<', db.raw('NOW()'))
             .first();
-             
+
         const obstojeci = await db('Komentar')
             .where('TK_prenocisce', req.params.prenocisceId)
             .where('TK_uporabnik',  req.uporabnik.id)
