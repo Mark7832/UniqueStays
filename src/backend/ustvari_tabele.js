@@ -34,6 +34,7 @@ async function napolniBazo() {
             table.string('opis');
             table.boolean('je_admin').defaultTo(false); // NOVO - določa ali je user admin
             table.date('ustvarjen_od').notNullable();
+            table.specificType('profilna_slika', 'LONGBLOB');
         });
 
         console.log('Tabela Uporabnik uspesno ustvarjena.');
